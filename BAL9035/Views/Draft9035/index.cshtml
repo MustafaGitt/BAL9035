@@ -1,0 +1,833 @@
+﻿@using BAL9035.Models
+@using BAL9035.Core
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<style type="text/css">
+    .redAddSection {
+        background-color: red !important;
+        color: white !important;
+    }
+
+    .greenAddSection {
+        background-color: green !important;
+        color: white !important;
+    }
+</style>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Draft 9035</title>
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+    @Styles.Render("~/Content/css")
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.standalone.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+    @Scripts.Render("~/bundles/modernizr")
+    <style>
+        body {
+            padding: 0;
+        }
+    </style>
+
+</head>
+<body>
+    <div id="parent" class="active">
+        <div class="loader-wrapper inactive">
+            <div class="loader-spin"></div>
+        </div>
+        <div class="wrapper">
+            @Html.Partial("SideMenu")
+            <div class="wrapper-content">
+                <div class="background">
+                    <form id="regForm">
+                        <div class="tab">
+                            <ul id="casetype" class="inactive">
+                                @foreach (var item in Model.Lists.caseSubTypes)
+                                {
+                                    <li>@item</li>
+                                }
+                            </ul>
+                            <ul id="Pcasetype" class="inactive">
+                                @foreach (var item in Model.Lists.parentCaseSubTypes)
+                                {
+                                    <li>@item</li>
+                                }
+                            </ul>
+                            <p><input placeholder="..." oninput="this.className = ''" name="A1" id="A1" maxlength="4" value="H-1B" disabled style="position:absolute;left:673px;top:240px;width:110px;font-weight:bold;"></p>
+
+                            <p><input placeholder="..." oninput="this.className = ''" name="B1" id="B1" value="@(Model.Form9035.SectionB.B1)" maxlength="50" style="position:absolute;left:175px;top:305px;width:600px;height:20px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="B2" id="B2" value="@(Model.Form9035.SectionB.B2)" maxlength="10" style="position:absolute;left:112px;top:342px;width:200px;height:17px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="B3" id="B3" value="@(Model.Form9035.SectionB.B3)" maxlength="60" style="position:absolute;left:350px;top:342px;width:430px;height:17px;font-weight:bold;"></p>
+                            <p><input type="radio" name="B4" id="B4Y" value="yes" @(Model.Form9035.SectionB.B4 != false ? "checked" : "") style="position:absolute;left:162px;top:380px;border:none;"></p>
+                            <p><input type="radio" name="B4" id="B4N" value="no" @(Model.Form9035.SectionB.B4 == false ? "checked" : "") style="position:absolute;left:214px;top:380px;border:none;"> </p>
+
+                            <p><input placeholder="mm/dd/yyyy" oninput="this.className = ''" name="B5" id="B5" value="@(Model.Form9035.SectionB.B5)" maxlength="10" class="datepicker" style="position:absolute;left:425px;top:380px;width:140px;font-weight:bold;height:26px;border:1px solid black;"></p>
+                            <p><input placeholder="mm/dd/yyyy" oninput="this.className = ''" name="B6" id="B6" value="@(Model.Form9035.SectionB.B6)" maxlength="10" class="datepicker" style="position:absolute;left:658px;top:380px;width:125px;font-weight:bold;height:26px;border:1px solid black;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="B7" id="B7" maxlength="5" value="@(Model.Form9035.SectionB.B7)" class="@(Model.Form9035.SectionB.B7 == null ||  Model.Form9035.SectionB.B7 == "" ? "highlight" : "")" style="position:absolute;left:113px;top:447px;width:48px;height:20px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="B7-A" id="B7-A" maxlength="5" value="@(Model.Form9035.SectionB.B7a)" class="@(Model.Form9035.SectionB.B7a == null ||  Model.Form9035.SectionB.B7a == "" ? "highlight" : "")" style="position:absolute;left:113px;top:519px;width:48px;height:20px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="B7-D" id="B7-D" maxlength="5" value="@(Model.Form9035.SectionB.B7d)" class="@(Model.Form9035.SectionB.B7d == null ||  Model.Form9035.SectionB.B7d == "" ? "highlight" : "")" style="position:absolute;left:483px;top:519px;width:48px;height:20px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="B7-B" id="B7-B" maxlength="5" value="@(Model.Form9035.SectionB.B7b)" class="@(Model.Form9035.SectionB.B7b == null ||  Model.Form9035.SectionB.B7b == "" ? "highlight" : "")" style="position:absolute;left:113px;top:554px;width:48px;height:20px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="B7-E" id="B7-E" maxlength="5" value="@(Model.Form9035.SectionB.B7e)" class="@(Model.Form9035.SectionB.B7e == null ||  Model.Form9035.SectionB.B7e == "" ? "highlight" : "")" style="position:absolute;left:483px;top:554px;width:48px;height:20px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="B7-C" id="B7-C" maxlength="5" value="@(Model.Form9035.SectionB.B7c)" class="@(Model.Form9035.SectionB.B7c == null ||  Model.Form9035.SectionB.B7c == "" ? "highlight" : "")" style="position:absolute;left:113px;top:587px;width:48px;height:20px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="B7-F" id="B7-F" maxlength="5" value="@(Model.Form9035.SectionB.B7f)" class="@(Model.Form9035.SectionB.B7f == null ||  Model.Form9035.SectionB.B7f == "" ? "highlight" : "")" style="position:absolute;left:483px;top:587px;width:48px;height:20px;font-weight:bold;"></p>
+
+                            <p><input placeholder="..." oninput="this.className = ''" name="C1" id="C1" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:240px;top:654px;width:544px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="C2" id="C2" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:397px;top:685px;width:387px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="C3" id="C3" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:180px;top:713px;width:605px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="C4" id="C4" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:180px;top:742px;width:605px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="C5" id="C5" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:145px;top:771px;width:313px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="C6" id="C6" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:476px;top:782px;width:125px;height:15px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="C7" id="C7" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:627px;top:782px;width:125px;height:15px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="C8" id="C8" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:165px;top:799px;width:294px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="C9" id="C9" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:536px;top:799px;width:248px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="C10" id="C10" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:230px;top:827px;width:228px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="C11" id="C11" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:550px;top:827px;width:235px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="C12" id="C12" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:117px;top:867px;width:342px;height:22px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="C13" id="C13" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:490px;top:867px;width:295px;height:22px;font-weight:bold;"></p>
+                        </div>
+                        <div class="tab">
+                            <p><input placeholder="..." oninput="this.className = ''" name="D1" id="D1" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:110px;top:237px;width:250px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="D2" id="D2" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:387px;top:237px;width:195px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="D3" id="D3" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:607px;top:237px;width:178px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="D4" id="D4" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:215px;top:265px;width:570px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="D5" id="D5" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:178px;top:293px;width:606px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="D6" id="D6" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:178px;top:321px;width:606px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="D7" id="D7" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:142px;top:349px;width:316px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="D8" id="D8" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:462px;top:360px;width:123px;height:15px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="D9" id="D9" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:612px;top:360px;width:173px;height:15px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="D10" id="D10" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:175px;top:377px;width:284px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="D11" id="D11" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:542px;top:377px;width:242px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="D12" id="D12" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:117px;top:416px;width:244px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="D13" id="D13" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:364px;top:416px;width:95px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="D14" id="D14" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:492px;top:416px;width:293px;font-weight:bold;"></p>
+
+                            <p><input type="radio" name="E1" id="E1Y" value="yes" checked="checked" disabled style="position:absolute;left:667px;top:514px;border:none;"></p>
+                            <p><input type="radio" name="E1" id="E1N" value="no" disabled style="position:absolute;left:737px;top:514px;border:none;"> </p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="E2" id="E2" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:109px;top:556px;width:246px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="E3" id="E3" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:380px;top:556px;width:195px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="E4" id="E4" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:600px;top:556px;width:185px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="E5" id="E5" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:180px;top:585px;width:605px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="E6" id="E6" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:180px;top:612px;width:605px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="E7" id="E7" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:144px;top:640px;width:315px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="E8" id="E8" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:473px;top:652px;width:123px;height:15px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="E9" id="E9" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:542px;top:652px;width:165px;height:15px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="E10" id="E10" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:172px;top:669px;width:287px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="E11" id="E11" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:542px;top:669px;width:243px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="E12" id="E12" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:118px;top:709px;width:205px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="E13" id="E13" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:356px;top:709px;width:104px;font-weight:bold;"></p>
+                            @{
+                                string valE14 = Model.Form9035.E14;
+                                if (string.IsNullOrEmpty(valE14) || valE14.ToLower() == "populated by flag")
+                                {
+                                    valE14 = "populated by FLAG";
+                                }
+                            }
+                            <p><input placeholder="..." oninput="this.className = ''" name="E14" id="E14" maxlength="20" value="@(valE14)" style="position:absolute;left:492px;top:709px;width:293px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="E15" id="E15" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:117px;top:749px;width:392px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="E16" id="E16" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:542px;top:749px;width:243px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="E17" id="E17" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:117px;top:797px;width:348px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="E18" id="E18" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:475px;top:804px;width:310px;height:20px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="E19" id="E19" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:117px;top:843px;width:667px;font-weight:bold;"></p>
+                        </div>
+                        <div class="tab">
+                            <p><input placeholder="..." oninput="this.className = ''" name="F1" id="F1" value="@(Model.Form9035.SectionF.F1)" maxlength="5" style="position:absolute;left:673px;top:315px;width:110px;font-weight:bold;"></p>
+
+                            <p><input type="radio" name="F2" id="F2Y" value="yes" @(Model.Form9035.SectionF.F2 == true ? "checked" : "") class="@(Model.Form9035.SectionF.F2 == null ? "customRadio" : "")" style="position:absolute;left:690px;top:350px;"></p>
+                            <p><input type="radio" name="F2" id="F2N" value="no" @(Model.Form9035.SectionF.F2 == false ? "checked" : "") class="@(Model.Form9035.SectionF.F2 == null ? "customRadio" : "")" style="position:absolute;left:743px;top:350px;"> </p>
+
+                            <p><input placeholder="..." oninput="this.className = ''" name="F3" id="F3" value="@(Model.Form9035.SectionF.F3)" maxlength="100" style="position:absolute;left:110px;top:396px;width:674px;font-weight:bold;"></p>
+                            <div class="location-table">
+                                <div class="table-responsive" style="margin:4px;">
+                                    <table id="locTable" class="table table-bordered table-striped table-font-size">
+                                        <thead>
+                                            <tr>
+                                                @*<td style="display:none;">id</td>*@
+                                                <th class="table-header" scope="col">
+                                                    Address 1
+                                                </th>
+                                                <th class="table-header">
+                                                    Address 2
+                                                </th>
+                                                <th>
+                                                    City
+                                                </th>
+                                                <th scope="col">
+                                                    State
+                                                </th>
+                                                <th>
+                                                    County
+                                                </th>
+                                                <th class="table-header-post" scope="col">
+                                                    Postal Code
+                                                </th>
+                                                <th scope="col"><button type="button" id="btnCreateLoc" class="btn btn-primary btn-tbl-custom">Add Location</button></th>
+                                                <th style="display:none;">
+
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        @foreach (var item in Model.Lists.LocationsList)
+                                        {
+                                            <tr id="Row-@item.LocationId">
+                                                @*<td style="display:none;">@item.LocationId</td>*@
+                                                <td scope="row">@item.Address1</td>
+                                                <td>@item.Address2</td>
+                                                <td>@item.City</td>
+                                                <td>@item.State.ToString().ToUpper()</td>
+                                                @if (string.IsNullOrEmpty(item.County))
+                                                {
+                                                    <td class="highlight">@item.County</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.County</td>
+                                                }
+                                                <td>@item.PostalCode</td>
+                                                <td>
+                                                    <button type="button" onclick="productDisplay(this);" class="btn btn-default btn-tbl-custom"><span class="glyphicon glyphicon-edit" /></button> |
+                                                    <button type="button" onclick="productDelete(this);" class="btn btn-default btn-tbl-custom"><span class="glyphicon glyphicon-remove" /></button> |
+                                                    @{
+                                                        bool addClass = false;
+                                                        if (!string.IsNullOrEmpty(item.FmodalObject.StateOrTerritory))
+                                                        { addClass = true; }
+                                                        else if (!string.IsNullOrEmpty(item.FmodalObject.F14a) && !string.IsNullOrEmpty(item.FmodalObject.F14b))
+                                                        {
+                                                            if (item.FmodalObject.F14a.ToLower() != "other")
+                                                            {
+                                                                addClass = true;
+                                                            }
+                                                            else
+                                                            {
+                                                                if (item.FmodalObject.F14c != null && item.FmodalObject.F14d != null)
+                                                                {
+                                                                    addClass = true;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    <button type="button" onclick="addSection(@item.LocationId);" class="btn btn-default btn-tbl-custom  @( addClass == true ? "greenAddSection" : "redAddSection")"><span class="glyphicon glyphicon-plus" /></button>
+                                                </td>
+                                                <td style="display:none;"><input type="text" name="jsonValue" id="jsonValue" value="@Json.Encode(item.FmodalObject)"></td>
+                                            </tr>
+                                        }
+                                    </table>
+                                </div>
+                            </div>
+                            @{
+                                string F10from = "";
+                                string F10fromP = "";
+
+                                if (Model.Form9035.SectionF.F10From != null && Model.Form9035.SectionF.F10From.Contains("."))
+                                {
+                                    string[] split = Model.Form9035.SectionF.F10From.Split('.');
+                                    F10from = split[0];
+                                    F10fromP = split[1];
+                                }
+                                else if (Model.Form9035.SectionF.F10From != null && !Model.Form9035.SectionF.F10From.Contains("."))
+                                {
+                                    F10from = Model.Form9035.SectionF.F10From;
+                                }
+                            }
+                            <p><input placeholder="..." oninput="this.className = ''" name="F10from" id="F10from" value="@(F10from)" maxlength="9" style="position:absolute;left:144px;top:766px;width:80px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="F10fromP" id="F10fromP" value="@(F10fromP)" maxlength="2" style="position:absolute;left:238px;top:766px;width:34px;font-weight:bold;"></p>
+                            @{
+                                string F10To = "";
+                                string F10ToP = "";
+
+                                if (Model.Form9035.SectionF.F10To != null && Model.Form9035.SectionF.F10To.Contains("."))
+                                {
+                                    string[] split = Model.Form9035.SectionF.F10To.Split('.');
+                                    F10To = split[0];
+                                    F10ToP = split[1];
+                                }
+                                else if (Model.Form9035.SectionF.F10To != null && !Model.Form9035.SectionF.F10To.Contains("."))
+                                {
+                                    F10To = Model.Form9035.SectionF.F10To;
+                                }
+                            }
+                            <p><input placeholder="..." oninput="this.className = ''" name="F10To" id="F10To" value="@(F10To)" maxlength="9" style="position:absolute;left:333px;top:766px;width:80px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="F10ToP" id="F10ToP" value="@(F10ToP)" maxlength="2" style="position:absolute;left:427px;top:766px;width:34px;font-weight:bold;"></p>
+                            <p><input type="radio" name="F10-A" @(Model.Form9035.SectionF.F10a == "hour" ? "checked" : "") value="hour" style="position:absolute;left:475px;top:768px;"></p>
+                            <p><input type="radio" name="F10-A" @(Model.Form9035.SectionF.F10a == "weekly" ? "checked" : "") value="weekly" style="position:absolute;left:526px;top:768px;"></p>
+                            <p><input type="radio" name="F10-A" @(Model.Form9035.SectionF.F10a == "bi-weekly" ? "checked" : "") value="bi-weekly" style="position:absolute;left:582px;top:768px;"></p>
+                            <p><input type="radio" name="F10-A" @(Model.Form9035.SectionF.F10a == "month" ? "checked" : "") value="month" style="position:absolute;left:661px;top:768px;"></p>
+                            <p><input type="radio" name="F10-A" @(Model.Form9035.SectionF.F10a == "year" || Model.Form9035.SectionF.F10a == null ? "checked" : "") value="year" style="position:absolute;left:720px;top:768px;"></p>
+
+                            <p><input type="radio" name="F11-A" @(Model.Form9035.SectionF.F11a == "hour" ? "checked" : "") value="hour" style="position: absolute;left:475px;top:819px;"></p>
+                            <p><input type="radio" name="F11-A" @(Model.Form9035.SectionF.F11a == "weekly" ? "checked" : "") value="weekly" style="position:absolute;left:526px;top:819px;"></p>
+                            <p><input type="radio" name="F11-A" @(Model.Form9035.SectionF.F11a == "bi-weekly" ? "checked" : "") value="bi-weekly" style="position:absolute;left:582px;top:819px;"></p>
+                            <p><input type="radio" name="F11-A" @(Model.Form9035.SectionF.F11a == "month" ? "checked" : "") value="month" style="position:absolute;left:661px;top:819px;"></p>
+                            <p><input type="radio" name="F11-A" @(Model.Form9035.SectionF.F11a == "year" || Model.Form9035.SectionF.F11a == null ? "checked" : "") value="year" style="position:absolute;left:720px;top:819px;"></p>
+                            @{
+                                string F11 = "";
+                                string F11P = "";
+
+                                if (Model.Form9035.SectionF.F11 != null && Model.Form9035.SectionF.F11.Contains("."))
+                                {
+                                    string[] split = Model.Form9035.SectionF.F11.Split('.');
+                                    F11 = split[0];
+                                    F11P = split[1];
+                                }
+                                else if (Model.Form9035.SectionF.F11 != null && !Model.Form9035.SectionF.F11.Contains("."))
+                                {
+                                    F11 = Model.Form9035.SectionF.F11;
+                                }
+                            }
+                            <p><input placeholder="..." oninput="this.className = ''" name="F11" id="F11" value="@(F11)" maxlength="9" style="position:absolute;left:144px;top:820px;width:80px;height:21px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="F11P" id="F11P" value="@(F11P)" maxlength="2" style="position:absolute;left:238px;top:820px;width:34px;height:21px;font-weight:bold;"></p>
+
+                            <p><input type="checkbox" name="F12" value="yes" disabled style="position:absolute;left:91px;top:879px;width:20px;height:15px;"></p>
+
+                            @*<p>
+                                    <input type="checkbox" class="inactive" name="F13" value="yes" @(Model.Form9035.SectionF.F13 == true ? "checked" : "") style="position:absolute;left:92px;top:706px;width:20px;height:15px;">
+                                    <button type="button" id="btnF13" class="btn-image" onclick="EnablebtnF13()" style="position:absolute;left: 90px;top: 707px;"></button>
+                                </p>
+
+                                <p><input type="radio" name="F13-A" @(Model.Form9035.SectionF.F13a == "I" ? "checked" : "") value="I" style="position:absolute;left:148px;top:734px;"></p>
+                                <p><input type="radio" name="F13-A" @(Model.Form9035.SectionF.F13a == "II" ? "checked" : "") value="II" style="position:absolute;left:214px;top:734px;"></p>
+                                <p><input type="radio" name="F13-A" @(Model.Form9035.SectionF.F13a == "III" ? "checked" : "") value="III" style="position:absolute;left:287px;top:734px;"></p>
+                                <p><input type="radio" name="F13-A" @(Model.Form9035.SectionF.F13a == "IV" ? "checked" : "") value="IV" style="position:absolute;left:349px;top:734px;"></p>
+                                <p><input type="radio" name="F13-A" @(Model.Form9035.SectionF.F13a == "NA" ? "checked" : "") value="NA" style="position:absolute;left:413px;top:734px;"></p>
+
+                                <p><input placeholder="..." oninput="this.className = ''" name="F13b" id="F13b" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:621px;top:733px;width:150px;height:20px;font-weight:bold;"></p>*@
+
+                            @*<p><input type="checkbox" name="F14" value="yes" @(Model.SectionFModal.F14 == true ? "checked" : "") style="position:absolute;left:92px;top:768px;width:20px;height:15px;"></p>
+                                <div id="divF14">
+                                    <p><input type="radio" name="F14-A" @(Model.SectionFModal.F14a == "CBA" ? "checked" : "") value="CBA" style="position:absolute;left:146px;top:794px;"></p>
+                                    <p><input type="radio" name="F14-A" @(Model.SectionFModal.F14a == "DBA" ? "checked" : "") value="DBA" style="position:absolute;left:217px;top:794px;"></p>
+                                    <p><input type="radio" name="F14-A" @(Model.SectionFModal.F14a == "SCA" ? "checked" : "") value="SCA" style="position:absolute;left:287px;top:794px;"></p>
+                                    <p><input type="radio" name="F14-A" @(Model.SectionFModal.F14a == "Other" ? "checked" : "") value="Other" style="position:absolute;left:351px;top:794px;"></p>
+                                    <p>
+                                        @{ string data = Model.SectionFModal.F14b; }
+                                        @Html.DropDownList("F14-B", DDLUtil.GetYear(data), new { style = "position:absolute;left:625px;top:795px;font-weight:bold;width:120px;" })
+                                    </p>
+                                    <p><input placeholder="..." oninput="this.className = ''" name="F14c" id="F14c" value="@(Model.SectionFModal.F14c)" maxlength="60" style="position:absolute;left:145px;top:832px;width:640px;font-weight:bold;"></p>
+                                    <p><input placeholder="..." oninput="this.className = ''" name="F14d" id="F14d" value="@(Model.SectionFModal.F14d)" maxlength="60" style="position:absolute;left:145px;top:874px;width:640px;font-weight:bold;"></p>
+                                </div>*@
+                        </div>
+                        <div class="tab">
+                            <p><input type="radio" name="G1" id="G1Y" value="yes" checked style="position:absolute;left:678px;top:538px;"></p>
+                            <p><input type="radio" name="G1" id="G1N" value="no" style="position:absolute;left:731px;top:538px;"> </p>
+
+                            <p><input type="radio" name="H1" id="H1Y" value="yes" @(Model.Form9035.SectionH.H1 == true ? "checked" : "") style="position:absolute;left:650px;top:673px;"></p>
+                            <p><input type="radio" name="H1" id="H1N" value="no" @(Model.Form9035.SectionH.H1 == false ? "checked" : "") style="position:absolute;left:703px;top:673px;"> </p>
+
+                            <p><input type="radio" name="H2" id="H2Y" value="yes" @(Model.Form9035.SectionH.H2 == true ? "checked" : "") style="position:absolute;left:650px;top:697px;"></p>
+                            <p><input type="radio" name="H2" id="H2N" value="no" @(Model.Form9035.SectionH.H2 != true ? "checked" : "") style="position:absolute;left:703px;top:697px;"> </p>
+
+                            <p><input type="radio" name="H3" id="H3Y" value="yes" @(Model.Form9035.SectionH.H3 == true ? "checked" : "") style="position:absolute;left:650px;top:730px;"></p>
+                            <p><input type="radio" name="H3" id="H3N" value="no" @(Model.Form9035.SectionH.H3 == false ? "checked" : "") style="position:absolute;left:703px;top:730px;"> </p>
+
+                            <p><input type="radio" name="H4" id="H460" value="$60,000 or higher annual wage" @(Model.Form9035.SectionH.H4 == "$60,000 or higher annual wage" ? "checked" : "") style="position:absolute;left:509px;top:761px;"></p>
+                            <p><input type="radio" name="H4" id="H4deg" value="master's degree or higher in related speciality" @(Model.Form9035.SectionH.H4 == "master's degree or higher in related speciality" ? "checked" : "") style="position:absolute;left:509px;top:775px;"> </p>
+                            <p><input type="radio" name="H4" id="H4both" value="both" @(Model.Form9035.SectionH.H4 == "both" ? "checked" : "") style="position:absolute;left:509px;top:789px;"> </p>
+
+                            <p><input type="radio" name="H5" id="H5Y" value="yes" style="position:absolute;left:646px;top:848px;"></p>
+                            <p><input type="radio" name="H5" id="H5N" value="no" style="position:absolute;left:700px;top:848px;"> </p>
+                            <p><input type="radio" name="H5" id="H5NA" value="na" style="position:absolute;left:747px;top:848px;"> </p>
+
+                        </div>
+                        <div class="tab">
+                            <p><input type="radio" name="H6" id="H6Y" value="yes" @(Model.Form9035.SectionH.H6 == true ? "checked" : "") style="position:absolute;left:684px;top:450px;"></p>
+                            <p><input type="radio" name="H6" id="H6N" value="no" @(Model.Form9035.SectionH.H6 == false ? "checked" : "") style="position:absolute;left:737px;top:450px;"> </p>
+
+                            @{
+                                string Ia = "";
+                                string Ib = "";
+                                if (Model.Form9035.I1 != null)
+                                {
+                                    if (Model.Form9035.I1.Contains("-"))
+                                    {
+                                        string[] split = Model.Form9035.I1.Split('-');
+                                        Ia = split[0];
+                                        Ib = split[1];
+                                    }
+                                    else
+                                    {
+                                        if (Model.Form9035.I1 == "employer’s principal place of business")
+                                        {
+                                            Ia = Model.Form9035.I1;
+                                        }
+                                        if (Model.Form9035.I1 == "place of employment")
+                                        {
+                                            Ib = Model.Form9035.I1;
+                                        }
+                                    }
+                                }
+
+                            }
+                            <p><input type="radio" name="I1a" id="I1a" @(Ia == "employer’s principal place of business" || (Ia == "" && Ib == "") ? "checked" : "") value="employer’s principal place of business" style="position:absolute;left:532px;top:540px;"></p>
+                            <p><input type="radio" name="I1b" id="I1b" @(Ib == "place of employment" ? "checked" : "") class="@(Ib == null || Ib == "" ? "customRadio" : "")" value="place of employment" style="position:absolute;left:532px;top:558px;"> </p>
+
+                            <p><input placeholder="..." oninput="this.className = ''" name="J1" id="J1" value="@(Model.Form9035.SectionJ.J1)" maxlength="35" style="position:absolute;left:112px;top:858px;width:273px;height:18px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="J2" id="J2" value="@(Model.Form9035.SectionJ.J2)" maxlength="35" style="position:absolute;left:408px;top:858px;width:273px;height:18px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="J3" id="J3" value="@(Model.Form9035.SectionJ.J3)" maxlength="3" style="position:absolute;left:700px;top:858px;width:90px;height:18px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="J4" id="J4" value="@(Model.Form9035.SectionJ.J4)" maxlength="60" style="position:absolute;left:295px;top:880px;width:495px;font-weight:bold;"></p>
+                        </div>
+                        <div class="tab">
+                            <p><input placeholder="..." oninput="this.className = ''" name="K1" id="K1" value="@(Model.Form9035.SectionK.K1)" maxlength="35" style="position:absolute;left:110px;top:226px;width:286px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="K2" id="K2" value="@(Model.Form9035.SectionK.K2)" maxlength="35" style="position:absolute;left:418px;top:226px;width:250px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="K3" id="K3" value="@(Model.Form9035.SectionK.K3)" maxlength="3" style="position:absolute;left:692px;top:226px;width:86px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="K4" id="K4" value="@(Model.Form9035.SectionK.K4)" maxlength="100" style="position:absolute;left:110px;top:272px;width:672px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="K5" id="K5" value="@(Model.Form9035.SectionK.K5)" maxlength="100" style="position:absolute;left:211px;top:302px;width:573px;font-weight:bold;"></p>
+                        </div>
+                        <div style="position:absolute;top:1030px;width:100%;">
+                            <button type="button" id="btnprev" class="btn btn-success btn-sm" onclick="nextPrev(-1,-1)">
+                                &laquo; Previous
+                            </button>
+
+                            <button type="button" id="btnSubmit" class="btn btn-success btn-sm" onclick="CreateAssets(true,'@ViewBag.bal_no','@ViewBag.id_no','@ViewBag.email_id')">
+                                Submit
+                            </button>
+                            <button type="button" id="btnSaveLater" class="btn btn-success btn-sm" onclick="CreateAssets(false,'@ViewBag.bal_no','@ViewBag.id_no','@ViewBag.email_id')">
+                                Save for Later
+                            </button>
+                            <button type="button" id="btnNext" class="btn btn-success btn-sm" onclick="nextPrev(1,0)">
+                                Next &raquo;
+                            </button>
+
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    @Html.Partial("SectionF13")
+    <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLongTitle">Errors</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">x</span>
+                    </button>
+                </div>
+                <form role="form" id="newModalForm">
+                    <div class="modal-body shortFont">
+                        <ul id="req"></ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnDlgClose" type="button" class="btn btn-secondary waves-effect waves-light" data-dismiss="modal">Cancel, Stay on this Tab</button>
+                        <button id="btnDlgOK" type="button" class="btn btn-success waves-effect waves-light" onclick="nextPrev(1,1)">Ok, Proceed to Next Tab</button>
+                        <button id="btnDlgSL" type="button" class="btn btn-success waves-effect waves-light" style="display: none;" onclick="SaveLater(false,'@ViewBag.bal_no','@ViewBag.id_no')">Ok, Proceed to Save for Later</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="credPopUp" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="display: none;" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLongTitleDOL">DOL Credentials</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="alert-message alert-message-default">
+                        <p id="message">
+                            Please enter the credentials for the FLAG account where you would like the 9035 drafted.  You will be notified via ServiceNow when your draft is ready for your review.
+                        </p>
+                        <p id="boldmsg">
+                            <strong>
+                                Note: We will NOT submit any applications.
+                            </strong>
+                        </p>
+                    </div>
+                    <div id="divUser" class="form-group inactive">
+                        <label for="exampleInputEmail1">Username *</label>
+                        <input type="text" id="username" class="form-control" placeholder="Enter Username" name="username" maxlength="50">
+
+                    </div>
+                    <div id="divPass" class="form-group inactive">
+                        <label for="exampleInputPassword1">Password *</label>
+                        <input type="password" class="form-control" id="password" placeholder="Enter Password" name="password" maxlength="50">
+                    </div>
+                    <div id="divKey" class="form-group">
+                        <label for="exampleInputKey1">Secret Key *</label>
+                        <input type="text" class="form-control" id="key" placeholder="Enter Secret Key" name="key" maxlength="50">
+                        (@Html.ActionLink("How to find your secret key", "Key", "Draft9035", htmlAttributes: new { @target = "_blank", @style = "color: gray;font-weight: bold;" }))
+                    </div>
+                    <div class="errorMessage text-center">
+                        <i></i><span id="reqCred"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnAdd" class="btn btn-success btn-sm inactive" onclick="CreateCredentialAsset('@ViewBag.id_no','@ViewBag.bal_no','@ViewBag.email_id')" style="width:100px;">Add</button>
+                    <button type="button" id="btnAddKey" class="btn btn-success btn-sm" onclick="SetESKey('@ViewBag.email_id')" style="width:105px;">Add Secret Key</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="LocPopUp" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="display: none;" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                @Html.Partial("AddLocation")
+            </div>
+        </div>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/js")
+    @Scripts.Render("~/bundles/ddlCounty")
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script>
+    var currentTab = 0; // Current tab is set to be the first tab (0)
+    var previousValue = "";
+        showTab(currentTab); // Display the current tab
+
+        function showTab(n) {
+            // This function will display the specified tab of the form...
+
+            /* The image used */
+            var f = document.getElementById("regForm");
+            var p = n + 1;
+            f.style.backgroundImage = "url(./Content/Images/" + p + ".jpg)";
+
+            var x = document.getElementsByClassName("tab");
+            x[n].style.display = "block";
+            //... and fix the Previous/Next buttons:
+            if (n == 0) {
+                document.getElementById("prevBtn").style.display = "none";
+                document.getElementById("btnprev").style.display = "none";
+            } else {
+                document.getElementById("prevBtn").style.display = "inline";
+                document.getElementById("btnprev").style.display = "inline";
+            }
+            if (n == (x.length - 1)) {
+                document.getElementById("nextBtn").style.display = "none";
+                document.getElementById("btnNext").style.display = "none";
+            } else {
+                document.getElementById("nextBtn").style.display = "inline";
+                document.getElementById("btnNext").style.display = "inline";
+            }
+            if (n == (x.length - 1)) {
+                document.getElementById("nextBtn").innerHTML = "Submit";
+            } else {
+                document.getElementById("nextBtn").innerHTML = "Next";
+            }
+            if (n == (x.length - 1)) {
+                document.getElementById("btnSubmit").style.display = "inline";
+                document.getElementById("btnSaveLater").style.display = "inline";
+            } else {
+                document.getElementById("btnSubmit").style.display = "none";
+                document.getElementById("btnSaveLater").style.display = "none";
+            }
+            // set page  number
+            var imageNum = document.getElementById("pageNumber");
+            imageNum.innerHTML = p;
+
+            var divList = document.getElementsByClassName("active-item");
+            var div = divList[0]
+            div.classList.remove("active-item")
+
+            var divList = document.getElementsByClassName("side-menu-item");
+            var div = divList[n]
+            div.classList.add("active-item")
+
+            //... and run a function that will display the correct step indicator:
+            //   fixStepIndicator(n)
+        }
+        function nextPrev(n, tab) {
+            var errCount = 0;
+            if (tab == 0) {
+                errCount = validateInputsByTab(currentTab);
+            }
+            if (errCount == 0) {
+                $("#errorModal").modal('hide');
+                // This function will figure out which tab to display
+                var x = document.getElementsByClassName("tab");
+                // Exit the function if any field in the current tab is invalid:
+                if (n == 1 && !validateForm()) return false;
+                // Hide the current tab:
+                x[currentTab].style.display = "none";
+                // Increase or decrease the current tab by 1:
+                currentTab = currentTab + n;
+                // if you have reached the end of the form...
+                if (currentTab >= x.length) {
+                    // ... the form gets submitted:
+                    document.getElementById("regForm").submit();
+                    return false;
+                }
+
+                // Otherwise, display the correct tab:
+                showTab(currentTab);
+            }
+            else {
+                if (tab != -1) {
+                    document.getElementById("btnDlgOK").style.display = "inline";
+                    document.getElementById("btnDlgClose").style.display = "inline";
+                    document.getElementById("exampleModalLongTitle").style.display = "inline";
+                    document.getElementById("btnDlgSL").style.display = "none";
+                    $("#errorModal").modal();
+                }
+            }
+        }
+        function displayImage(element, selectedImage) {
+            //var errCount = validateInputsByTab(currentTab);
+            //if (errCount == 0) {
+            var divList = document.getElementsByClassName("active-item");
+            var div = divList[0]
+            div.classList.remove("active-item")
+
+            var parentDiv = element.parentNode
+            parentDiv.classList.add("active-item")
+            window.scrollTo(0, 0);
+
+            // This function will figure out which tab to display
+            var x = document.getElementsByClassName("tab");
+            // Exit the function if any field in the current tab is invalid:
+            if (selectedImage == 1 && !validateForm()) return false;
+            // get form id
+            var form = document.getElementById("regForm");
+            // get form image
+            tabNumber = form.style.backgroundImage
+            if (tabNumber.length > 20) {
+                currentTab = tabNumber.charAt(22)
+            }
+            else {
+                currentTab = tabNumber.charAt(5)
+            }
+            // get image name without extention
+
+            // Hide the current tab:
+            x[currentTab - 1].style.display = "none";
+
+            currentTab = selectedImage - 1
+
+            form.style.backgroundImage = "url(./Content/Images/" + selectedImage + ".jpg)";
+
+            x[selectedImage - 1].style.display = "block";
+
+            var imageNum = document.getElementById("pageNumber");
+
+            imageNum.innerHTML = selectedImage;
+
+            if (selectedImage == 1) {
+                document.getElementById("prevBtn").style.display = "none";
+                document.getElementById("btnprev").style.display = "none";
+            } else {
+                document.getElementById("prevBtn").style.display = "inline";
+                document.getElementById("btnprev").style.display = "inline";
+            }
+            if (selectedImage == 6) {
+                document.getElementById("nextBtn").style.display = "none";
+                document.getElementById("btnNext").style.display = "none";
+            } else {
+                document.getElementById("nextBtn").style.display = "inline";
+                document.getElementById("btnNext").style.display = "inline";
+            }
+            if (selectedImage == 6) {
+                document.getElementById("btnSubmit").style.display = "inline";
+                document.getElementById("btnSaveLater").style.display = "inline";
+            } else {
+                document.getElementById("btnSubmit").style.display = "none";
+                document.getElementById("btnSaveLater").style.display = "none";
+            }
+
+        }
+        function firstnLastTab(tab, selectedImage) {
+            var divList = document.getElementsByClassName("active-item");
+            var div = divList[0]
+            div.classList.remove("active-item")
+
+            var tabListDiv = document.getElementsByClassName("side-menu-item");
+            var tabDiv = tabListDiv[tab]
+            tabDiv.classList.add("active-item")
+            tabDiv.scrollIntoView(true);
+            // This function will figure out which tab to display
+            var x = document.getElementsByClassName("tab");
+            // Exit the function if any field in the current tab is invalid:
+            if (selectedImage == 1 && !validateForm()) return false;
+            // get form id
+            var form = document.getElementById("regForm");
+            // get form image
+            tabNumber = form.style.backgroundImage
+            // get image name without extention
+            if (tabNumber.length > 20) {
+                currentTab = tabNumber.charAt(22)
+            }
+            else {
+                currentTab = tabNumber.charAt(5)
+            }
+            // Hide the current tab:
+            x[currentTab - 1].style.display = "none";
+
+            currentTab = selectedImage - 1
+
+            form.style.backgroundImage = "url(./Content/Images/" + selectedImage + ".jpg)";
+
+            x[selectedImage - 1].style.display = "block";
+
+            var imageNum = document.getElementById("pageNumber");
+
+            imageNum.innerHTML = selectedImage;
+
+            if (selectedImage == 1) {
+                document.getElementById("prevBtn").style.display = "none";
+                document.getElementById("btnprev").style.display = "none";
+            } else {
+                document.getElementById("prevBtn").style.display = "inline";
+                document.getElementById("btnprev").style.display = "inline";
+            }
+            if (selectedImage == 6) {
+                document.getElementById("nextBtn").style.display = "none";
+                document.getElementById("btnNext").style.display = "none";
+            } else {
+                document.getElementById("nextBtn").style.display = "inline";
+                document.getElementById("btnNext").style.display = "inline";
+            }
+            if (selectedImage == 6) {
+                document.getElementById("btnSubmit").style.display = "inline";
+                document.getElementById("btnSaveLater").style.display = "inline";
+            } else {
+                document.getElementById("btnSubmit").style.display = "none";
+                document.getElementById("btnSaveLater").style.display = "none";
+            }
+
+
+        }
+        function validateForm() {
+            // This function deals with validation of the form fields
+            var x, y, i, valid = true;
+            return valid; // return the valid status
+        }
+
+    $("document").ready(function () {
+        EnableDisableSectionF();
+        $('.datepicker').datepicker();
+        filterValidations();
+
+        var isSubmit = '@Model.Form9035.isSubmit';
+        if (isSubmit == "False") {
+            isSubmit = false;
+        }
+        else if (isSubmit == "True") {
+            isSubmit = true;
+            $("#regForm :input").prop("disabled", true);
+            $("#btnNext").prop("disabled", false);
+            $("#btnprev").prop("disabled", false);
+        }
+        if ($("input[name=I1a]:checked").is(':checked') == false) {
+            $("input[name=I1a]").addClass("customRadio");
+        }
+        // Add a new location button in a table to open a popup
+        $("#btnCreateLoc").click(function () {
+            btnLocOnClose();
+            $("#btnLocSav1").text("Add Location");
+            //$('#btnCopyValues').addClass('hidden');
+            $("#sectionFPopUp").modal();
+            var valueJson = "";
+            if ($('#locTable tr').length > 1) {
+                valueJson = $('#locTable tr').eq(1).find('#jsonValue').val();
+            }
+            if (valueJson.length > 0) {
+                var parsedJson = JSON.parse(valueJson);
+                if (parsedJson.F14 != null || parsedJson.StateOrTerritory != null) {
+                    $('#btnCopyValues').removeClass('hidden');
+                    if (!$('#btnCopyValues').hasClass('header')) {
+                        $('#btnCopyValues').addClass('header');
+                    }
+                }
+                else {
+                    if (!$('#btnCopyValues').hasClass('hidden')) {
+                        $('#btnCopyValues').addClass('hidden');
+                    }
+                    if ($('#btnCopyValues').hasClass('header')) {
+                        $('#btnCopyValues').removeClass('header')
+                    }
+                }
+            }
+            else {
+                if (!$('#btnCopyValues').hasClass('hidden')) {
+                    $('#btnCopyValues').addClass('hidden');
+                }
+                if ($('#btnCopyValues').hasClass('header')) {
+                    $('#btnCopyValues').removeClass('header')
+                }
+            }
+        });
+            // Radiobutton events to perform actions on check and uncheck events
+            $('input[type=radio]').bind('touchstart mousedown', function () {
+                this.checked = !this.checked
+                var name = this.name;
+                if (name == "B4" || name == "F2" || name == "I1a" || name == "I1b" || name == "H4" || name == "H5" || name == "H6") {
+                    if ($("input[name=" + name + "]").is(':checked') == true) {
+                        $("input[name=" + name + "]").removeClass("customRadio");
+                    }
+                    else {
+                        $("input[name=" + name + "]").addClass("customRadio");
+                    }
+
+                    if (name == "F2") {
+                        var valF2 = $("input[name=F2]:checked").val();
+                        if (valF2 != null) {
+                            if (valF2 == "yes") {
+                                $("input[name=F3]").addClass("highlight");
+                            }
+                            else if (valF2 == "no") {
+                                $("input[name=F3]").removeClass("highlight");
+                            }
+                        }
+                        else {
+                            $("input[name=F3]").removeClass("highlight");
+                        }
+                    }
+                    if (name == "H4") {
+                        var valH4 = $("input[name=H4]:checked").val();
+                        if (valH4 != null) {
+                            if (valH4 == "master's degree or higher in related speciality") {
+                                $("input[name=H5]").addClass("customRadio");
+                                $("input[name=H5]").prop('checked', false);
+                            }
+                            else {
+                                $("input[name=H5]").removeClass("customRadio");
+                            }
+                        }
+                    }
+                }
+                else if (name == "H1" || name == "H2") {
+                    RadioH1();
+                }
+                else if (name == "H3") {
+                    var valH3 = $("input[name=H3]:checked").val();
+                    if (valH3 != null) {
+                        $("input[name=H3]").removeClass("customRadio");
+                        if (valH3 == "yes") {
+                            $("input[name=H4]").addClass("customRadio");
+                            $("input[name=H4]").prop('checked', false);
+                        }
+                        else if (valH3 == "no") {
+                            $("input[name=H4]").removeClass("customRadio");
+                        }
+                    }
+                    else {
+                        $("input[name=H4]").removeClass("customRadio");
+                        RadioH1();
+                    }
+                }
+
+            }).bind('click touchend', function (e) {
+                e.preventDefault()
+            });
+
+    });
+    // calls when the AJAX Start and add the loading gif
+    $(document).ajaxStart(function () {
+        $(".loader-wrapper").removeClass("inactive");
+        $(".loader-wrapper").addClass("on-active");
+    });
+    // calls when the AJAX end and remove the loading gif
+    $(document).ajaxComplete(function () {
+        $(".loader-wrapper").removeClass("on-active");
+        $(".loader-wrapper").addClass("inactive");
+    });
+    </script>
+
+</body>
+</html>

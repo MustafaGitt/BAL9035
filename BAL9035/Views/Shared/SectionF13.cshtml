@@ -1,0 +1,200 @@
+﻿@using BAL9035.Core
+
+<div class="modal fade  bd-example-modal-lg" id="sectionFPopUp" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="display: none;" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered  modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header popup-header">
+                <h4 class="modal-title  pull-left header " id="exampleModalLongTitleAddLocation">Calculator</h4>
+                <div class="pull-right">
+                    <button type="button" id="btnCopyValues" class="btn btn-success hidden" onclick="copyValuesFunction()" style="margin-right:10px;height:30px;margin-top:-2px;"><span class="glyphicon glyphicon-copy" /></button>
+                    <button type="button" class="close " data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">x</span>
+                    </button>
+                </div>
+               
+            </div>
+            <div class="modal-body">
+                <form id="sectionFPopUpForm" class="form-horizontal">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-sm-6  text-center">
+                                <p>
+                                    <input type="radio" name="FPopUp" value="F13" onclick="onRadioChange()">
+                                    <label class="control-label" for="FPopUp">F13</label>
+                                </p>
+                            </div>
+                            <div class="col-sm-6  text-center">
+                                <p>
+                                    <input type="radio" name="FPopUp" value="F14" onclick="onRadioChange()">
+                                    <label class="control-label" for="FPopUp">F14</label>
+                                </p>
+                            </div>
+                            @Html.Hidden("parentTableRowNo")
+                        </div>
+                    </div>
+                    <div id="divF13" class="form-horizontal inactive">
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Wage Level (Check One) *</label>
+                            <div class="col-sm-8 custom-control-inline">
+                                <p class="custom-horizontel-radio">
+                                    <input type="radio" name="F13a" value="I">
+                                    <label class="control-label" for="F13a">I</label>
+                                </p>
+                                <p class="custom-horizontel-radio">
+                                    <input type="radio" name="F13a" value="II">
+                                    <label class="control-label" for="F13a">II</label>
+                                </p>
+                                <p class="custom-horizontel-radio">
+                                    <input type="radio" name="F13a" value="III">
+                                    <label class="control-label" for="F13a">III</label>
+                                </p>
+                                <p class="custom-horizontel-radio">
+                                    <input type="radio" name="F13a" value="IV">
+                                    <label class="control-label" for="F13a">IV</label>
+                                </p>
+                                <p class="custom-horizontel-radio">
+                                    <input type="radio" name="F13a" value="NA">
+                                    <label class="control-label" for="F13a">NA</label>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">State/Territory *</label>
+                            <div class="col-sm-8">
+                                <p>
+                                    @Html.DropDownList("FModalState", DDLUtil.GetState("0"), new { @class = "form-control", style = "font-weight:bold;", onchange = "FetchAreas('0')" })
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Collection Type *</label>
+                            <div class="col-sm-8">
+                                <p class="zeroMargin">
+                                    <input type="radio" name="CType" id="CTypeY" value="yes">
+                                    <label class="control-label" for="CTypeY">All Industries</label>
+                                </p>
+                                <p class="zeroMargin">
+                                    <input type="radio" name="CType" id="CTypeN" value="no">
+                                    <label class="control-label" for="CTypeN">ACWIA Higher Ed.</label>
+                                </p>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Area Based On *</label>
+                            <div class="col-sm-8">
+                                <p class="zeroMargin">
+                                    <input type="radio" name="AB" id="ABY" value="yes">
+                                    <label class="control-label" for="ABY">County/Township</label>
+                                </p>
+                                <p class="zeroMargin">
+                                    <input type="radio" name="AB" id="ABN" value="no">
+                                    <label class="control-label" for="ABN">BLS Areas</label>
+                                </p>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Area </label>
+                            <div class="col-sm-8">
+                                <select name="SectionFArea" id="SectionFArea" class="form-control" style="font-weight:bold; ">
+                                    <option value="0">-- SELECT --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Research and Development Position *</label>
+                            <div class="col-sm-8">
+                                <p class="zeroMargin">
+                                    <input type="radio" name="RDP" id="RDPY" value="yes">
+                                    <label class="control-label" for="RDPY">Yes</label>
+                                </p>
+                                <p class="zeroMargin">
+                                    <input type="radio" name="RDP" id="RDPN" value="no">
+                                    <label class="control-label" for="RDPN">No</label>
+                                </p>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Is this a highly Compensated Position *</label>
+                            <div class="col-sm-8">
+                                <p class="zeroMargin">
+                                    <input type="radio" name="HCP" id="HCPY" value="yes">
+                                    <label class="control-label" for="HCPY">Yes</label>
+                                </p>
+                                <p class="zeroMargin">
+                                    <input type="radio" name="HCP" id="HCPN" value="no">
+                                    <label class="control-label" for="HCPN">No</label>
+                                </p>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Per *</label>
+                            <div class="col-sm-8">
+                                <p>
+                                    @Html.DropDownList("FModalPer", DDLUtil.GetPer("0"), new { @class = "form-control", style = "font-weight:bold;" })
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="divF14" class="form-horizontal inactive">
+                        <div class="form-group">
+                            <label class="control-label col-md-5">Source Type (Check One) *</label>
+                            <div class="col-sm-7 custom-control-inline">
+                                <p class="custom-horizontel-radio">
+                                    <input type="radio" name="F14a" value="CBA">
+                                    <label class="control-label" for="F14a">CBA</label>
+                                </p>
+                                <p class="custom-horizontel-radio">
+                                    <input type="radio" name="F14a" value="DBA" )>
+                                    <label class="control-label" for="F14a">DBA</label>
+                                </p>
+                                <p class="custom-horizontel-radio">
+                                    <input type="radio" name="F14a" value="SCA">
+                                    <label class="control-label" for="F14a">SCA</label>
+                                </p>
+                                <p class="custom-horizontel-radio">
+                                    <input type="radio" name="F14a" value="Other">
+                                    <label class="control-label" for="F14a">Other</label>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-5">Source Year *</label>
+                            <div class="col-sm-7">
+                                <p>
+                                    @Html.DropDownList("F14b", DDLUtil.GetYear("0"), new { @class = "form-control", style = "font-weight:bold;max-width:initial;" })
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-5">If responded “Other/PW Survey”, enter the name of the survey producer or publisher.</label>
+                            <div class="col-sm-7">
+                                <p>
+                                    <input name="F14c" id="F14c" maxlength="60" class="form-control">
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-5">If responded “Other/PW Survey”, enter the title or name of the PW survey.</label>
+                            <div class="col-sm-7">
+                                <p>
+                                    <input name="F14d" id="F14d" maxlength="60" class="form-control">
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="errorMessage">
+                        <i></i><span id="reqModal"></span>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="btnFPClose" type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+                <button id="btnFPSave" type="button" class="btn btn-success" onclick="SectionFModalPopUp()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>

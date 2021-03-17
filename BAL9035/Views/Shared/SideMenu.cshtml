@@ -1,0 +1,59 @@
+﻿<div class="side-menu">
+    <div class="side-menu-header">
+        <button type="button" id="firstBtn" onclick="firstnLastTab(0,1)"></button>
+        <button type="button" id="prevBtn" onclick="nextPrev(-1,-1)">Prev</button>
+        <span class="page-counter">Page <label id="pageNumber">1</label> / 6</span>
+        <button type="button" id="nextBtn" onclick="nextPrev(1,0)">Next</button>
+        <button type="button" id="lastBtn" onclick="firstnLastTab(5,6)"></button>
+    </div>
+    <div class="side-menu-body">
+        <div class="side-menu-item active-item">
+            <!-- your dynamic image will go here -->
+            <img src="~/Content/Icons/1.jpg" alt="" onclick="displayImage(this,1)">
+            <div class="item-counter">
+                <!-- put your dynamic counter value here -->
+                1
+            </div>
+        </div>
+        <div class="side-menu-item">
+            <!-- your dynamic image will go here -->
+            <img src="~/Content/Icons/2.jpg" alt="" onclick="displayImage(this,2)">
+            <div class="item-counter">
+                <!-- put your dynamic counter value here -->
+                2
+            </div>
+        </div>
+        <div class="side-menu-item">
+            <!-- your dynamic image will go here -->
+            <img src="~/Content/Icons/3.jpg" alt="" onclick="displayImage(this,3)">
+            <div class="item-counter">
+                <!-- put your dynamic counter value here -->
+                3
+            </div>
+        </div>
+        <div class="side-menu-item">
+            <!-- your dynamic image will go here -->
+            <img src="~/Content/Icons/4.jpg" alt="" onclick="displayImage(this,4)">
+            <div class="item-counter">
+                <!-- put your dynamic counter value here -->
+                4
+            </div>
+        </div>
+        <div class="side-menu-item">
+            <!-- your dynamic image will go here -->
+            <img src="~/Content/Icons/5.jpg" alt="" onclick="displayImage(this,5)">
+            <div class="item-counter">
+                <!-- put your dynamic counter value here -->
+                5
+            </div>
+        </div>
+        <div class="side-menu-item">
+            <!-- your dynamic image will go here -->
+            <img src="~/Content/Icons/6.jpg" alt="" onclick="displayImage(this,6)">
+            <div class="item-counter">
+                <!-- put your dynamic counter value here -->
+                6
+            </div>
+        </div>
+    </div>
+</div>
