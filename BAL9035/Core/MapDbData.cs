@@ -193,70 +193,72 @@ namespace BAL9035.Core
         }
         public void AssignValue(Form9035 form, List<string> pSubTypes)
         {
-            if ((pSubTypes.Contains("Cap Counted") && pSubTypes.Contains("Consular"))
-              || (pSubTypes.Contains("Cap Counted") && pSubTypes.Contains("COS"))
-              || (pSubTypes.Contains("Cap Exempt Employer") && pSubTypes.Contains("Consular"))
-              || (pSubTypes.Contains("Cap Exempt Employer") && pSubTypes.Contains("COS"))
-              || (pSubTypes.Contains("Cap Subject (Master's Cap)"))
-              || (pSubTypes.Contains("Cap Subject (Regular Cap)"))
-               )
+            if (form.SectionB.B7 == "1" && pSubTypes.Count > 0)
             {
-                form.SectionB.B7a = "1";
-                form.SectionB.B7b = "0";
-                form.SectionB.B7c = "0";
-                form.SectionB.B7d = "0";
-                form.SectionB.B7e = "0";
-                form.SectionB.B7f = "0";
+                if ((pSubTypes.Contains("Change of Employer") && pSubTypes.Contains("Cap Counted") && pSubTypes.Contains("Consular"))
+           || (pSubTypes.Contains("Change of Employer") && pSubTypes.Contains("Cap Counted") && pSubTypes.Contains("EOS"))
+           || (pSubTypes.Contains("Change of Employer") && pSubTypes.Contains("Cap Exempt Employer") && pSubTypes.Contains("Consular"))
+           || (pSubTypes.Contains("Change of Employer") && pSubTypes.Contains("Cap Exempt Employer") && pSubTypes.Contains("EOS"))
+           )
+                {
+                    form.SectionB.B7a = "0";
+                    form.SectionB.B7b = "0";
+                    form.SectionB.B7c = "0";
+                    form.SectionB.B7d = "0";
+                    form.SectionB.B7e = "1";
+                    form.SectionB.B7f = "0";
+                }
+                else if ((pSubTypes.Contains("Amend - Work Location Only") && pSubTypes.Contains("Cap Counted"))
+                || (pSubTypes.Contains("Amend - Work Location Only") && pSubTypes.Contains("Cap Counted") && pSubTypes.Contains("Consular"))
+                || (pSubTypes.Contains("Amend - Work Location Only") && pSubTypes.Contains("Cap Counted") && pSubTypes.Contains("COS"))
+                || (pSubTypes.Contains("Amend - Work Location Only") && pSubTypes.Contains("Cap Counted") && pSubTypes.Contains("EOS"))
+                || (pSubTypes.Contains("Amend - Work Location Only") && pSubTypes.Contains("Cap Exempt Employer"))
+                || (pSubTypes.Contains("Amend - Work Location Only") && pSubTypes.Contains("Cap Exempt Employer") && pSubTypes.Contains("Consular"))
+                || (pSubTypes.Contains("Amend - Work Location Only") && pSubTypes.Contains("Cap Exempt Employer") && pSubTypes.Contains("COS"))
+                || (pSubTypes.Contains("Amend - Work Location Only") && pSubTypes.Contains("Cap Exempt Employer") && pSubTypes.Contains("EOS"))
+                || (pSubTypes.Contains("Amend") && pSubTypes.Contains("Cap Counted"))
+                || (pSubTypes.Contains("Amend") && pSubTypes.Contains("Cap Counted") && pSubTypes.Contains("Consular"))
+                || (pSubTypes.Contains("Amend") && pSubTypes.Contains("Cap Counted") && pSubTypes.Contains("COS"))
+                || (pSubTypes.Contains("Amend") && pSubTypes.Contains("Cap Counted") && pSubTypes.Contains("EOS"))
+                || (pSubTypes.Contains("Amend") && pSubTypes.Contains("Cap Exempt Employer"))
+                || (pSubTypes.Contains("Amend") && pSubTypes.Contains("Cap Exempt Employer") && pSubTypes.Contains("Consular"))
+                || (pSubTypes.Contains("Amend") && pSubTypes.Contains("Cap Exempt Employer") && pSubTypes.Contains("COS"))
+                || (pSubTypes.Contains("Amend") && pSubTypes.Contains("Cap Exempt Employer") && pSubTypes.Contains("EOS"))
+                )
+                {
+                    form.SectionB.B7a = "0";
+                    form.SectionB.B7b = "0";
+                    form.SectionB.B7c = "0";
+                    form.SectionB.B7d = "0";
+                    form.SectionB.B7e = "0";
+                    form.SectionB.B7f = "1";
+                }
+                else if ((pSubTypes.Contains("Cap Counted") && pSubTypes.Contains("Consular"))
+                  || (pSubTypes.Contains("Cap Counted") && pSubTypes.Contains("COS"))
+                  || (pSubTypes.Contains("Cap Exempt Employer") && pSubTypes.Contains("Consular"))
+                  || (pSubTypes.Contains("Cap Exempt Employer") && pSubTypes.Contains("COS"))
+                  || (pSubTypes.Contains("Cap Subject (Master's Cap)"))
+                  || (pSubTypes.Contains("Cap Subject (Regular Cap)"))
+                   )
+                {
+                    form.SectionB.B7a = "1";
+                    form.SectionB.B7b = "0";
+                    form.SectionB.B7c = "0";
+                    form.SectionB.B7d = "0";
+                    form.SectionB.B7e = "0";
+                    form.SectionB.B7f = "0";
+                }
+                else if ((pSubTypes.Contains("Cap Counted") && pSubTypes.Contains("EOS"))
+                  || (pSubTypes.Contains("Cap Exempt Employer") && pSubTypes.Contains("EOS")))
+                {
+                    form.SectionB.B7a = "0";
+                    form.SectionB.B7b = "1";
+                    form.SectionB.B7c = "0";
+                    form.SectionB.B7d = "0";
+                    form.SectionB.B7e = "0";
+                    form.SectionB.B7f = "0";
+                }
             }
-            else if ((pSubTypes.Contains("Cap Counted") && pSubTypes.Contains("EOS"))
-              || (pSubTypes.Contains("Cap Exempt Employer") && pSubTypes.Contains("EOS")))
-            {
-                form.SectionB.B7a = "0";
-                form.SectionB.B7b = "1";
-                form.SectionB.B7c = "0";
-                form.SectionB.B7d = "0";
-                form.SectionB.B7e = "0";
-                form.SectionB.B7f = "0";
-            }
-            else if ((pSubTypes.Contains("Change of Employer") && pSubTypes.Contains("Cap Counted") && pSubTypes.Contains("Consular"))
-              || (pSubTypes.Contains("Change of Employer") && pSubTypes.Contains("Cap Counted") && pSubTypes.Contains("EOS"))
-              || (pSubTypes.Contains("Change of Employer") && pSubTypes.Contains("Cap Exempt Employer") && pSubTypes.Contains("Consular"))
-              || (pSubTypes.Contains("Change of Employer") && pSubTypes.Contains("Cap Exempt Employer") && pSubTypes.Contains("EOS"))
-              )
-            {
-                form.SectionB.B7a = "0";
-                form.SectionB.B7b = "0";
-                form.SectionB.B7c = "0";
-                form.SectionB.B7d = "0";
-                form.SectionB.B7e = "1";
-                form.SectionB.B7f = "0";
-            }
-            else if ((pSubTypes.Contains("Amend - Work Location Only") && pSubTypes.Contains("Cap Counted"))
-              || (pSubTypes.Contains("Amend - Work Location Only") && pSubTypes.Contains("Cap Counted") && pSubTypes.Contains("Consular"))
-              || (pSubTypes.Contains("Amend - Work Location Only") && pSubTypes.Contains("Cap Counted") && pSubTypes.Contains("COS"))
-              || (pSubTypes.Contains("Amend - Work Location Only") && pSubTypes.Contains("Cap Counted") && pSubTypes.Contains("EOS"))
-              || (pSubTypes.Contains("Amend - Work Location Only") && pSubTypes.Contains("Cap Exempt Employer"))
-              || (pSubTypes.Contains("Amend - Work Location Only") && pSubTypes.Contains("Cap Exempt Employer") && pSubTypes.Contains("Consular"))
-              || (pSubTypes.Contains("Amend - Work Location Only") && pSubTypes.Contains("Cap Exempt Employer") && pSubTypes.Contains("COS"))
-              || (pSubTypes.Contains("Amend - Work Location Only") && pSubTypes.Contains("Cap Exempt Employer") && pSubTypes.Contains("EOS"))
-              || (pSubTypes.Contains("Amend") && pSubTypes.Contains("Cap Counted"))
-              || (pSubTypes.Contains("Amend") && pSubTypes.Contains("Cap Counted") && pSubTypes.Contains("Consular"))
-              || (pSubTypes.Contains("Amend") && pSubTypes.Contains("Cap Counted") && pSubTypes.Contains("COS"))
-              || (pSubTypes.Contains("Amend") && pSubTypes.Contains("Cap Counted") && pSubTypes.Contains("EOS"))
-              || (pSubTypes.Contains("Amend") && pSubTypes.Contains("Cap Exempt Employer"))
-              || (pSubTypes.Contains("Amend") && pSubTypes.Contains("Cap Exempt Employer") && pSubTypes.Contains("Consular"))
-              || (pSubTypes.Contains("Amend") && pSubTypes.Contains("Cap Exempt Employer") && pSubTypes.Contains("COS"))
-              || (pSubTypes.Contains("Amend") && pSubTypes.Contains("Cap Exempt Employer") && pSubTypes.Contains("EOS"))
-              )
-            {
-                form.SectionB.B7a = "0";
-                form.SectionB.B7b = "0";
-                form.SectionB.B7c = "0";
-                form.SectionB.B7d = "0";
-                form.SectionB.B7e = "0";
-                form.SectionB.B7f = "1";
-            }
-
         }
     }
 }
