@@ -21,7 +21,7 @@ namespace BAL9035.Controllers
         ElasticSearch es = new ElasticSearch();
         // CREATE Data Assets on UIPATH Orchestrator
         [HttpPost]
-        public IHttpActionResult CreateAsset([FromBody]PostSaveData bodyModel)
+        public IHttpActionResult CreateAsset([FromBody] PostSaveData bodyModel)
         {
             string assetResponse = "";
             string logMsg = "";
@@ -52,7 +52,7 @@ namespace BAL9035.Controllers
                 {
                     outResponse.success = false;
                     outResponse.message = "Sorry, there seems to be an issue with your request.  Please send an email to #automationinfo with your ServiceNow ticket number and we will contact you shortly.";
-                    logMsg = "Bal Number" + bodyModel.BalNumber + " , Process : Save9035 Create Asset, Message : UIPATH Token has not been generated. Token : "+ token;
+                    logMsg = "Bal Number" + bodyModel.BalNumber + " , Process : Save9035 Create Asset, Message : UIPATH Token has not been generated. Token : " + token;
                     Log.Info(logMsg);
                     es.AddErrorESLog(bodyModel.Sysid, "Technical", "UIPATH Token not generated. Authentication Failed.", out errorMessage);
                     api.AddErrorQueueItem(bodyModel.Sysid, "UIPATH Token not generated. Authentication Failed.", "Technical", "UIPATH Token not generated. Authentication Failed.", "In Progress");
@@ -179,7 +179,7 @@ namespace BAL9035.Controllers
         }
 
         [HttpPost]
-        public IHttpActionResult AddQueueItem([FromBody]PostSaveData bodyModel)
+        public IHttpActionResult AddQueueItem([FromBody] PostSaveData bodyModel)
         {
             string assetResponse = "";
             Response outResponse = new Response();
@@ -192,7 +192,7 @@ namespace BAL9035.Controllers
                 {
                     outResponse.success = false;
                     outResponse.message = "Sorry, there seems to be an issue with your request.  Please send an email to #automationinfo with your ServiceNow ticket number and we will contact you shortly.";
-                    logMsg = "Bal Number : "+ bodyModel.BalNumber + ", Process : Add Queue Item, Message : JsonString  parameter required";
+                    logMsg = "Bal Number : " + bodyModel.BalNumber + ", Process : Add Queue Item, Message : JsonString  parameter required";
                     Log.Info(logMsg);
                     assetResponse = JsonConvert.SerializeObject(outResponse);
                     es.AddErrorESLog(bodyModel.Sysid, "Technical", "QueueItem API Parameter Missing", out errorMessage);
@@ -229,6 +229,14 @@ namespace BAL9035.Controllers
 
                     string strQueue = JsonConvert.SerializeObject(queueItemBody);
                     string message = api.AddQueueItem(token, strQueue);
+
+                    var messageResult = JsonConvert.DeserializeObject<ItemData>(message).SpecificContent;
+                    if (messageResult != null && !string.IsNullOrEmpty(messageResult.ID))
+                    {
+                        // Entry point on ES
+                        //  if (es.AddESLog(bodyModel.BalNumber, bodyModel.Sysid, out errorMessage) == HttpStatusCode.BadRequest)
+                        //    Log.Info(bodyModel.BalNumber + ": Process : Draft9089 -  Error Occurred while Calling ES. See ES Log File for further details");
+                    }
                     outResponse.success = true;
                     outResponse.message = "Your 9035 will be drafted on FLAG and a copy will be updated to Cobalt. You will receive a notification from ServiceNow when it is complete. if you have any questions, contact #automationinfo";
                     logMsg = "Bal Number : " + bodyModel.BalNumber + ", Process : Add Queue Item, Message : Queueitem has been added.";

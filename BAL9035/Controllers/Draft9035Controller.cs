@@ -78,9 +78,6 @@ namespace BAL9035.Controllers
                     ViewBag.id_no = queryString["id_no"];
                     ViewBag.bal_no = bal_no;
                     ViewBag.email_id = sUserName;
-                    // Entry point on ES
-                    if (es.AddESLog(ViewBag.bal_no, ViewBag.id_no, out errorMessage) == HttpStatusCode.BadRequest)
-                        Log.Info(bal_no + ": Process : Draft9089 -  Error Occurred while Calling ES. See ES Log File for further details");
                     // Getting UIPATH Token
                     string token = api.Authentication(appKeys.isDevelopmentEnvironment);
                     Log.Info("Bal Number : " + bal_no + " Process : Draft 9035 Page Loading, Message :  All variables has been initialized successfully.");

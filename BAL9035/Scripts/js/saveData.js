@@ -40,6 +40,7 @@ function fetchValues(balNo, sysid, isSubmit, email) {
     var valB7d = $("input[name='B7-D']").val();
     var valB7e = $("input[name='B7-E']").val();
     var valB7f = $("input[name='B7-F']").val();
+    var valD0 = $("input[name='D0']").val();
     // Section E
     var valE14 = $("input[name='E14']").val();
     //Section F
@@ -138,6 +139,9 @@ function fetchValues(balNo, sysid, isSubmit, email) {
         'B7e': valB7e,
         'B7f': valB7f,
     }
+    var SectionD = {
+        'D0': valD0,
+    }
     var SectionF = {
         'F1': valF1,
         'F2': convertToBool(valF2),
@@ -207,6 +211,7 @@ function fetchValues(balNo, sysid, isSubmit, email) {
     var Form9035 = {
         'isSubmit': isSubmit,
         'SectionB': SectionB,
+        'SectionD': SectionD,
         'E14': valE14,
         'SectionF': SectionF,
         'SectionH': SectionH,

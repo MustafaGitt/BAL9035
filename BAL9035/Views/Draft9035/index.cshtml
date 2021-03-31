@@ -88,6 +88,11 @@
                             <p><input placeholder="..." oninput="this.className = ''" name="C13" id="C13" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:490px;top:867px;width:295px;height:22px;font-weight:bold;"></p>
                         </div>
                         <div class="tab">
+                            <p style="position:absolute;left:85px;top:187px;font-weight:bold;">
+                                <input type="checkbox" id="FlagProfileChkBox" name="FlagProfileChkBox"   @(string.IsNullOrEmpty(Model.Form9035.SectionD.D0)?"":"checked='checked'")>
+                                <label for="FlagProfileChkBox"> I want to provide the Flag Profile Name </label>
+                                <input type="text" placeholder="..." oninput="this.className = ''" style="margin-left:6px;width:223px;" name="D0" id="D0" maxlength="20" @(string.IsNullOrEmpty(Model.Form9035.SectionD.D0)?"disabled='disabled'":"")  value="@(Model.Form9035.SectionD.D0)"/>
+                            </p>
                             <p><input placeholder="..." oninput="this.className = ''" name="D1" id="D1" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:110px;top:237px;width:250px;font-weight:bold;"></p>
                             <p><input placeholder="..." oninput="this.className = ''" name="D2" id="D2" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:387px;top:237px;width:195px;font-weight:bold;"></p>
                             <p><input placeholder="..." oninput="this.className = ''" name="D3" id="D3" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:607px;top:237px;width:178px;font-weight:bold;"></p>
@@ -815,6 +820,10 @@
             }).bind('click touchend', function (e) {
                 e.preventDefault()
             });
+
+        $("#FlagProfileChkBox").change(function () {
+            $("#D0").prop("disabled", !$(this).is(':checked'));
+        });
 
     });
     // calls when the AJAX Start and add the loading gif

@@ -76,6 +76,7 @@ function tab1(errCount, errMsg) {
     var valB7d = $("input[name='B7-D']").val();
     var valB7e = $("input[name='B7-E']").val();
     var valB7f = $("input[name='B7-F']").val();
+    var valD0 = $("input[name='D0']").val();
 
     if (valB1.length > 0) {
         if (valB1.length < 5) {
@@ -215,6 +216,12 @@ function tab1(errCount, errMsg) {
             errMsg = " The Sum of B7a-B7f must be equal to or greater than B7 worker positions.";
             $("#req").append('<li>' + errMsg + '</li>');
         }
+        //if D0 checkbox is not checked then set empty value
+        if (!$('#FlagProfileChkBox').is(":checked")) {
+            $('#D0').val('');
+        }
+
+
         //if (valB7a.length || valB7b.length || valB7c.length || valB7d.length || valB7e.length || valB7f.length) {
         //if (valB7a.length == 0) {
         //    valB7a = 0;
@@ -237,7 +244,6 @@ function tab1(errCount, errMsg) {
 
         //}
     }
-
     return errCount
 }
 

@@ -226,6 +226,7 @@
     <Compile Include="Models\QueueItemCountParent.cs" />
     <Compile Include="Models\Response.cs" />
     <Compile Include="Models\SectionB.cs" />
+    <Compile Include="Models\SectionD.cs" />
     <Compile Include="Models\SectionF.cs" />
     <Compile Include="Models\SectionFModal.cs" />
     <Compile Include="Models\SectionH.cs" />
