@@ -27,9 +27,6 @@ namespace BAL9035.Controllers
         // Return a Model Object with index View and fill the data from Assets / Database
         public ActionResult Index([FromBody] OIDCRequest request)
         {
-
-            //Just to verify
-
             // Model Object Declerations
             ParentModel obj = new ParentModel();
             Form9035 form = new Form9035();
