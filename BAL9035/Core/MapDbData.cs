@@ -165,11 +165,11 @@ namespace BAL9035.Core
                         loc.Address1 = dataRow["AddressLine1"].ToString();
                         AddressLine1 = loc.Address1;
                         loc.Address2 = dataRow["AddressLine2"].ToString();
-                        if ((dataRow["AddressLine2"].ToString() != null && dataRow["AddressLine2"].ToString() != "") && (dataRow["Suite"].ToString() != null && dataRow["Suite"].ToString() != ""))
+                        if ( !string.IsNullOrEmpty(dataRow["AddressLine2"].ToString()) &&   !string.IsNullOrEmpty(dataRow["Suite"].ToString()))
                         {
                             loc.Address2 += ", " + dataRow["Suite"].ToString();
                         }
-                        else if ((dataRow["AddressLine2"].ToString() == null && dataRow["AddressLine2"].ToString() == "") && (dataRow["Suite"].ToString() != null && dataRow["Suite"].ToString() != ""))
+                        else if (string.IsNullOrEmpty(dataRow["AddressLine2"].ToString()) && !string.IsNullOrEmpty(dataRow["Suite"].ToString()))
                         {
                             loc.Address2 = dataRow["Suite"].ToString();
                         }
