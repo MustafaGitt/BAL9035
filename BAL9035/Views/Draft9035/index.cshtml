@@ -55,8 +55,15 @@
                                     <li>@item</li>
                                 }
                             </ul>
-                            <p><input placeholder="..." oninput="this.className = ''" name="A1" id="A1" maxlength="4" value="H-1B" disabled style="position:absolute;left:673px;top:240px;width:110px;font-weight:bold;"></p>
-
+                            <p><input placeholder="..." oninput="this.className = ''" name="A1" id="A1" maxlength="4" value="@(Model.Form9035.SectionA.A1)" disabled style="position:absolute;left:673px;top:240px;width:110px;font-weight:bold;"></p>
+                            <div style="display:@(Model.Form9035.SectionA.A1 == "H-1B1" ? "block" : "none")">
+                                <div style="position:absolute;left:640px;top:280px;border:none;">
+                                    <input type="radio" name="A1Radio" id="chile" value="Chile" @(Model.Form9035.SectionA.A1Radio == "Chile" ? "checked" : "")><b>Chile</b>
+                                </div>
+                                <div style="position:absolute;left:705px;top:280px;border:none;">
+                                    <input type="radio" name="A1Radio" id="singapore" value="Singapore" @(Model.Form9035.SectionA.A1Radio == "Singapore" ? "checked" : "")><b>Singapore</b>
+                                </div>
+                            </div>
                             <p><input placeholder="..." oninput="this.className = ''" name="B1" id="B1" value="@(Model.Form9035.SectionB.B1)" maxlength="50" style="position:absolute;left:175px;top:305px;width:600px;height:20px;font-weight:bold;"></p>
                             <p><input placeholder="..." oninput="this.className = ''" name="B2" id="B2" value="@(Model.Form9035.SectionB.B2)" maxlength="10" style="position:absolute;left:112px;top:342px;width:200px;height:17px;font-weight:bold;"></p>
                             <p><input placeholder="..." oninput="this.className = ''" name="B3" id="B3" value="@(Model.Form9035.SectionB.B3)" maxlength="60" style="position:absolute;left:350px;top:342px;width:430px;height:17px;font-weight:bold;"></p>

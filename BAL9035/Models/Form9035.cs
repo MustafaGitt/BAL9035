@@ -8,6 +8,7 @@ namespace BAL9035.Models
     public class Form9035
     {
         public bool? isSubmit { get; set; }
+        public SectionA SectionA { get; set; }
         public SectionB SectionB { get; set; }
         public SectionD SectionD { get; set; }
         public string E14 { get; set; }
@@ -20,6 +21,7 @@ namespace BAL9035.Models
 
         public Form9035()
         {
+            SectionA = new SectionA();
             SectionB = new SectionB();
             SectionD = new SectionD();
             SectionF = new SectionF();

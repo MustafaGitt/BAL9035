@@ -27,6 +27,9 @@ function SaveLater(isSubmit, sysid, balNo) {
 }
 // Fetch all the HTML INPUTS, Convert it into model object and calls the API
 function fetchValues(balNo, sysid, isSubmit, email) {
+
+    var valA1 = $("input[name=A1]").val();
+    var valA1Radio = $("input[name='A1Radio']").val();
     var valB1 = $("input[name='B1']").val();
     var valB2 = $("input[name='B2']").val();
     var valB3 = $("input[name='B3']").val();
@@ -124,6 +127,10 @@ function fetchValues(balNo, sysid, isSubmit, email) {
         }
 
     }
+    var SectionA = {
+        'A1': valA1,
+        'A1Radio': valA1 == 'H-1B1' ? valA1Radio : ""
+    }
     var SectionB = {
         'B1': valB1,
         'B2': valB2,
@@ -210,6 +217,7 @@ function fetchValues(balNo, sysid, isSubmit, email) {
     }
     var Form9035 = {
         'isSubmit': isSubmit,
+        'SectionA': SectionA,
         'SectionB': SectionB,
         'SectionD': SectionD,
         'E14': valE14,

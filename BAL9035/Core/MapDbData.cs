@@ -18,6 +18,11 @@ namespace BAL9035.Core
                 Form9035 form9035 = new Form9035();
                 foreach (DataRow dataRow in dt.Rows)
                 {
+                    form9035.SectionA.A1 = dataRow["CaseSubType"].ToString();
+                    if (!string.IsNullOrEmpty(dataRow["CaseSubType"].ToString()) && dataRow["CaseSubType"].ToString() == "H-1B1")
+                    {
+                        form9035.SectionA.A1Radio = citizenshipValue(dataRow);
+                    }
                     form9035.SectionB.B1 = dataRow["Beneficiary Job Title"].ToString();
                     form9035.SectionB.B2 = dataRow["SocCode"].ToString();
                     form9035.SectionB.B3 = dataRow["SocOccupation"].ToString();
@@ -165,7 +170,7 @@ namespace BAL9035.Core
                         loc.Address1 = dataRow["AddressLine1"].ToString();
                         AddressLine1 = loc.Address1;
                         loc.Address2 = dataRow["AddressLine2"].ToString();
-                        if ( !string.IsNullOrEmpty(dataRow["AddressLine2"].ToString()) &&   !string.IsNullOrEmpty(dataRow["Suite"].ToString()))
+                        if (!string.IsNullOrEmpty(dataRow["AddressLine2"].ToString()) && !string.IsNullOrEmpty(dataRow["Suite"].ToString()))
                         {
                             loc.Address2 += ", " + dataRow["Suite"].ToString();
                         }
@@ -260,5 +265,38 @@ namespace BAL9035.Core
                 }
             }
         }
+        private string citizenshipValue(DataRow dataRow)
+        {
+            bool isChileExist = false;
+            bool isSingaporeExist = false;
+            string returnValue = "";
+            if (dataRow["Citizenship 1"].ToString().ToLower() == "chile" || dataRow["Citizenship 2"].ToString().ToLower() == "chile" || dataRow["Citizenship 3"].ToString().ToLower() == "chile" || dataRow["Citizenship 4"].ToString().ToLower() == "chile" || dataRow["Citizenship 5"].ToString().ToLower() == "chile" ||
+                dataRow["Citizenship 6"].ToString().ToLower() == "chile" || dataRow["Citizenship 7"].ToString().ToLower() == "chile" || dataRow["Citizenship 8"].ToString().ToLower() == "chile" || dataRow["Citizenship 9"].ToString().ToLower() == "chile" || dataRow["Citizenship 10"].ToString().ToLower() == "chile")
+            {
+                isChileExist = true;
+            }
+            if (dataRow["Citizenship 1"].ToString().ToLower() == "singapore" || dataRow["Citizenship 2"].ToString().ToLower() == "singapore" || dataRow["Citizenship 3"].ToString().ToLower() == "singapore" || dataRow["Citizenship 4"].ToString().ToLower() == "singapore" || dataRow["Citizenship 5"].ToString().ToLower() == "singapore" ||
+                dataRow["Citizenship 6"].ToString().ToLower() == "singapore" || dataRow["Citizenship 7"].ToString().ToLower() == "singapore" || dataRow["Citizenship 8"].ToString().ToLower() == "singapore" || dataRow["Citizenship 9"].ToString().ToLower() == "singapore" || dataRow["Citizenship 10"].ToString().ToLower() == "singapore")
+            {
+                isSingaporeExist = true;
+            }
+
+           
+            if(isChileExist == true && isSingaporeExist == false)
+            {
+                returnValue = "Chile";
+            }
+            else if (isChileExist == false && isSingaporeExist == true)
+            {
+                returnValue = "Singapore";
+            }
+            else
+            {
+                returnValue = string.Empty;
+            }
+
+            return returnValue;
+        }
+
     }
 }
