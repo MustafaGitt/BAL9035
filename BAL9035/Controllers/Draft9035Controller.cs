@@ -45,6 +45,9 @@ namespace BAL9035.Controllers
                 // add the case no. and the id no. whenever you're debugging and using this as local
                 if (url.Contains("localhost"))
                 {
+                    //for staging localhost
+                    request.State = "'+bal_no=1615.54312.7;id_no=BOT0001711;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
+                    //localhost
                     request.State = "'+bal_no=91.147449.2;id_no=43383;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
                     request.Code = "182635";
                 }
@@ -142,36 +145,36 @@ namespace BAL9035.Controllers
                     if (assetModel.value.Count <= 0)
                     {
                         //string query = @"select * from BAL9035";
-                        string query = @"select * from BAL9035 where BALNumber='20000.50054.51'";
-                        //string query = @"select c.CompanyName, c.CompanyNumber, c.IsH1BDependent as 'Company H-1B Dependent', ce.EntityName as 'Sponsoring Entity', ce.IsH1BDependent as 'Entity H-1B Dependent',
-                        //                b.MatterNumber, b.FullName as 'Beneficiary', b.JobPosition as 'Beneficiary Job Title',
-                        //                cc.BALNumber, cst.CaseSubType, --max of 6
-                        //                lca.SocCode, lca.SocOccupation, lca.BeginOfValidity, lca.EndOfValidity, lca.WageRangeLow, lca.WageRangeHigh, lca.WageLevel, lca.NumberOfPositions,
-                        //                bt1.StaffFirstName as 'Attorney First Name', bt1.StaffMiddleName as 'Attorney Middle Name', bt1.StaffLastName as 'Attorney Last Name', bt1.StaffEmail as 'Attorney Email',
-                        //                bt2.StaffFirstName as 'Assistant First Name', bt2.StaffMiddleName as 'Assistant Middle Name', bt2.StaffLastName as 'Assistant Last Name', bt2.StaffEmail as 'Assistant Email',
-                        //                bt3.ContactFirstName as 'Signer First Name', bt3.ContactMiddleName as 'Signer Middle Name', bt3.ContactLastName as 'Signer Last Name', bt3.JobTitle as 'Signer Job',
-                        //                ca.AddressLine1, ca.AddressLine2, ca.Suite, ca.City, ca.State, ca.ZipCode, l.PrevailingWage, l.PrevailingWageSource, l.PrevailingWagePublishedYear, l.PrevailingWageOther,
-                        //                p.BALNumber as 'Parent Case Number', ps.CaseSubType as 'ParentCaseSubType'
-                        //                from ClientCase cc
-                        //                inner join Beneficiary b on b.beneid = cc.BeneId
-                        //                inner join Company c on c.CompanyId = b.CompanyId
-                        //                inner join LCADetail lca on lca.CaseId = cc.CaseId
-                        //                left join CompanyEntity ce on ce.CompanyEntityId = cc.SponsorEntityId
-                        //                inner join casecontacts cc1 (nolock) on cc.caseid = cc1.caseid and cc1.casecontacttype = 'BAL_MANAGER' and cc1.isprimary = 1
-                        //                inner join balteam bt1 (nolock) on cc1.userid = bt1.userid
-                        //                inner join casecontacts cc2 (nolock) on cc.caseid = cc2.caseid and cc2.casecontacttype = 'BAL_ASSISTANT' and cc2.isprimary = 1
-                        //                inner join balteam bt2 (nolock) on cc2.userid = bt2.userid
-                        //                left join casecontacts cc3 (nolock) on cc.caseid = cc3.caseid and cc3.casecontacttype = 'SIGNER'
-                        //                left join CompanyContacts bt3 (nolock) on cc3.userid = bt3.userid
-                        //                --inner join CaseAddress a on a.CaseId = cc.CaseId
-                        //                left join CaseCompanyAddressLink l on l.CaseId = cc.CaseId
-                        //                left join CompanyAddress ca on ca.CompanyAddressId = l.CompanyAddressId
-                        //                inner join CaseSubTypeRel r on r.CaseId = cc.CaseId
-                        //                inner join CaseSubTypes cst on cst.MetaDataId = r.MetaDataId
-                        //                left join ClientCase p on cc.ParentCaseId = p.CaseId
-                        //                left join CaseSubTypeRel pr on pr.CaseId = p.CaseId
-                        //                left join CaseSubTypes ps on ps.MetaDataId = pr.MetaDataId
-                        //                where CC.BALNumber = '" + bal_no +"' order by cc.BALNumber";
+                        // string query = @"select * from BAL9035 where BALNumber='20000.50054.51'";
+                        string query = @"select c.CompanyName, c.CompanyNumber, c.IsH1BDependent as 'Company H-1B Dependent', ce.EntityName as 'Sponsoring Entity', ce.IsH1BDependent as 'Entity H-1B Dependent',
+                                        b.MatterNumber, b.FullName as 'Beneficiary', b.JobPosition as 'Beneficiary Job Title',
+                                        cc.BALNumber, cst.CaseSubType, --max of 6
+                                        lca.SocCode, lca.SocOccupation, lca.BeginOfValidity, lca.EndOfValidity, lca.WageRangeLow, lca.WageRangeHigh, lca.WageLevel, lca.NumberOfPositions,
+                                        bt1.StaffFirstName as 'Attorney First Name', bt1.StaffMiddleName as 'Attorney Middle Name', bt1.StaffLastName as 'Attorney Last Name', bt1.StaffEmail as 'Attorney Email',
+                                        bt2.StaffFirstName as 'Assistant First Name', bt2.StaffMiddleName as 'Assistant Middle Name', bt2.StaffLastName as 'Assistant Last Name', bt2.StaffEmail as 'Assistant Email',
+                                        bt3.ContactFirstName as 'Signer First Name', bt3.ContactMiddleName as 'Signer Middle Name', bt3.ContactLastName as 'Signer Last Name', bt3.JobTitle as 'Signer Job',
+                                        ca.AddressLine1, ca.AddressLine2, ca.Suite, ca.City, ca.State, ca.ZipCode, l.PrevailingWage, l.PrevailingWageSource, l.PrevailingWagePublishedYear, l.PrevailingWageOther,
+                                        p.BALNumber as 'Parent Case Number', ps.CaseSubType as 'ParentCaseSubType'
+                                        from ClientCase cc
+                                        inner join Beneficiary b on b.beneid = cc.BeneId
+                                        inner join Company c on c.CompanyId = b.CompanyId
+                                        inner join LCADetail lca on lca.CaseId = cc.CaseId
+                                        left join CompanyEntity ce on ce.CompanyEntityId = cc.SponsorEntityId
+                                        inner join casecontacts cc1 (nolock) on cc.caseid = cc1.caseid and cc1.casecontacttype = 'BAL_MANAGER' and cc1.isprimary = 1
+                                        inner join balteam bt1 (nolock) on cc1.userid = bt1.userid
+                                        inner join casecontacts cc2 (nolock) on cc.caseid = cc2.caseid and cc2.casecontacttype = 'BAL_ASSISTANT' and cc2.isprimary = 1
+                                        inner join balteam bt2 (nolock) on cc2.userid = bt2.userid
+                                        left join casecontacts cc3 (nolock) on cc.caseid = cc3.caseid and cc3.casecontacttype = 'SIGNER'
+                                        left join CompanyContacts bt3 (nolock) on cc3.userid = bt3.userid
+                                        --inner join CaseAddress a on a.CaseId = cc.CaseId
+                                        left join CaseCompanyAddressLink l on l.CaseId = cc.CaseId
+                                        left join CompanyAddress ca on ca.CompanyAddressId = l.CompanyAddressId
+                                        inner join CaseSubTypeRel r on r.CaseId = cc.CaseId
+                                        inner join CaseSubTypes cst on cst.MetaDataId = r.MetaDataId
+                                        left join ClientCase p on cc.ParentCaseId = p.CaseId
+                                        left join CaseSubTypeRel pr on pr.CaseId = p.CaseId
+                                        left join CaseSubTypes ps on ps.MetaDataId = pr.MetaDataId
+                                        where CC.BALNumber = '" + bal_no + "' order by cc.BALNumber";
                         //20000.55.52,20000.50054.51
                         // Calling db object and sending the query and returning the DataTable
                         Database db = new Database();
