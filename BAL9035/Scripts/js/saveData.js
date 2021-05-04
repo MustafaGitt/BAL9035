@@ -29,7 +29,7 @@ function SaveLater(isSubmit, sysid, balNo) {
 function fetchValues(balNo, sysid, isSubmit, email) {
 
     var valA1 = $("input[name=A1]").val();
-    var valA1Radio = $("input[name='A1Radio']").val();
+    var valA1Radio = $("input[name='A1Radio']:checked").val();
     var valB1 = $("input[name='B1']").val();
     var valB2 = $("input[name='B2']").val();
     var valB3 = $("input[name='B3']").val();
