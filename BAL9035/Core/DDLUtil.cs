@@ -56,6 +56,7 @@ namespace BAL9035.Core
             new SelectListItem{ Text="NEW YORK", Value ="New York", Selected ="New York" == selectedValue.ToString()},
             new SelectListItem{ Text="NORTH CAROLINA", Value ="North Carolina", Selected ="North Carolina" == selectedValue.ToString()},
             new SelectListItem{ Text="NORTH DAKOTA", Value ="North Dakota", Selected ="North Dakota" == selectedValue.ToString()},
+            new SelectListItem{ Text="NORTHERN MARIANA ISLANDS", Value ="NORTHERN MARIANA ISLANDS", Selected ="NORTHERN MARIANA ISLANDS" == selectedValue.ToString()},
             new SelectListItem{ Text="OHIO", Value ="Ohio", Selected ="Ohio" == selectedValue.ToString()},
             new SelectListItem{ Text="OKLAHOMA", Value ="Oklahoma", Selected ="Oklahoma" == selectedValue.ToString()},
             new SelectListItem{ Text="OREGON", Value ="Oregon", Selected ="Oregon" == selectedValue.ToString()},
