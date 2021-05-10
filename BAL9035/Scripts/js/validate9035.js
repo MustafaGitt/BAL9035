@@ -63,6 +63,7 @@ function validateInputsByTab(tabNo) {
 }
 
 function tab1(errCount, errMsg) {
+    var valA1 = $("input[name='A1']").val();
     var valB1 = $("input[name='B1']").val();
     var valB2 = $("input[name='B2']").val();
     var valB3 = $("input[name='B3']").val();
@@ -127,10 +128,19 @@ function tab1(errCount, errMsg) {
         var DateB5 = new Date(valB5);
         var DateB6 = new Date(valB6);
         var diff = daydiff(DateB6, DateB5);
-        if (parseInt(diff) > 1095) {
-            errCount++;
-            errMsg = " Section B Question 6 : The end date for the workers period of employment must be less than or equal to three years from the start date for H1B and H1B1 visa classes, and less than or equal to two years from the start date for the E3 visa class.";
-            $("#req").append('<li>' + errMsg + '</li>');
+        if (valA1 == 'H-1B1' || valA1 == 'H-1B') {
+            if (parseInt(diff) > 1095) {
+                errCount++;
+                errMsg = " Section B Question 6 : The end date for the workers period of employment must be less than or equal to three years."
+                $("#req").append('<li>' + errMsg + '</li>');
+            }
+        }
+        if (valA1 == 'E-3') {
+            if (parseInt(diff) > 730) {
+                errCount++;
+                errMsg = " Section B Question 6 : The end date for the workers period of employment must be less than or equal to two years."
+                $("#req").append('<li>' + errMsg + '</li>');
+            }
         }
     }
 
