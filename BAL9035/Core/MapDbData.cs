@@ -37,7 +37,7 @@ namespace BAL9035.Core
                         DateTime EndDate = Convert.ToDateTime(dataRow["EndOfValidity"].ToString());
                         form9035.SectionB.B6 = EndDate.ToString("MM/dd/yyyy");
                     }
-                    if (!dataRow["NumberOfPositions"].ToString().Equals(""))
+                    if (!string.IsNullOrEmpty(dataRow["NumberOfPositions"].ToString()))
                     {
                         form9035.SectionB.B7 = dataRow["NumberOfPositions"].ToString();
                         form9035.SectionF.F1 = dataRow["NumberOfPositions"].ToString();
@@ -198,7 +198,7 @@ namespace BAL9035.Core
         }
         public void AssignValue(Form9035 form, List<string> pSubTypes)
         {
-            if (form.SectionB.B7 == "1" && pSubTypes.Count > 0)
+            if (form.SectionA.A1 == "H-1B" && form.SectionB.B7 == "1" && pSubTypes.Count > 0)
             {
                 if ((pSubTypes.Contains("Change of Employer") && pSubTypes.Contains("Cap Counted") && pSubTypes.Contains("Consular"))
            || (pSubTypes.Contains("Change of Employer") && pSubTypes.Contains("Cap Counted") && pSubTypes.Contains("EOS"))
@@ -264,6 +264,68 @@ namespace BAL9035.Core
                     form.SectionB.B7f = "0";
                 }
             }
+
+            if (form.SectionA.A1 == "E-3" && form.SectionB.B7 == "1" && pSubTypes.Count > 0)
+            {
+                if ((pSubTypes.Contains("Consular") && pSubTypes.Contains("Initial Filing")) || (pSubTypes.Contains("COS")))
+                {
+                    form.SectionB.B7a = "1";
+                    form.SectionB.B7b = "0";
+                    form.SectionB.B7c = "0";
+                    form.SectionB.B7d = "0";
+                    form.SectionB.B7e = "0";
+                    form.SectionB.B7f = "0";
+                }
+                else if ((pSubTypes.Contains("Consular") && pSubTypes.Contains("Renewal")) || (pSubTypes.Contains("EOS")))
+                {
+                    form.SectionB.B7a = "0";
+                    form.SectionB.B7b = "1";
+                    form.SectionB.B7c = "0";
+                    form.SectionB.B7d = "0";
+                    form.SectionB.B7e = "0";
+                    form.SectionB.B7f = "0";
+                }
+                else if ((pSubTypes.Contains("Consular") && pSubTypes.Contains("Change of Employer")) || (pSubTypes.Contains("Change of Employer") && pSubTypes.Contains("EOS")))
+                {
+                    form.SectionB.B7a = "0";
+                    form.SectionB.B7b = "0";
+                    form.SectionB.B7c = "0";
+                    form.SectionB.B7d = "0";
+                    form.SectionB.B7e = "1";
+                    form.SectionB.B7f = "0";
+                }
+                else if ((pSubTypes.Contains("Consular") && pSubTypes.Contains("Amend")) || (pSubTypes.Contains("Amend") && pSubTypes.Contains("EOS")))
+                {
+                    form.SectionB.B7a = "0";
+                    form.SectionB.B7b = "0";
+                    form.SectionB.B7c = "0";
+                    form.SectionB.B7d = "0";
+                    form.SectionB.B7e = "0";
+                    form.SectionB.B7f = "1";
+                }
+            }
+
+            if (form.SectionA.A1 == "H-1B1" && form.SectionB.B7 == "1" && pSubTypes.Count > 0)
+            {
+                if ((pSubTypes.Contains("Consular") && pSubTypes.Contains("Initial")) || (pSubTypes.Contains("COS") && pSubTypes.Contains("Initial")))
+                {
+                    form.SectionB.B7a = "1";
+                    form.SectionB.B7b = "0";
+                    form.SectionB.B7c = "0";
+                    form.SectionB.B7d = "0";
+                    form.SectionB.B7e = "0";
+                    form.SectionB.B7f = "0";
+                }
+                else if ((pSubTypes.Contains("Consular") && pSubTypes.Contains("Renewal")) || (pSubTypes.Contains("EOS") && pSubTypes.Contains("Renewal")))
+                {
+                    form.SectionB.B7a = "0";
+                    form.SectionB.B7b = "1";
+                    form.SectionB.B7c = "0";
+                    form.SectionB.B7d = "0";
+                    form.SectionB.B7e = "0";
+                    form.SectionB.B7f = "0";
+                }
+            }
         }
         private string citizenshipValue(DataRow dataRow)
         {
@@ -281,8 +343,8 @@ namespace BAL9035.Core
                 isSingaporeExist = true;
             }
 
-           
-            if(isChileExist == true && isSingaporeExist == false)
+
+            if (isChileExist == true && isSingaporeExist == false)
             {
                 returnValue = "Chile";
             }
