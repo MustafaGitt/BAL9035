@@ -11,6 +11,7 @@ namespace BAL9035.Models
         public string QueueName { get; set; }
         public string ResponseQueueName { get; set; }
         public string tenancyName { get; set; }
+        public string cobaltDtenancyName { get; set; }
         public string usernameOrEmailAddress { get; set; }
         public string password { get; set; }
         public string SecretKey { get; set; }

@@ -15,7 +15,7 @@ namespace BAL9035.Core
         AppSettingsValues appKeys = GetAppSettings.GetAppSettingsValues();
 
         // GETS Orchestrator Token
-        public string Authentication(bool isCloudEnv)
+        public string Authentication(AppSettingsValues parentAppKeys)
         {
             try
             {
@@ -23,17 +23,15 @@ namespace BAL9035.Core
                 Dictionary<string, string> authBody = new Dictionary<string, string>();
                 string body = "";
                 string response = "";
-                //appSettings = GetAppSettings.GetInstance;
-                appKeys = GetAppSettings.GetAppSettingsValues();
-                if (isCloudEnv == false)
+                if (parentAppKeys.isDevelopmentEnvironment == false)
                 {
-                    Url = appKeys.OrchestratorUrl + "api/Account/Authenticate";
-                    if (appKeys.tenancyName != "")
+                    Url = parentAppKeys.OrchestratorUrl + "api/Account/Authenticate";
+                    if (parentAppKeys.tenancyName != "")
                     {
-                        authBody.Add("tenancyName", appKeys.tenancyName);
+                        authBody.Add("tenancyName", parentAppKeys.tenancyName);
                     }
-                    authBody.Add("usernameOrEmailAddress", appKeys.usernameOrEmailAddress);
-                    authBody.Add("password", appKeys.password);
+                    authBody.Add("usernameOrEmailAddress", parentAppKeys.usernameOrEmailAddress);
+                    authBody.Add("password", parentAppKeys.password);
                     body = JsonConvert.SerializeObject(authBody);
                     response = api.Post(Url, body);
                     OrchestratorAuthenticateModel authenticateModel = JsonConvert.DeserializeObject<OrchestratorAuthenticateModel>(response);
@@ -86,9 +84,9 @@ namespace BAL9035.Core
                     url = url + filterValue;
                 }
                 string response = string.Empty;
-                if (appKeys.isDevelopmentEnvironment==true)
+                if (appKeys.isDevelopmentEnvironment == true)
                 {
-                     response = api.GetCloud(url, token);
+                    response = api.GetCloud(url, token);
                 }
                 else
                 {
@@ -191,7 +189,7 @@ namespace BAL9035.Core
         {
             try
             {
-                string url = appKeys.OrchestratorUrl + "odata/QueueItems?$filter=QueueDefinitionId%20eq%20" + QueueID + " and Status%20eq%20'New' and CreationTime le "+ QueueCreationTime + "";
+                string url = appKeys.OrchestratorUrl + "odata/QueueItems?$filter=QueueDefinitionId%20eq%20" + QueueID + " and Status%20eq%20'New' and CreationTime le " + QueueCreationTime + "";
                 string response = api.Get(url, token);
                 return response;
             }
@@ -218,9 +216,12 @@ namespace BAL9035.Core
                 itemData.Priority = "Normal";
                 itemData.SpecificContent = content;
 
+                //Set which tenant to use
+                appKeys.tenancyName = ID.StartsWith("COB") ? appKeys.cobaltDtenancyName : appKeys.tenancyName;
+
                 RootObject queueItemBody = new RootObject();
                 queueItemBody.itemData = itemData;
-                string token = Authentication(appKeys.isDevelopmentEnvironment);
+                string token = Authentication(appKeys);
                 string strQueue = JsonConvert.SerializeObject(queueItemBody);
                 AddQueueItem(token, strQueue);
             }

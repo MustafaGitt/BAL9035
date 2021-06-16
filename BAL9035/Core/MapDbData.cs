@@ -344,7 +344,7 @@ namespace BAL9035.Core
             }
 
 
-            if (isChileExist == true && isSingaporeExist == false)
+            if(isChileExist == true && isSingaporeExist == false)
             {
                 returnValue = "Chile";
             }

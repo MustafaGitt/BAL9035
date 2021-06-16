@@ -90,8 +90,10 @@ namespace BAL9035.Controllers
                 string filter = "";
                 //  Get the Config from AppSettings
                 AppSettingsValues appKeys = GetAppSettings.GetAppSettingsValues();
+                //Set which tenant to use
+                appKeys.tenancyName = bodyModel.Name.StartsWith("COB") ? appKeys.cobaltDtenancyName : appKeys.tenancyName;
                 // UIPATH TOKEN
-                string token = api.Authentication(appKeys.isDevelopmentEnvironment);
+                string token = api.Authentication(appKeys);
                 // Send error message if the token is null
                 if (string.IsNullOrEmpty(token))
                 {

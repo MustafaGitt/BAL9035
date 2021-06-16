@@ -563,5 +563,37 @@ namespace BAL9035.Core
             }
             return HttpStatusCode.BadRequest;
         }
+
+
+        public List<EsResultObj> GetElasticSearchAsset(string bal_no)
+        {
+            string body = "";
+            List<EsResultObj> result= new List<EsResultObj>();
+            string authority = appKeys.ElasticSearch_Authority;
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    body = "{\"query\":{\"wildcard\":{\"AssetName.keyword\":{\"value\":\"" + bal_no + "*\",\"boost\":1,\"rewrite\":\"constant_score\"}}}}";
+                    var content = new StringContent(body, System.Text.Encoding.UTF8, "application/json");
+                    // HTTP POST
+                    HttpResponseMessage response = client.PostAsync(authority + "cobaltd_assets/_search", content).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string responseString = response.Content.ReadAsStringAsync().Result;
+                        result = JToken.Parse(responseString).SelectTokens("hits.hits[*]._source").Select(t => t.ToObject<EsResultObj>()).ToList();
+                    }
+
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
     }
 }

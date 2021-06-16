@@ -212,6 +212,7 @@
     <Compile Include="Models\AssetValueArrayModel.cs" />
     <Compile Include="Models\CredentialAsset.cs" />
     <Compile Include="Models\ErrorDetails.cs" />
+    <Compile Include="Models\EsResultObj.cs" />
     <Compile Include="Models\Form9035.cs" />
     <Compile Include="Models\Lists.cs" />
     <Compile Include="Models\Location.cs" />

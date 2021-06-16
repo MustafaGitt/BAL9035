@@ -45,8 +45,11 @@ namespace BAL9035.Controllers
                 string filter = "";
                 // configuration getting from Appsetting
                 AppSettingsValues appKeys = GetAppSettings.GetAppSettingsValues();
+
+                //Set which tenant to use
+                appKeys.tenancyName = bodyModel.Sysid.StartsWith("COB") ? appKeys.cobaltDtenancyName : appKeys.tenancyName;
                 // Saving all keys in a class object
-                string token = api.Authentication(appKeys.isDevelopmentEnvironment);
+                string token = api.Authentication(appKeys);
                 // check if token is generated or not
                 if (string.IsNullOrEmpty(token))
                 {
@@ -202,7 +205,9 @@ namespace BAL9035.Controllers
                 string filter = "?$filter=Name eq '" + bodyModel.BalNumber + "'";
                 // configuration
                 AppSettingsValues appKeys = GetAppSettings.GetAppSettingsValues();
-                string token = api.Authentication(appKeys.isDevelopmentEnvironment);
+                //Set which tenant to use
+                appKeys.tenancyName = bodyModel.Sysid.StartsWith("COB") ? appKeys.cobaltDtenancyName : appKeys.tenancyName;
+                string token = api.Authentication(appKeys);
 
                 AssetModel assetModel = api.GetAsset(token, filter);
                 if (assetModel.value.Count > 0)

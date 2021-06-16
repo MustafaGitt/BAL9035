@@ -24,6 +24,7 @@ namespace BAL9035.Core
                 keys.QueueName = SecureData.Base64Decode(appSettings["QueueName"]);
                 keys.ResponseQueueName = SecureData.Base64Decode(appSettings["ResponseQueueName"]);
                 keys.tenancyName = SecureData.Base64Decode(appSettings["tenancyName"]);
+                keys.cobaltDtenancyName = SecureData.Base64Decode(appSettings["CobaltDtenancyName"]);
                 keys.usernameOrEmailAddress = SecureData.Base64Decode(appSettings["usernameOrEmailAddress"]);
                 keys.password = SecureData.Base64Decode(appSettings["password"]);
                 keys.SecretKey = SecureData.Base64Decode(appSettings["SecretKey"]);
