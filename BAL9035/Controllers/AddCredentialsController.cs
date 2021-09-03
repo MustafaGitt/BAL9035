@@ -136,7 +136,7 @@ namespace BAL9035.Controllers
 
                         outResponse.success = true;
                         outResponse.message = esKeyID;
-                        logMsg = "Bal Number : " + bodyModel.Name + " Process : Create Credential Asset, Message :  The method has been successfully exexuted.";
+                        logMsg = "Bal Number : " + bodyModel.Name +",UserName: "+ bodyModel.Username+" Process : Create Credential Asset, Message :  The method has been successfully exexuted.";
                         Log.Info(logMsg);
                     }
                     else
