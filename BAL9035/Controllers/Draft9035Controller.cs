@@ -46,9 +46,9 @@ namespace BAL9035.Controllers
                 if (url.Contains("localhost"))
                 {
                     //for staging localhost
-                   // request.State = "'+bal_no=1615.54312.7;id_no=BOT0001711;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
+                     //request.State = "'+bal_no=1615.54312.7;id_no=BOT0001711;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
                     //localhost
-                    request.State = "'+bal_no=20000.51610.8;id_no=COB0001734;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
+                    request.State = "'+bal_no=20000.51610.8;id_no=BOT0001711;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
                     request.Code = "182635";
                 }
                 TempData["Error"] = "";
@@ -93,10 +93,11 @@ namespace BAL9035.Controllers
                     if (ViewBag.id_no.ToString().StartsWith("COB") && assetModel.value.Count <= 0)
                     {
                         List<EsResultObj> EsAsset = es.GetElasticSearchAsset(bal_no);
-                        if (EsAsset.Count>0)
+                        if (EsAsset.Count > 0)
                         {
-                            EsAsset.ForEach(asset => {
-                                assetModel.value.Add(new AssetValueArrayModel { Name = asset.AssetName,Value=asset.AssetValue ,StringValue=asset.AssetValue}) ;
+                            EsAsset.ForEach(asset =>
+                            {
+                                assetModel.value.Add(new AssetValueArrayModel { Name = asset.AssetName, Value = asset.AssetValue, StringValue = asset.AssetValue });
                             });
                         }
                     }
@@ -155,7 +156,7 @@ namespace BAL9035.Controllers
                     if (assetModel.value.Count <= 0)
                     {
                         //string query = @"select * from BAL9035";
-                         string query = @"select * from BAL9035 where BALNumber='20000.50054.51'";
+                        string query = @"select * from BAL9035 where BALNumber='20000.50054.51'";
                         //string query = @"select c.CompanyName, c.CompanyNumber, c.IsH1BDependent as 'Company H-1B Dependent', ce.EntityName as 'Sponsoring Entity', ce.IsH1BDependent as 'Entity H-1B Dependent',
                         //b.MatterNumber, b.FullName as 'Beneficiary', cc.JobPosition as 'Beneficiary Job Title',
                         //cc.BALNumber, cst.CaseSubType, --max of 6
@@ -239,7 +240,15 @@ namespace BAL9035.Controllers
                 TempData["Error"] = "Sorry, there seems to be an issue with your request.  Please send an email to #automationinfo with your ServiceNow ticket number and we will contact you shortly";
                 Log.Error(ex, bal_no);
                 es.AddErrorESLog(ViewBag.id_no, "Technical", ex.Message, out errorMessage);
-                api.AddErrorQueueItem(ViewBag.id_no, ex.Message, "Technical", ex.Message, "In Progress", bal_no);
+                bool isSqlException = ex.GetType().Name == "SqlException" ? true : false;
+                if (isSqlException)
+                {
+                    api.AddErrorQueueItem(ViewBag.id_no, "The process cannot proceed due to SQL connection issue,Please submit again later", "Business", null, "Failed", bal_no);
+                }
+                else
+                {
+                    api.AddErrorQueueItem(ViewBag.id_no, ex.Message, "Technical", ex.Message, "In Progress", bal_no);
+                }
                 return RedirectToAction("Error");
             }
         }
