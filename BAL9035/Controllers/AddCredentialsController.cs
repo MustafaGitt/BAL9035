@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Web.Configuration;
 using System.Web.Http;
 using _9035BL;
 using BAL9035.Core;
@@ -157,6 +158,20 @@ namespace BAL9035.Controllers
                 Log.Error(ex, bodyModel.Name);
                 es.AddErrorESLog(bodyModel.Name, "Technical", ex.Message, out errorMessage);
                 api.AddErrorQueueItem(bodyModel.Name, ex.Message, "Technical", ex.Message, "In Progress");
+
+                if (WebConfigurationManager.AppSettings["EnvironmentName"] == "prod")
+                {
+                    //create jira exception ticket for production environment
+                    try
+                    {
+                        JiraTicket jira = new JiraTicket();
+                        jira.CreateJiraException(bodyModel.Name, ex.Message);
+                    }
+                    catch (Exception exception)
+                    {
+                        Log.Error(exception, bodyModel.Name);
+                    }
+                }
             }
             assetResponse = JsonConvert.SerializeObject(outResponse);
             return Json(assetResponse);

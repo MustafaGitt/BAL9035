@@ -201,6 +201,7 @@
     <Compile Include="Core\ElasticSearch.cs" />
     <Compile Include="Core\EncryptionUtil.cs" />
     <Compile Include="Core\GetAppSettings.cs" />
+    <Compile Include="Core\JiraTicket.cs" />
     <Compile Include="Core\MapDbData.cs" />
     <Compile Include="Core\OrchestratorAPI.cs" />
     <Compile Include="Core\UserViewModel.cs" />

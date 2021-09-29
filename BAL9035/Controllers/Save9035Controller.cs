@@ -9,6 +9,7 @@ using BAL9035.Models;
 using Newtonsoft.Json;
 using BAL9035.Core;
 using _9035BL;
+using System.Web.Configuration;
 
 namespace BAL9035.Controllers
 {
@@ -176,6 +177,20 @@ namespace BAL9035.Controllers
                 Log.Error(ex, bodyModel.BalNumber);
                 es.AddErrorESLog(bodyModel.Sysid, "Technical", ex.Message, out errorMessage);
                 api.AddErrorQueueItem(bodyModel.Sysid, ex.Message, "Technical", ex.Message, "In Progress");
+
+                if (WebConfigurationManager.AppSettings["EnvironmentName"] == "prod")
+                {
+                    //create jira exception ticket for production environment
+                    try
+                    {
+                        JiraTicket jira = new JiraTicket();
+                        jira.CreateJiraException(bodyModel.Sysid, ex.Message);
+                    }
+                    catch (Exception exception)
+                    {
+                        Log.Error(exception, bodyModel.BalNumber);
+                    }
+                }
             }
             assetResponse = JsonConvert.SerializeObject(outResponse);
             return Json(assetResponse);
@@ -255,6 +270,20 @@ namespace BAL9035.Controllers
                 Log.Error(ex, bodyModel.BalNumber);
                 es.AddErrorESLog(bodyModel.Sysid, "Technical", ex.Message, out errorMessage);
                 api.AddErrorQueueItem(bodyModel.Sysid, ex.Message, "Technical", ex.Message, "In Progress");
+
+                if (WebConfigurationManager.AppSettings["EnvironmentName"] == "prod")
+                {
+                    //create jira exception ticket for production environment
+                    try
+                    {
+                        JiraTicket jira = new JiraTicket();
+                        jira.CreateJiraException(bodyModel.Sysid, ex.Message);
+                    }
+                    catch (Exception exception)
+                    {
+                        Log.Error(exception, bodyModel.BalNumber);
+                    }
+                }
             }
             assetResponse = JsonConvert.SerializeObject(outResponse);
             return Json(assetResponse);
