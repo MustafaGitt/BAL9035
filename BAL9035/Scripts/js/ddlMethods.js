@@ -1,24 +1,4 @@
-﻿// Creating Area DropDown Options with selected option 
-function FetchAreas(selectedvalue) {
-    if (selectedvalue == null || selectedvalue == "") {
-        selectedvalue = "0";
-    }
-    $("#SectionFArea").empty().append('<option value="0">-- SELECT --</option>');
-    var stateVal = $("select[name=FModalState] option:selected").text();
-    var chkStateCode = stateVal.charCodeAt(0);
-    let areas = []
-    //fetching counties values which are in the following state
-    areas = DDLCounty.Common.ddl_childValue.filter(function (area) {
-        return area.PValue == stateVal;
-    });
-    // Appending options into DDL
-    if (areas.length > 0) {
-        $.each(areas, function (i) {
-            $("#SectionFArea").append("<option value='" + $.trim(areas[i].Value) + "'>" + $.trim(areas[i].Text) + "</option>");
-            $("#SectionFArea").val(selectedvalue);
-        });
-    }
-}
+﻿
 // Creating County DropDown Options with selected option 
 function FetchCounties(selectedvalue, jsonValue) {
     $("#reqLoc").empty();

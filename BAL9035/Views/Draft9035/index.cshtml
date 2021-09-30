@@ -96,9 +96,9 @@
                         </div>
                         <div class="tab">
                             <p style="position:absolute;left:85px;top:187px;font-weight:bold;">
-                                <input type="checkbox" id="FlagProfileChkBox" name="FlagProfileChkBox"   @(string.IsNullOrEmpty(Model.Form9035.SectionD.D0)?"":"checked='checked'")>
+                                <input type="checkbox" id="FlagProfileChkBox" name="FlagProfileChkBox" @(string.IsNullOrEmpty(Model.Form9035.SectionD.D0) ? "" : "checked='checked'")>
                                 <label for="FlagProfileChkBox"> I want to provide the Flag Profile Name </label>
-                                <input type="text" placeholder="..." oninput="this.className = ''" style="margin-left:6px;width:223px;" name="D0" id="D0" maxlength="20" @(string.IsNullOrEmpty(Model.Form9035.SectionD.D0)?"disabled='disabled'":"")  value="@(Model.Form9035.SectionD.D0)"/>
+                                <input type="text" placeholder="..." oninput="this.className = ''" style="margin-left:6px;width:223px;" name="D0" id="D0" maxlength="20" @(string.IsNullOrEmpty(Model.Form9035.SectionD.D0) ? "disabled='disabled'" : "") value="@(Model.Form9035.SectionD.D0)" />
                             </p>
                             <p><input placeholder="..." oninput="this.className = ''" name="D1" id="D1" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:110px;top:237px;width:250px;font-weight:bold;"></p>
                             <p><input placeholder="..." oninput="this.className = ''" name="D2" id="D2" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:387px;top:237px;width:195px;font-weight:bold;"></p>
@@ -201,23 +201,20 @@
                                                     <button type="button" onclick="productDisplay(this);" class="btn btn-default btn-tbl-custom"><span class="glyphicon glyphicon-edit" /></button> |
                                                     <button type="button" onclick="productDelete(this);" class="btn btn-default btn-tbl-custom"><span class="glyphicon glyphicon-remove" /></button> |
                                                     @{
-                                                        bool addClass = false;
-                                                        if (!string.IsNullOrEmpty(item.FmodalObject.StateOrTerritory))
-                                                        { addClass = true; }
-                                                        else if (!string.IsNullOrEmpty(item.FmodalObject.F14a) && !string.IsNullOrEmpty(item.FmodalObject.F14b))
+                                                        bool addClass = true;
+                                                        if (item.FmodalObject.F13==true)
                                                         {
-                                                            if (item.FmodalObject.F14a.ToLower() != "other")
+                                                            //F13 Case
+                                                        }
+                                                        else
+                                                        {
+                                                            //F14 Case
+                                                            if (string.IsNullOrEmpty(item.FmodalObject.F14a) || string.IsNullOrEmpty(item.FmodalObject.F14b))
                                                             {
-                                                                addClass = true;
-                                                            }
-                                                            else
-                                                            {
-                                                                if (item.FmodalObject.F14c != null && item.FmodalObject.F14d != null)
-                                                                {
-                                                                    addClass = true;
-                                                                }
+                                                                addClass = false;
                                                             }
                                                         }
+
                                                     }
                                                     <button type="button" onclick="addSection(@item.LocationId);" class="btn btn-default btn-tbl-custom  @( addClass == true ? "greenAddSection" : "redAddSection")"><span class="glyphicon glyphicon-plus" /></button>
                                                 </td>
@@ -740,7 +737,7 @@
             }
             if (valueJson.length > 0) {
                 var parsedJson = JSON.parse(valueJson);
-                if (parsedJson.F14 != null || parsedJson.StateOrTerritory != null) {
+                if (parsedJson.F14 != null || parsedJson.Per != null) {
                     $('#btnCopyValues').removeClass('hidden');
                     if (!$('#btnCopyValues').hasClass('header')) {
                         $('#btnCopyValues').addClass('header');

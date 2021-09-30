@@ -140,6 +140,14 @@ namespace BAL9035.Core
                                     }
                             }
                         }
+
+
+                        //Set By Defaule Values
+                        sectionFModal.CollectionType = true;
+                        sectionFModal.AreaBasedOn = true;
+                        sectionFModal.RnDPosition = false;
+                        sectionFModal.HCPosition = false;
+                        sectionFModal.Per = "Year";
                     }
                     else if (dataRow["PrevailingWageSource"].ToString().ToLower().Equals("other"))
                     {
@@ -147,6 +155,7 @@ namespace BAL9035.Core
                         sectionFModal.F14a = "Other";
                         sectionFModal.F14b = dataRow["PrevailingWagePublishedYear"].ToString();
                         sectionFModal.F14c = dataRow["PrevailingWageOther"].ToString();
+                        sectionFModal.F14d = dataRow["PrevailingWageOther"].ToString();
                     }
                     // Creating Case Subtypes
                     if (dataRow["CaseSubType"].ToString() != null && dataRow["CaseSubType"].ToString() != "")

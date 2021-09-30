@@ -92,14 +92,6 @@ function fetchValues(balNo, sysid, isSubmit, email) {
     var valK3 = $("input[name=K3]").val();
     var valK4 = $("input[name=K4]").val();
     var valK5 = $("input[name=K5]").val();
-    //Section FModal
-    //var valFModalState = $("select[name=FModalState]").val();
-    //var valCType = $("input[name=CType]:checked").val();
-    //var valAB = $("input[name=AB]:checked").val();
-    //var valFModalArea = $("select[name=SectionFArea]").val();
-    //var valRDP = $("input[name=RDP]:checked").val();
-    //var valHCP = $("input[name=HCP]:checked").val();
-    //var valFModalPer = $("select[name=FModalPer]").val();
 
     var F10From = valF10from;
     if (valF10fromP.length > 0) {
@@ -190,12 +182,6 @@ function fetchValues(balNo, sysid, isSubmit, email) {
     var LocationsList = $("#locTable tr").map(function (id) {
         if (id > 0) {
             var jsonObj = $.parseJSON($('#locTable tr').eq(id).find('#jsonValue').val());
-            if (isSubmit == true) {
-                if (jsonObj.StateOrTerritory != "0") {
-                    $('select[name=FModalState]').val(jsonObj.StateOrTerritory);
-                    jsonObj.StateOrTerritory = $("select[name=FModalState] option:selected").text();
-                }
-            }
             return {
                 'LocationId': id,
                 "Address1": $("td", this).eq(0).text(),

@@ -194,7 +194,7 @@ function productBuildTableRow(id) {
     var classResult = 'redAddSection';
     if (resultString) {
         var result = $.parseJSON(resultString);
-        if (result.StateOrTerritory) {
+        if (result.F13) {
             classResult = 'greenAddSection';
         }
         else if (result.F14a && result.F14b) {
@@ -245,17 +245,11 @@ function addSection(tableRowNo) {
                 else if (result.F13 == true) {
                     $('#sectionFPopUp input[name=FPopUp][value=F13]').prop('checked', true);
                     $('#sectionFPopUp input[name=F13a][value=' + result.F13a + ']').prop('checked', true);
-                    if (result.StateOrTerritory != null) {
-                        $("#FModalState").val(result.StateOrTerritory);
-                    }
                     if (result.CollectionType != null) {
                         $('#sectionFPopUp input[name=CType][value=' + boolToString(result.CollectionType) + ']').prop('checked', true);
                     }
                     if (result.AreaBasedOn != null) {
                         $('#sectionFPopUp input[name=AB][value=' + boolToString(result.AreaBasedOn) + ']').prop('checked', true);
-                    }
-                    if (result.Area != null) {
-                        FetchAreas(result.Area);
                     }
                     if (result.RnDPosition != null) {
                         $('#sectionFPopUp input[name=RDP][value=' + boolToString(result.RnDPosition) + ']').prop('checked', true);

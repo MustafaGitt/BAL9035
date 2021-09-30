@@ -69,10 +69,8 @@ function createSectionFObj() {
         SectionFModal.F13 = true;
         SectionFModal.F14 = false;
         SectionFModal.F13a = UndefinedToNull($("input[name=F13a]:checked").val());
-        SectionFModal.StateOrTerritory = $("#FModalState").val();
         SectionFModal.CollectionType = convertToBool($("input[name=CType]:checked").val());
         SectionFModal.AreaBasedOn = convertToBool($("input[name=AB]:checked").val());
-        SectionFModal.Area = $.trim($("#SectionFArea").val());
         SectionFModal.RnDPosition = convertToBool($("input[name=RDP]:checked").val());
         SectionFModal.HCPosition = convertToBool($("input[name=HCP]:checked").val());
         SectionFModal.Per = $("#FModalPer").val();
@@ -98,10 +96,8 @@ function validateSectionFModal() {
     var checkRadio = $("input[name='FPopUp']:checked").val();
     ////F13 Inputs
     var F13a = $("input[name=F13a]:checked").val();
-    var valPState = $("#FModalState").val();
     var valCType = $("input[name=CType]:checked").val();
     var valAB = $("input[name=AB]:checked").val();
-    var valArea = $("#SectionFArea").val();
     var valRDP = $("input[name=RDP]:checked").val();
     var valHCP = $("input[name=HCP]:checked").val();
     var valPer = $("select[name='FModalPer']").val();
@@ -117,12 +113,6 @@ function validateSectionFModal() {
             errMsg = " Section F Question F13-A is Required.  ";
             $("#reqModal").append('<li>' + errMsg + '</li>');
         }
-        if (valPState == "0") {
-            secFerrCount++;
-            errMsg = " Section F  'State/Territory' is Required.  ";
-            $("#reqModal").append('<li>' + errMsg + '</li>');
-
-        }
         if (valCType == null) {
             secFerrCount++;
             errMsg = " Section F 'Collection Type' is Required.  ";
@@ -135,12 +125,6 @@ function validateSectionFModal() {
             $("#reqModal").append('<li>' + errMsg + '</li>');
 
         }
-        //if (valArea == "0") {
-        //    secFerrCount++;
-        //    errMsg = " Section F  'Area' is Required.  ";
-        //    $("#req").append('<li>' + errMsg + '</li>');
-
-        //}
         if (valRDP == null) {
             secFerrCount++;
             errMsg = " Section F 'Research and Development Position' is Required.  ";
