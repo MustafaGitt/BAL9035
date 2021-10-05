@@ -145,3 +145,39 @@ function ResetCountiestbl(FieldName) {
         previousValue = FieldName;
     }
 }
+
+function F10CheckBoxFunc() {
+    var isChecked = $('#F10CheckBox').is(':checked')
+    if (!isChecked) {
+        $('#multiplePurposeModal').modal('show');
+        $("#F10from").prop("disabled", true); 
+        $("#F10fromP").prop("disabled", true); 
+
+        $("#F10To").prop("disabled", true);
+        $("#F10ToP").prop("disabled", true); 
+    }
+    else {
+        $("#F10from").prop("disabled", false);
+        $("#F10fromP").prop("disabled", false); 
+        $("#F10To").prop("disabled", false);
+        $("#F10ToP").prop("disabled", false); 
+    }
+
+    UpdateWagesInLocTbl(isChecked);
+}
+
+function UpdateWagesInLocTbl(isChecked) {
+    var fromWageResult = $('#F10fromP').val() ? $('#F10from').val() + "." + $('#F10fromP').val() : $('#F10from').val();
+    var toWageResult = $('#F10ToP').val() ? $('#F10To').val() + "." + $('#F10ToP').val() : $('#F10To').val();
+    $('#locTable > tbody  > tr').each(function (index, tr) {
+        debugger;
+        if (isChecked) {
+            $(tr).find('#wageFrom')[0].innerText = fromWageResult;
+            $(tr).find('#wageTo')[0].innerText = toWageResult;
+        }
+        else {
+            $(tr).find('#wageFrom')[0].innerText = "";
+            $(tr).find('#wageTo')[0].innerText = "";
+        }
+    });
+}

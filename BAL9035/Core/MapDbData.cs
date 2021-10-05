@@ -47,6 +47,7 @@ namespace BAL9035.Core
                         form9035.SectionB.B7 = "1";
                         form9035.SectionF.F1 = "1";
                     }
+                    form9035.SectionF.F10CheckBox = true;
                     form9035.SectionF.F10From = dataRow["WageRangeLow"].ToString().Replace(",", "");
                     form9035.SectionF.F10To = dataRow["WageRangeHigh"].ToString().Replace(",", "");
                     form9035.SectionF.F11 = dataRow["PrevailingWage"].ToString().Replace(",", "");
@@ -191,6 +192,10 @@ namespace BAL9035.Core
                         City = loc.City;
                         loc.State = dataRow["State"].ToString();
                         loc.PostalCode = dataRow["ZipCode"].ToString();
+
+                        loc.LocWageFrom= dataRow["WageRangeLow"].ToString().Replace(",", "");
+                        loc.LocWageTo= dataRow["WageRangeHigh"].ToString().Replace(",", "");
+
                         loc.FmodalObject = sectionFModal;
                         locations.Add(loc);
                     }

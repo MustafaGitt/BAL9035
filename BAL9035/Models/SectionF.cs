@@ -14,6 +14,7 @@ namespace BAL9035.Models
         //public string F5 { get; set; }
         public string F10From { get; set; }
         public string F10To { get; set; }
+        public bool F10CheckBox { get; set; }
         public string F10a { get; set; }
         public string F11 { get; set; }
         public string F11a { get; set; }

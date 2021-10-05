@@ -202,7 +202,7 @@
                                                     <button type="button" onclick="productDelete(this);" class="btn btn-default btn-tbl-custom"><span class="glyphicon glyphicon-remove" /></button> |
                                                     @{
                                                         bool addClass = true;
-                                                        if (item.FmodalObject.F13==true)
+                                                        if (item.FmodalObject.F13 == true)
                                                         {
                                                             //F13 Case
                                                         }
@@ -219,11 +219,16 @@
                                                     <button type="button" onclick="addSection(@item.LocationId);" class="btn btn-default btn-tbl-custom  @( addClass == true ? "greenAddSection" : "redAddSection")"><span class="glyphicon glyphicon-plus" /></button>
                                                 </td>
                                                 <td style="display:none;"><input type="text" name="jsonValue" id="jsonValue" value="@Json.Encode(item.FmodalObject)"></td>
+
+
+                                                <td style="display:none;" id="wageFrom">@item.LocWageFrom</td>
+                                                <td style="display:none;" id="wageTo">@item.LocWageTo</td>
                                             </tr>
                                         }
                                     </table>
                                 </div>
                             </div>
+                            <p><input type="checkbox" name="F10CheckBox" id="F10CheckBox" value="true" onclick="F10CheckBoxFunc()" @(Model.Form9035.SectionF.F10CheckBox ? "checked='checked'" : "") style="position:absolute;left:91px;top:730px;width:15px;height:15px;"></p>
                             @{
                                 string F10from = "";
                                 string F10fromP = "";
@@ -477,6 +482,23 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="multiplePurposeModal" tabindex="-1" role="dialog" aria-labelledby="multiplePurposeModalTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="multiModalHeaderTitle">Location Specific Wage Range</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="multiModalBody">
+                        <b> Click on the Edit icon for each location to provide the location-specific wage range.</b>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
@@ -496,7 +518,7 @@
             /* The image used */
             var f = document.getElementById("regForm");
             var p = n + 1;
-            f.style.backgroundImage = "url(./Content/Images/" + p + ".jpg)";
+            f.style.backgroundImage = "url(./Content/Images/" + p + ".jpg?r=" +@DateTime.Now.Ticks+")";
 
             var x = document.getElementsByClassName("tab");
             x[n].style.display = "block";
@@ -543,6 +565,7 @@
             //   fixStepIndicator(n)
         }
         function nextPrev(n, tab) {
+            debugger;
             var errCount = 0;
             if (tab == 0) {
                 errCount = validateInputsByTab(currentTab);
@@ -609,7 +632,7 @@
 
             currentTab = selectedImage - 1
 
-            form.style.backgroundImage = "url(./Content/Images/" + selectedImage + ".jpg)";
+            form.style.backgroundImage = "url(./Content/Images/" + selectedImage + ".jpg?r=" +@DateTime.Now.Ticks+")";
 
             x[selectedImage - 1].style.display = "block";
 
@@ -669,7 +692,7 @@
 
             currentTab = selectedImage - 1
 
-            form.style.backgroundImage = "url(./Content/Images/" + selectedImage + ".jpg)";
+            form.style.backgroundImage = "url(./Content/Images/" + selectedImage + ".jpg?r=" +@DateTime.Now.Ticks+")";
 
             x[selectedImage - 1].style.display = "block";
 

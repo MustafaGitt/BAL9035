@@ -56,6 +56,7 @@ function fetchValues(balNo, sysid, isSubmit, email) {
     var valF7 = $("input[name=F7]").val();
     var valF8 = $("input[name=F8]").val();
     var valF9 = $("input[name=F9]").val();
+    var isCheckedF10CheckBox = $('#F10CheckBox').is(':checked')
     var valF10from = $("input[name=F10from]").val();
     var valF10fromP = $("input[name=F10fromP]").val();
     var valF10To = $("input[name=F10To]").val();
@@ -145,6 +146,7 @@ function fetchValues(balNo, sysid, isSubmit, email) {
         'F1': valF1,
         'F2': convertToBool(valF2),
         'F3': valF3,
+        'F10CheckBox': isCheckedF10CheckBox,
         'F10From': F10From,
         'F10To': F10To,
         'F10a': UndefinedToNull(valF10A),
@@ -190,6 +192,8 @@ function fetchValues(balNo, sysid, isSubmit, email) {
                 "State": $("td", this).eq(3).text(),
                 "County": $.trim($("td", this).eq(4).text()),
                 "PostalCode": $("td", this).eq(5).text(),
+                "LocWageFrom": $(this).find('#wageFrom').text(),
+                "LocWageTo": $(this).find('#wageTo').text(),
                 //'FmodalObject': $("td", this).eq(7).text(),
                 'FmodalObject': jsonObj
             };

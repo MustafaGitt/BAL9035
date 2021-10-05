@@ -438,6 +438,7 @@ function tab3(errCount, errMsg) {
         var breakLoop = 0;
         var $tds = $(this).find('td');
         var County = $tds.eq(4).text();
+        var locWageFrom = $(this).find('#wageFrom').text();
         if ($tds.eq(7).find("input").val().length > 0) {
             var popUpObj = $.parseJSON($tds.eq(7).find("input").val());
             if (popUpObj.F13 == true) {
@@ -474,6 +475,13 @@ function tab3(errCount, errMsg) {
             errCount++;
             breakLoop++;
             errMsg = " County must be provided for Section F to be populated on FLAG.  Click the Edit icon next to the work location and select the County from the drop down.";
+            $("#req").append('<li>' + errMsg + '</li>');
+        }
+
+        if (!locWageFrom) {
+            errCount++;
+            breakLoop++;
+            errMsg = " Wage Range From must be provided for Section F. Click on the Edit icon for each location to provide the location-specific wage range.";
             $("#req").append('<li>' + errMsg + '</li>');
         }
         if (breakLoop > 0) {
