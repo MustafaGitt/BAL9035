@@ -14,10 +14,8 @@ namespace BAL9035.Models
         public string F14b { get; set; }
         public string F14c { get; set; }
         public string F14d { get; set; }
-        public string StateOrTerritory { get; set; }
         public bool? CollectionType { get; set; }
         public bool? AreaBasedOn { get; set; }
-        public string Area { get; set; }
         public bool? RnDPosition { get; set; }
         public bool? HCPosition { get; set; }
         public string Per { get; set; }

@@ -96,9 +96,9 @@
                         </div>
                         <div class="tab">
                             <p style="position:absolute;left:85px;top:187px;font-weight:bold;">
-                                <input type="checkbox" id="FlagProfileChkBox" name="FlagProfileChkBox"   @(string.IsNullOrEmpty(Model.Form9035.SectionD.D0)?"":"checked='checked'")>
+                                <input type="checkbox" id="FlagProfileChkBox" name="FlagProfileChkBox" @(string.IsNullOrEmpty(Model.Form9035.SectionD.D0) ? "" : "checked='checked'")>
                                 <label for="FlagProfileChkBox"> I want to provide the Flag Profile Name </label>
-                                <input type="text" placeholder="..." oninput="this.className = ''" style="margin-left:6px;width:223px;" name="D0" id="D0" maxlength="20" @(string.IsNullOrEmpty(Model.Form9035.SectionD.D0)?"disabled='disabled'":"")  value="@(Model.Form9035.SectionD.D0)"/>
+                                <input type="text" placeholder="..." oninput="this.className = ''" style="margin-left:6px;width:223px;" name="D0" id="D0" maxlength="20" @(string.IsNullOrEmpty(Model.Form9035.SectionD.D0) ? "disabled='disabled'" : "") value="@(Model.Form9035.SectionD.D0)" />
                             </p>
                             <p><input placeholder="..." oninput="this.className = ''" name="D1" id="D1" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:110px;top:237px;width:250px;font-weight:bold;"></p>
                             <p><input placeholder="..." oninput="this.className = ''" name="D2" id="D2" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:387px;top:237px;width:195px;font-weight:bold;"></p>
@@ -149,7 +149,9 @@
                             <p><input type="radio" name="F2" id="F2Y" value="yes" @(Model.Form9035.SectionF.F2 == true ? "checked" : "") class="@(Model.Form9035.SectionF.F2 == null ? "customRadio" : "")" style="position:absolute;left:690px;top:350px;"></p>
                             <p><input type="radio" name="F2" id="F2N" value="no" @(Model.Form9035.SectionF.F2 == false ? "checked" : "") class="@(Model.Form9035.SectionF.F2 == null ? "customRadio" : "")" style="position:absolute;left:743px;top:350px;"> </p>
 
-                            <p><input placeholder="..." oninput="this.className = ''" name="F3" id="F3" value="@(Model.Form9035.SectionF.F3)" maxlength="100" style="position:absolute;left:110px;top:396px;width:674px;font-weight:bold;"></p>
+
+                            <p><input type="checkbox" name="F3CheckBox" id="F3CheckBox" value="true" onclick="F3CheckBoxFunc()" @(Model.Form9035.SectionF.F3CheckBox ? "checked='checked'" : "") style="position:absolute;left:540px;top:374px;width:15px;height:15px;"><b style="position: absolute; left: 558px; top: 377px;font-size:12px; ">Use this Business Name for all locations</b></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="F3" id="F3" value="@(Model.Form9035.SectionF.F3)" onkeyup="tblRowsUpdateF3()" maxlength="100" style="position:absolute;left:110px;top:396px;width:674px;font-weight:bold;"></p>
                             <div class="location-table">
                                 <div class="table-responsive" style="margin:4px;">
                                     <table id="locTable" class="table table-bordered table-striped table-font-size">
@@ -201,32 +203,35 @@
                                                     <button type="button" onclick="productDisplay(this);" class="btn btn-default btn-tbl-custom"><span class="glyphicon glyphicon-edit" /></button> |
                                                     <button type="button" onclick="productDelete(this);" class="btn btn-default btn-tbl-custom"><span class="glyphicon glyphicon-remove" /></button> |
                                                     @{
-                                                        bool addClass = false;
-                                                        if (!string.IsNullOrEmpty(item.FmodalObject.StateOrTerritory))
-                                                        { addClass = true; }
-                                                        else if (!string.IsNullOrEmpty(item.FmodalObject.F14a) && !string.IsNullOrEmpty(item.FmodalObject.F14b))
+                                                        bool addClass = true;
+                                                        if (item.FmodalObject.F13 == true)
                                                         {
-                                                            if (item.FmodalObject.F14a.ToLower() != "other")
+                                                            //F13 Case
+                                                        }
+                                                        else
+                                                        {
+                                                            //F14 Case
+                                                            if (string.IsNullOrEmpty(item.FmodalObject.F14a) || string.IsNullOrEmpty(item.FmodalObject.F14b))
                                                             {
-                                                                addClass = true;
-                                                            }
-                                                            else
-                                                            {
-                                                                if (item.FmodalObject.F14c != null && item.FmodalObject.F14d != null)
-                                                                {
-                                                                    addClass = true;
-                                                                }
+                                                                addClass = false;
                                                             }
                                                         }
+
                                                     }
                                                     <button type="button" onclick="addSection(@item.LocationId);" class="btn btn-default btn-tbl-custom  @( addClass == true ? "greenAddSection" : "redAddSection")"><span class="glyphicon glyphicon-plus" /></button>
                                                 </td>
                                                 <td style="display:none;"><input type="text" name="jsonValue" id="jsonValue" value="@Json.Encode(item.FmodalObject)"></td>
+
+
+                                                <td style="display:none;" id="wageFrom">@item.LocWageFrom</td>
+                                                <td style="display:none;" id="wageTo">@item.LocWageTo</td>
+                                                <td style="display:none;" id="tblSecondEntityName">@item.SecondEntityName</td>
                                             </tr>
                                         }
                                     </table>
                                 </div>
                             </div>
+                            <p><input type="checkbox" name="F10CheckBox" id="F10CheckBox" value="true" onclick="F10CheckBoxFunc()" @(Model.Form9035.SectionF.F10CheckBox ? "checked='checked'" : "") style="position:absolute;left:91px;top:730px;width:15px;height:15px;"></p>
                             @{
                                 string F10from = "";
                                 string F10fromP = "";
@@ -293,31 +298,31 @@
                             <p><input type="checkbox" name="F12" value="yes" disabled style="position:absolute;left:91px;top:879px;width:20px;height:15px;"></p>
 
                             @*<p>
-                                    <input type="checkbox" class="inactive" name="F13" value="yes" @(Model.Form9035.SectionF.F13 == true ? "checked" : "") style="position:absolute;left:92px;top:706px;width:20px;height:15px;">
-                                    <button type="button" id="btnF13" class="btn-image" onclick="EnablebtnF13()" style="position:absolute;left: 90px;top: 707px;"></button>
-                                </p>
+            <input type="checkbox" class="inactive" name="F13" value="yes" @(Model.Form9035.SectionF.F13 == true ? "checked" : "") style="position:absolute;left:92px;top:706px;width:20px;height:15px;">
+            <button type="button" id="btnF13" class="btn-image" onclick="EnablebtnF13()" style="position:absolute;left: 90px;top: 707px;"></button>
+        </p>
 
-                                <p><input type="radio" name="F13-A" @(Model.Form9035.SectionF.F13a == "I" ? "checked" : "") value="I" style="position:absolute;left:148px;top:734px;"></p>
-                                <p><input type="radio" name="F13-A" @(Model.Form9035.SectionF.F13a == "II" ? "checked" : "") value="II" style="position:absolute;left:214px;top:734px;"></p>
-                                <p><input type="radio" name="F13-A" @(Model.Form9035.SectionF.F13a == "III" ? "checked" : "") value="III" style="position:absolute;left:287px;top:734px;"></p>
-                                <p><input type="radio" name="F13-A" @(Model.Form9035.SectionF.F13a == "IV" ? "checked" : "") value="IV" style="position:absolute;left:349px;top:734px;"></p>
-                                <p><input type="radio" name="F13-A" @(Model.Form9035.SectionF.F13a == "NA" ? "checked" : "") value="NA" style="position:absolute;left:413px;top:734px;"></p>
+        <p><input type="radio" name="F13-A" @(Model.Form9035.SectionF.F13a == "I" ? "checked" : "") value="I" style="position:absolute;left:148px;top:734px;"></p>
+        <p><input type="radio" name="F13-A" @(Model.Form9035.SectionF.F13a == "II" ? "checked" : "") value="II" style="position:absolute;left:214px;top:734px;"></p>
+        <p><input type="radio" name="F13-A" @(Model.Form9035.SectionF.F13a == "III" ? "checked" : "") value="III" style="position:absolute;left:287px;top:734px;"></p>
+        <p><input type="radio" name="F13-A" @(Model.Form9035.SectionF.F13a == "IV" ? "checked" : "") value="IV" style="position:absolute;left:349px;top:734px;"></p>
+        <p><input type="radio" name="F13-A" @(Model.Form9035.SectionF.F13a == "NA" ? "checked" : "") value="NA" style="position:absolute;left:413px;top:734px;"></p>
 
-                                <p><input placeholder="..." oninput="this.className = ''" name="F13b" id="F13b" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:621px;top:733px;width:150px;height:20px;font-weight:bold;"></p>*@
+        <p><input placeholder="..." oninput="this.className = ''" name="F13b" id="F13b" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:621px;top:733px;width:150px;height:20px;font-weight:bold;"></p>*@
 
                             @*<p><input type="checkbox" name="F14" value="yes" @(Model.SectionFModal.F14 == true ? "checked" : "") style="position:absolute;left:92px;top:768px;width:20px;height:15px;"></p>
-                                <div id="divF14">
-                                    <p><input type="radio" name="F14-A" @(Model.SectionFModal.F14a == "CBA" ? "checked" : "") value="CBA" style="position:absolute;left:146px;top:794px;"></p>
-                                    <p><input type="radio" name="F14-A" @(Model.SectionFModal.F14a == "DBA" ? "checked" : "") value="DBA" style="position:absolute;left:217px;top:794px;"></p>
-                                    <p><input type="radio" name="F14-A" @(Model.SectionFModal.F14a == "SCA" ? "checked" : "") value="SCA" style="position:absolute;left:287px;top:794px;"></p>
-                                    <p><input type="radio" name="F14-A" @(Model.SectionFModal.F14a == "Other" ? "checked" : "") value="Other" style="position:absolute;left:351px;top:794px;"></p>
-                                    <p>
-                                        @{ string data = Model.SectionFModal.F14b; }
-                                        @Html.DropDownList("F14-B", DDLUtil.GetYear(data), new { style = "position:absolute;left:625px;top:795px;font-weight:bold;width:120px;" })
-                                    </p>
-                                    <p><input placeholder="..." oninput="this.className = ''" name="F14c" id="F14c" value="@(Model.SectionFModal.F14c)" maxlength="60" style="position:absolute;left:145px;top:832px;width:640px;font-weight:bold;"></p>
-                                    <p><input placeholder="..." oninput="this.className = ''" name="F14d" id="F14d" value="@(Model.SectionFModal.F14d)" maxlength="60" style="position:absolute;left:145px;top:874px;width:640px;font-weight:bold;"></p>
-                                </div>*@
+        <div id="divF14">
+            <p><input type="radio" name="F14-A" @(Model.SectionFModal.F14a == "CBA" ? "checked" : "") value="CBA" style="position:absolute;left:146px;top:794px;"></p>
+            <p><input type="radio" name="F14-A" @(Model.SectionFModal.F14a == "DBA" ? "checked" : "") value="DBA" style="position:absolute;left:217px;top:794px;"></p>
+            <p><input type="radio" name="F14-A" @(Model.SectionFModal.F14a == "SCA" ? "checked" : "") value="SCA" style="position:absolute;left:287px;top:794px;"></p>
+            <p><input type="radio" name="F14-A" @(Model.SectionFModal.F14a == "Other" ? "checked" : "") value="Other" style="position:absolute;left:351px;top:794px;"></p>
+            <p>
+                @{ string data = Model.SectionFModal.F14b; }
+                @Html.DropDownList("F14-B", DDLUtil.GetYear(data), new { style = "position:absolute;left:625px;top:795px;font-weight:bold;width:120px;" })
+            </p>
+            <p><input placeholder="..." oninput="this.className = ''" name="F14c" id="F14c" value="@(Model.SectionFModal.F14c)" maxlength="60" style="position:absolute;left:145px;top:832px;width:640px;font-weight:bold;"></p>
+            <p><input placeholder="..." oninput="this.className = ''" name="F14d" id="F14d" value="@(Model.SectionFModal.F14d)" maxlength="60" style="position:absolute;left:145px;top:874px;width:640px;font-weight:bold;"></p>
+        </div>*@
                         </div>
                         <div class="tab">
                             <p><input type="radio" name="G1" id="G1Y" value="yes" checked style="position:absolute;left:678px;top:538px;"></p>
@@ -480,6 +485,23 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="multiplePurposeModal" tabindex="-1" role="dialog" aria-labelledby="multiplePurposeModalTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="multiModalHeaderTitle"></h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        <b id="multiModalBody"> </b>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
@@ -499,7 +521,7 @@
             /* The image used */
             var f = document.getElementById("regForm");
             var p = n + 1;
-            f.style.backgroundImage = "url(./Content/Images/" + p + ".jpg)";
+            f.style.backgroundImage = "url(./Content/Images/" + p + ".jpg?r=" +@DateTime.Now.Ticks+")";
 
             var x = document.getElementsByClassName("tab");
             x[n].style.display = "block";
@@ -612,7 +634,7 @@
 
             currentTab = selectedImage - 1
 
-            form.style.backgroundImage = "url(./Content/Images/" + selectedImage + ".jpg)";
+            form.style.backgroundImage = "url(./Content/Images/" + selectedImage + ".jpg?r=" +@DateTime.Now.Ticks+")";
 
             x[selectedImage - 1].style.display = "block";
 
@@ -672,7 +694,7 @@
 
             currentTab = selectedImage - 1
 
-            form.style.backgroundImage = "url(./Content/Images/" + selectedImage + ".jpg)";
+            form.style.backgroundImage = "url(./Content/Images/" + selectedImage + ".jpg?r=" +@DateTime.Now.Ticks+")";
 
             x[selectedImage - 1].style.display = "block";
 
@@ -740,7 +762,7 @@
             }
             if (valueJson.length > 0) {
                 var parsedJson = JSON.parse(valueJson);
-                if (parsedJson.F14 != null || parsedJson.StateOrTerritory != null) {
+                if (parsedJson.F14 != null || parsedJson.Per != null) {
                     $('#btnCopyValues').removeClass('hidden');
                     if (!$('#btnCopyValues').hasClass('header')) {
                         $('#btnCopyValues').addClass('header');

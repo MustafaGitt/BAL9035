@@ -56,6 +56,8 @@ function fetchValues(balNo, sysid, isSubmit, email) {
     var valF7 = $("input[name=F7]").val();
     var valF8 = $("input[name=F8]").val();
     var valF9 = $("input[name=F9]").val();
+    var isCheckedF10CheckBox = $('#F10CheckBox').is(':checked')
+    var isCheckedF3CheckBox = $('#F3CheckBox').is(':checked')
     var valF10from = $("input[name=F10from]").val();
     var valF10fromP = $("input[name=F10fromP]").val();
     var valF10To = $("input[name=F10To]").val();
@@ -92,14 +94,6 @@ function fetchValues(balNo, sysid, isSubmit, email) {
     var valK3 = $("input[name=K3]").val();
     var valK4 = $("input[name=K4]").val();
     var valK5 = $("input[name=K5]").val();
-    //Section FModal
-    //var valFModalState = $("select[name=FModalState]").val();
-    //var valCType = $("input[name=CType]:checked").val();
-    //var valAB = $("input[name=AB]:checked").val();
-    //var valFModalArea = $("select[name=SectionFArea]").val();
-    //var valRDP = $("input[name=RDP]:checked").val();
-    //var valHCP = $("input[name=HCP]:checked").val();
-    //var valFModalPer = $("select[name=FModalPer]").val();
 
     var F10From = valF10from;
     if (valF10fromP.length > 0) {
@@ -153,6 +147,8 @@ function fetchValues(balNo, sysid, isSubmit, email) {
         'F1': valF1,
         'F2': convertToBool(valF2),
         'F3': valF3,
+        'F10CheckBox': isCheckedF10CheckBox,
+        'F3CheckBox': isCheckedF3CheckBox,
         'F10From': F10From,
         'F10To': F10To,
         'F10a': UndefinedToNull(valF10A),
@@ -190,12 +186,6 @@ function fetchValues(balNo, sysid, isSubmit, email) {
     var LocationsList = $("#locTable tr").map(function (id) {
         if (id > 0) {
             var jsonObj = $.parseJSON($('#locTable tr').eq(id).find('#jsonValue').val());
-            if (isSubmit == true) {
-                if (jsonObj.StateOrTerritory != "0") {
-                    $('select[name=FModalState]').val(jsonObj.StateOrTerritory);
-                    jsonObj.StateOrTerritory = $("select[name=FModalState] option:selected").text();
-                }
-            }
             return {
                 'LocationId': id,
                 "Address1": $("td", this).eq(0).text(),
@@ -204,6 +194,9 @@ function fetchValues(balNo, sysid, isSubmit, email) {
                 "State": $("td", this).eq(3).text(),
                 "County": $.trim($("td", this).eq(4).text()),
                 "PostalCode": $("td", this).eq(5).text(),
+                "LocWageFrom": $(this).find('#wageFrom').text(),
+                "LocWageTo": $(this).find('#wageTo').text(),
+                "SecondEntityName": $(this).find('#tblSecondEntityName').text(),
                 //'FmodalObject': $("td", this).eq(7).text(),
                 'FmodalObject': jsonObj
             };

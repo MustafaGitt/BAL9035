@@ -47,8 +47,11 @@ namespace BAL9035.Core
                         form9035.SectionB.B7 = "1";
                         form9035.SectionF.F1 = "1";
                     }
+                    form9035.SectionF.F10CheckBox = true;
+                    form9035.SectionF.F3CheckBox = true;
                     form9035.SectionF.F10From = dataRow["WageRangeLow"].ToString().Replace(",", "");
                     form9035.SectionF.F10To = dataRow["WageRangeHigh"].ToString().Replace(",", "");
+                    //form9035.SectionF.F3 = "test";
                     form9035.SectionF.F11 = dataRow["PrevailingWage"].ToString().Replace(",", "");
                     bool entity = false;
                     bool company = false;
@@ -140,6 +143,14 @@ namespace BAL9035.Core
                                     }
                             }
                         }
+
+
+                        //Set By Defaule Values
+                        sectionFModal.CollectionType = true;
+                        sectionFModal.AreaBasedOn = true;
+                        sectionFModal.RnDPosition = false;
+                        sectionFModal.HCPosition = false;
+                        sectionFModal.Per = "Year";
                     }
                     else if (dataRow["PrevailingWageSource"].ToString().ToLower().Equals("other"))
                     {
@@ -147,6 +158,7 @@ namespace BAL9035.Core
                         sectionFModal.F14a = "Other";
                         sectionFModal.F14b = dataRow["PrevailingWagePublishedYear"].ToString();
                         sectionFModal.F14c = dataRow["PrevailingWageOther"].ToString();
+                        sectionFModal.F14d = dataRow["PrevailingWageOther"].ToString();
                     }
                     // Creating Case Subtypes
                     if (dataRow["CaseSubType"].ToString() != null && dataRow["CaseSubType"].ToString() != "")
@@ -182,6 +194,10 @@ namespace BAL9035.Core
                         City = loc.City;
                         loc.State = dataRow["State"].ToString();
                         loc.PostalCode = dataRow["ZipCode"].ToString();
+
+                        loc.LocWageFrom= dataRow["WageRangeLow"].ToString().Replace(",", "");
+                        loc.LocWageTo= dataRow["WageRangeHigh"].ToString().Replace(",", "");
+
                         loc.FmodalObject = sectionFModal;
                         locations.Add(loc);
                     }

@@ -333,7 +333,7 @@ input.customRadio::after {
 .location-table {
     background-color: white;
     width: 700px;
-    height: 31%;
+    height: 28% !important;
     overflow-y: scroll;
     left: 87px;
     top: 426px;

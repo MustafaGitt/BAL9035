@@ -1,24 +1,4 @@
-﻿// Creating Area DropDown Options with selected option 
-function FetchAreas(selectedvalue) {
-    if (selectedvalue == null || selectedvalue == "") {
-        selectedvalue = "0";
-    }
-    $("#SectionFArea").empty().append('<option value="0">-- SELECT --</option>');
-    var stateVal = $("select[name=FModalState] option:selected").text();
-    var chkStateCode = stateVal.charCodeAt(0);
-    let areas = []
-    //fetching counties values which are in the following state
-    areas = DDLCounty.Common.ddl_childValue.filter(function (area) {
-        return area.PValue == stateVal;
-    });
-    // Appending options into DDL
-    if (areas.length > 0) {
-        $.each(areas, function (i) {
-            $("#SectionFArea").append("<option value='" + $.trim(areas[i].Value) + "'>" + $.trim(areas[i].Text) + "</option>");
-            $("#SectionFArea").val(selectedvalue);
-        });
-    }
-}
+﻿
 // Creating County DropDown Options with selected option 
 function FetchCounties(selectedvalue, jsonValue) {
     $("#reqLoc").empty();
@@ -163,5 +143,81 @@ function ResetCountiestbl(FieldName) {
                 County = $tds.eq(4).text("");
         });
         previousValue = FieldName;
+    }
+}
+
+function F10CheckBoxFunc() {
+    var isChecked = $('#F10CheckBox').is(':checked')
+    if (!isChecked) {
+        //update multiplePurposeModal Header and body Text to show in modal
+        $('#multiModalHeaderTitle').html($.parseHTML('<span class="glyphicon glyphicon-alert"></span>  Location Specific Wage Range'));
+        $('#multiModalBody').html($.parseHTML('Click on the Edit icon <span class="glyphicon glyphicon-edit"></span> for each location to provide the location-specific wage range.')).contents();
+        $('#multiplePurposeModal').modal('show');
+        $("#F10from").prop("disabled", true); 
+        $("#F10fromP").prop("disabled", true); 
+
+        $("#F10To").prop("disabled", true);
+        $("#F10ToP").prop("disabled", true); 
+    }
+    else {
+        $("#F10from").prop("disabled", false);
+        $("#F10fromP").prop("disabled", false); 
+        $("#F10To").prop("disabled", false);
+        $("#F10ToP").prop("disabled", false); 
+    }
+
+    UpdateWagesInLocTbl(isChecked);
+}
+
+function UpdateWagesInLocTbl(isChecked) {
+    var fromWageResult = $('#F10fromP').val() ? $('#F10from').val() + "." + $('#F10fromP').val() : $('#F10from').val();
+    var toWageResult = $('#F10ToP').val() ? $('#F10To').val() + "." + $('#F10ToP').val() : $('#F10To').val();
+    $('#locTable > tbody  > tr').each(function (index, tr) {
+        debugger;
+        if (isChecked) {
+            $(tr).find('#wageFrom')[0].innerText = fromWageResult;
+            $(tr).find('#wageTo')[0].innerText = toWageResult;
+        }
+        else {
+            $(tr).find('#wageFrom')[0].innerText = "";
+            $(tr).find('#wageTo')[0].innerText = "";
+        }
+    });
+}
+
+function F3CheckBoxFunc() {
+    var isChecked = $('#F3CheckBox').is(':checked');
+    if (!isChecked) {
+        //update multiplePurposeModal Header and body Text to show in modal
+        $('#multiModalHeaderTitle').html($.parseHTML('<span class="glyphicon glyphicon-alert"></span> Location Specific Secondary Business Entity Name'));
+        $('#multiModalBody').html($.parseHTML('Click on the Edit icon <span class="glyphicon glyphicon-edit"></span> for each location to provide the location-specific Secondary Entity Business Name'));
+        $('#multiplePurposeModal').modal('show');
+        $("#F3").prop("disabled", true);
+    }
+    else {
+        $("#F3").prop("disabled", false);
+    }
+    UpdateBusinessEntityInLocTbl(isChecked);
+}
+
+function UpdateBusinessEntityInLocTbl(isChecked) {
+    var entityBusinessNameResult = $('#F3').val();
+    $('#locTable > tbody  > tr').each(function (index, tr) {
+        if (isChecked) {
+            $(tr).find('#tblSecondEntityName')[0].innerText = entityBusinessNameResult;
+        }
+        else {
+            $(tr).find('#tblSecondEntityName')[0].innerText = "";
+        }
+    });
+}
+
+function tblRowsUpdateF3() {
+    debugger;
+    var isChecked = $('#F3CheckBox').is(':checked');
+    if (isChecked) {
+        $('#locTable > tbody  > tr').each(function (index, tr) {
+            $(tr).find('#tblSecondEntityName')[0].innerText = $('#F3').val();
+        });
     }
 }
