@@ -149,6 +149,9 @@ function ResetCountiestbl(FieldName) {
 function F10CheckBoxFunc() {
     var isChecked = $('#F10CheckBox').is(':checked')
     if (!isChecked) {
+        //update multiplePurposeModal Header and body Text to show in modal
+        $('#multiModalHeaderTitle').html($.parseHTML('<span class="glyphicon glyphicon-alert"></span>  Location Specific Wage Range'));
+        $('#multiModalBody').html($.parseHTML('Click on the Edit icon <span class="glyphicon glyphicon-edit"></span> for each location to provide the location-specific wage range.')).contents();
         $('#multiplePurposeModal').modal('show');
         $("#F10from").prop("disabled", true); 
         $("#F10fromP").prop("disabled", true); 
@@ -180,4 +183,41 @@ function UpdateWagesInLocTbl(isChecked) {
             $(tr).find('#wageTo')[0].innerText = "";
         }
     });
+}
+
+function F3CheckBoxFunc() {
+    var isChecked = $('#F3CheckBox').is(':checked');
+    if (!isChecked) {
+        //update multiplePurposeModal Header and body Text to show in modal
+        $('#multiModalHeaderTitle').html($.parseHTML('<span class="glyphicon glyphicon-alert"></span> Location Specific Secondary Business Entity Name'));
+        $('#multiModalBody').html($.parseHTML('Click on the Edit icon <span class="glyphicon glyphicon-edit"></span> for each location to provide the location-specific Secondary Entity Business Name'));
+        $('#multiplePurposeModal').modal('show');
+        $("#F3").prop("disabled", true);
+    }
+    else {
+        $("#F3").prop("disabled", false);
+    }
+    UpdateBusinessEntityInLocTbl(isChecked);
+}
+
+function UpdateBusinessEntityInLocTbl(isChecked) {
+    var entityBusinessNameResult = $('#F3').val();
+    $('#locTable > tbody  > tr').each(function (index, tr) {
+        if (isChecked) {
+            $(tr).find('#tblSecondEntityName')[0].innerText = entityBusinessNameResult;
+        }
+        else {
+            $(tr).find('#tblSecondEntityName')[0].innerText = "";
+        }
+    });
+}
+
+function tblRowsUpdateF3() {
+    debugger;
+    var isChecked = $('#F3CheckBox').is(':checked');
+    if (isChecked) {
+        $('#locTable > tbody  > tr').each(function (index, tr) {
+            $(tr).find('#tblSecondEntityName')[0].innerText = $('#F3').val();
+        });
+    }
 }

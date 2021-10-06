@@ -48,8 +48,10 @@ namespace BAL9035.Core
                         form9035.SectionF.F1 = "1";
                     }
                     form9035.SectionF.F10CheckBox = true;
+                    form9035.SectionF.F3CheckBox = true;
                     form9035.SectionF.F10From = dataRow["WageRangeLow"].ToString().Replace(",", "");
                     form9035.SectionF.F10To = dataRow["WageRangeHigh"].ToString().Replace(",", "");
+                    //form9035.SectionF.F3 = "test";
                     form9035.SectionF.F11 = dataRow["PrevailingWage"].ToString().Replace(",", "");
                     bool entity = false;
                     bool company = false;

@@ -149,7 +149,9 @@
                             <p><input type="radio" name="F2" id="F2Y" value="yes" @(Model.Form9035.SectionF.F2 == true ? "checked" : "") class="@(Model.Form9035.SectionF.F2 == null ? "customRadio" : "")" style="position:absolute;left:690px;top:350px;"></p>
                             <p><input type="radio" name="F2" id="F2N" value="no" @(Model.Form9035.SectionF.F2 == false ? "checked" : "") class="@(Model.Form9035.SectionF.F2 == null ? "customRadio" : "")" style="position:absolute;left:743px;top:350px;"> </p>
 
-                            <p><input placeholder="..." oninput="this.className = ''" name="F3" id="F3" value="@(Model.Form9035.SectionF.F3)" maxlength="100" style="position:absolute;left:110px;top:396px;width:674px;font-weight:bold;"></p>
+
+                            <p><input type="checkbox" name="F3CheckBox" id="F3CheckBox" value="true" onclick="F3CheckBoxFunc()" @(Model.Form9035.SectionF.F3CheckBox ? "checked='checked'" : "") style="position:absolute;left:540px;top:374px;width:15px;height:15px;"><b style="position: absolute; left: 558px; top: 377px;font-size:12px; ">Use this Business Name for all locations</b></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="F3" id="F3" value="@(Model.Form9035.SectionF.F3)" onkeyup="tblRowsUpdateF3()" maxlength="100" style="position:absolute;left:110px;top:396px;width:674px;font-weight:bold;"></p>
                             <div class="location-table">
                                 <div class="table-responsive" style="margin:4px;">
                                     <table id="locTable" class="table table-bordered table-striped table-font-size">
@@ -223,6 +225,7 @@
 
                                                 <td style="display:none;" id="wageFrom">@item.LocWageFrom</td>
                                                 <td style="display:none;" id="wageTo">@item.LocWageTo</td>
+                                                <td style="display:none;" id="tblSecondEntityName">@item.SecondEntityName</td>
                                             </tr>
                                         }
                                     </table>
@@ -295,31 +298,31 @@
                             <p><input type="checkbox" name="F12" value="yes" disabled style="position:absolute;left:91px;top:879px;width:20px;height:15px;"></p>
 
                             @*<p>
-                                    <input type="checkbox" class="inactive" name="F13" value="yes" @(Model.Form9035.SectionF.F13 == true ? "checked" : "") style="position:absolute;left:92px;top:706px;width:20px;height:15px;">
-                                    <button type="button" id="btnF13" class="btn-image" onclick="EnablebtnF13()" style="position:absolute;left: 90px;top: 707px;"></button>
-                                </p>
+            <input type="checkbox" class="inactive" name="F13" value="yes" @(Model.Form9035.SectionF.F13 == true ? "checked" : "") style="position:absolute;left:92px;top:706px;width:20px;height:15px;">
+            <button type="button" id="btnF13" class="btn-image" onclick="EnablebtnF13()" style="position:absolute;left: 90px;top: 707px;"></button>
+        </p>
 
-                                <p><input type="radio" name="F13-A" @(Model.Form9035.SectionF.F13a == "I" ? "checked" : "") value="I" style="position:absolute;left:148px;top:734px;"></p>
-                                <p><input type="radio" name="F13-A" @(Model.Form9035.SectionF.F13a == "II" ? "checked" : "") value="II" style="position:absolute;left:214px;top:734px;"></p>
-                                <p><input type="radio" name="F13-A" @(Model.Form9035.SectionF.F13a == "III" ? "checked" : "") value="III" style="position:absolute;left:287px;top:734px;"></p>
-                                <p><input type="radio" name="F13-A" @(Model.Form9035.SectionF.F13a == "IV" ? "checked" : "") value="IV" style="position:absolute;left:349px;top:734px;"></p>
-                                <p><input type="radio" name="F13-A" @(Model.Form9035.SectionF.F13a == "NA" ? "checked" : "") value="NA" style="position:absolute;left:413px;top:734px;"></p>
+        <p><input type="radio" name="F13-A" @(Model.Form9035.SectionF.F13a == "I" ? "checked" : "") value="I" style="position:absolute;left:148px;top:734px;"></p>
+        <p><input type="radio" name="F13-A" @(Model.Form9035.SectionF.F13a == "II" ? "checked" : "") value="II" style="position:absolute;left:214px;top:734px;"></p>
+        <p><input type="radio" name="F13-A" @(Model.Form9035.SectionF.F13a == "III" ? "checked" : "") value="III" style="position:absolute;left:287px;top:734px;"></p>
+        <p><input type="radio" name="F13-A" @(Model.Form9035.SectionF.F13a == "IV" ? "checked" : "") value="IV" style="position:absolute;left:349px;top:734px;"></p>
+        <p><input type="radio" name="F13-A" @(Model.Form9035.SectionF.F13a == "NA" ? "checked" : "") value="NA" style="position:absolute;left:413px;top:734px;"></p>
 
-                                <p><input placeholder="..." oninput="this.className = ''" name="F13b" id="F13b" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:621px;top:733px;width:150px;height:20px;font-weight:bold;"></p>*@
+        <p><input placeholder="..." oninput="this.className = ''" name="F13b" id="F13b" maxlength="20" value="populated by FLAG" disabled style="position:absolute;left:621px;top:733px;width:150px;height:20px;font-weight:bold;"></p>*@
 
                             @*<p><input type="checkbox" name="F14" value="yes" @(Model.SectionFModal.F14 == true ? "checked" : "") style="position:absolute;left:92px;top:768px;width:20px;height:15px;"></p>
-                                <div id="divF14">
-                                    <p><input type="radio" name="F14-A" @(Model.SectionFModal.F14a == "CBA" ? "checked" : "") value="CBA" style="position:absolute;left:146px;top:794px;"></p>
-                                    <p><input type="radio" name="F14-A" @(Model.SectionFModal.F14a == "DBA" ? "checked" : "") value="DBA" style="position:absolute;left:217px;top:794px;"></p>
-                                    <p><input type="radio" name="F14-A" @(Model.SectionFModal.F14a == "SCA" ? "checked" : "") value="SCA" style="position:absolute;left:287px;top:794px;"></p>
-                                    <p><input type="radio" name="F14-A" @(Model.SectionFModal.F14a == "Other" ? "checked" : "") value="Other" style="position:absolute;left:351px;top:794px;"></p>
-                                    <p>
-                                        @{ string data = Model.SectionFModal.F14b; }
-                                        @Html.DropDownList("F14-B", DDLUtil.GetYear(data), new { style = "position:absolute;left:625px;top:795px;font-weight:bold;width:120px;" })
-                                    </p>
-                                    <p><input placeholder="..." oninput="this.className = ''" name="F14c" id="F14c" value="@(Model.SectionFModal.F14c)" maxlength="60" style="position:absolute;left:145px;top:832px;width:640px;font-weight:bold;"></p>
-                                    <p><input placeholder="..." oninput="this.className = ''" name="F14d" id="F14d" value="@(Model.SectionFModal.F14d)" maxlength="60" style="position:absolute;left:145px;top:874px;width:640px;font-weight:bold;"></p>
-                                </div>*@
+        <div id="divF14">
+            <p><input type="radio" name="F14-A" @(Model.SectionFModal.F14a == "CBA" ? "checked" : "") value="CBA" style="position:absolute;left:146px;top:794px;"></p>
+            <p><input type="radio" name="F14-A" @(Model.SectionFModal.F14a == "DBA" ? "checked" : "") value="DBA" style="position:absolute;left:217px;top:794px;"></p>
+            <p><input type="radio" name="F14-A" @(Model.SectionFModal.F14a == "SCA" ? "checked" : "") value="SCA" style="position:absolute;left:287px;top:794px;"></p>
+            <p><input type="radio" name="F14-A" @(Model.SectionFModal.F14a == "Other" ? "checked" : "") value="Other" style="position:absolute;left:351px;top:794px;"></p>
+            <p>
+                @{ string data = Model.SectionFModal.F14b; }
+                @Html.DropDownList("F14-B", DDLUtil.GetYear(data), new { style = "position:absolute;left:625px;top:795px;font-weight:bold;width:120px;" })
+            </p>
+            <p><input placeholder="..." oninput="this.className = ''" name="F14c" id="F14c" value="@(Model.SectionFModal.F14c)" maxlength="60" style="position:absolute;left:145px;top:832px;width:640px;font-weight:bold;"></p>
+            <p><input placeholder="..." oninput="this.className = ''" name="F14d" id="F14d" value="@(Model.SectionFModal.F14d)" maxlength="60" style="position:absolute;left:145px;top:874px;width:640px;font-weight:bold;"></p>
+        </div>*@
                         </div>
                         <div class="tab">
                             <p><input type="radio" name="G1" id="G1Y" value="yes" checked style="position:absolute;left:678px;top:538px;"></p>
@@ -486,11 +489,11 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="multiModalHeaderTitle">Location Specific Wage Range</h4>
+                    <h4 class="modal-title" id="multiModalHeaderTitle"></h4>
                 </div>
                 <div class="modal-body">
-                    <p id="multiModalBody">
-                        <b> Click on the Edit icon for each location to provide the location-specific wage range.</b>
+                    <p>
+                        <b id="multiModalBody"> </b>
                     </p>
                 </div>
                 <div class="modal-footer">
@@ -565,7 +568,6 @@
             //   fixStepIndicator(n)
         }
         function nextPrev(n, tab) {
-            debugger;
             var errCount = 0;
             if (tab == 0) {
                 errCount = validateInputsByTab(currentTab);

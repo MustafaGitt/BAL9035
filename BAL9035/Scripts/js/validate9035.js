@@ -439,6 +439,7 @@ function tab3(errCount, errMsg) {
         var $tds = $(this).find('td');
         var County = $tds.eq(4).text();
         var locWageFrom = $(this).find('#wageFrom').text();
+        var locSecEntBName = $(this).find('#tblSecondEntityName').text();
         if ($tds.eq(7).find("input").val().length > 0) {
             var popUpObj = $.parseJSON($tds.eq(7).find("input").val());
             if (popUpObj.F13 == true) {
@@ -482,6 +483,12 @@ function tab3(errCount, errMsg) {
             errCount++;
             breakLoop++;
             errMsg = " Wage Range From must be provided for Section F. Click on the Edit icon for each location to provide the location-specific wage range.";
+            $("#req").append('<li>' + errMsg + '</li>');
+        }
+        if (!locSecEntBName) {
+            errCount++;
+            breakLoop++;
+            errMsg = " Secondary Entity Business Name must be provided for Section F. Click on the Edit icon for each location to provide the location-specific Secondary Entity Business Name";
             $("#req").append('<li>' + errMsg + '</li>');
         }
         if (breakLoop > 0) {

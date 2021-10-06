@@ -11,7 +11,9 @@ function validateLocation() {
     var valF9 = $("input[name=F9]").val();
     var wageFrom = $('#LocWageFrom').val();
     var wageTo = $('#LocWageTo').val();
-    var isChecked = $('#F10CheckBox').is(':checked')
+    var secondryEntName = $('#SecondEntityName').val();
+    var isCheckedF10 = $('#F10CheckBox').is(':checked')
+    var isCheckedF3 = $('#F3CheckBox').is(':checked')
     if (valF4.length > 0) {
         if (valF4.length < 5) {
             errCount++;
@@ -56,7 +58,7 @@ function validateLocation() {
         }
     }
 
-    if (!isChecked) {
+    if (!isCheckedF10) {
         if (!wageFrom) {
             errCount++;
             errMsg = " Section F Wage Range From Is Required";
@@ -65,6 +67,13 @@ function validateLocation() {
         if (!wageTo) {
             errCount++;
             errMsg = " Section F Wage Range To Is Required";
+            $("#reqLoc").append('<li>' + errMsg + '</li>');
+        }
+    }
+    if (!isCheckedF3) {
+        if (!secondryEntName) {
+            errCount++;
+            errMsg = " Section F Secondary Entity Business Name Is Required";
             $("#reqLoc").append('<li>' + errMsg + '</li>');
         }
     }
@@ -80,6 +89,7 @@ function btnLocOnClose() {
     $("input[name=F9]").val("");
     $("#LocWageFrom").val("");
     $("#LocWageTo").val("");
+    $("#SecondEntityName").val("");
 }
 // Add or Update the Location Table Values
 function UpdateLocationTable() {
@@ -144,29 +154,7 @@ function productDisplay(ctl) {
 
     $("input[name=LocWageFrom]").val(cols[8].innerText);
     $("input[name=LocWageTo]").val(cols[9].innerText);
-
-
-
-
-    //var isChecked = $('#F10CheckBox').is(':checked')
-    //if (isChecked) {
-       
-    //    $("input[name=LocWageFrom]").val(cols[8].innerText);
-    //    $("input[name=LocWageTo]").val(cols[9].innerText);
-    //}
-    //else {
-    //    //check if value updated
-    //    var Fromval1 = $('#F10from').val();
-    //    var Fromval2 = $('#F10fromP').val();
-    //    var resultFromWages = Fromval1 + Fromval2;
-    //    if (resultFromWages == cols[8].innerText) {
-
-    //    }
-    //    $("input[name=LocWageFrom]").val('');
-    //    $("input[name=LocWageTo]").val('');
-    //}
-
-
+    $("input[name=SecondEntityName]").val($(row).find('#tblSecondEntityName').text());
     $('#LocPopUp').modal();
     // Change Update Button Text
     $("#btnLocSav1").text("Update Location");
@@ -180,6 +168,7 @@ function AddLocationTable(jsonObject) {
     var valF9 = $("input[name=F9]").val();
     var valLocWageFrom = $("input[name=LocWageFrom]").val();
     var valLocWageTo = $("input[name=LocWageTo]").val();
+    var valLocBusnsName = $("input[name=SecondEntityName]").val();
 
     var highlight = "<td>";
     if (valF8 == "0") {
@@ -207,7 +196,7 @@ function AddLocationTable(jsonObject) {
             '<button type="button" onclick="productDisplay(this);" class="btn btn-default btn-tbl-custom"><span class="glyphicon glyphicon-edit" /></button> | ' +
             '<button type="button" onclick="productDelete(this);" class="btn btn-default btn-tbl-custom"><span class="glyphicon glyphicon-remove" /></button> | ' +
             '<button type="button" onclick="addSection(' + inc + ');" class="btn btn-default btn-tbl-custom redAddSection"><span class="glyphicon glyphicon-plus" /></button>' +
-            '</td><td style="display:none;"><input type="text" name="jsonValue" id="jsonValue" value=""></td><td style="display:none;" id="wageFrom">' + valLocWageFrom + '</td><td style="display:none;" id="wageTo">' + valLocWageTo +'</td></tr>');
+            '</td><td style="display:none;"><input type="text" name="jsonValue" id="jsonValue" value=""></td><td style="display:none;" id="wageFrom">' + valLocWageFrom + '</td><td style="display:none;" id="wageTo">' + valLocWageTo + '</td><td style="display:none;" id="tblSecondEntityName">' + valLocBusnsName +'</td></tr>');
         $('#locTable tr').eq(inc).find('#jsonValue').val(jsonObject);
     }
 
@@ -230,6 +219,7 @@ function productBuildTableRow(id) {
     var valF9 = $("input[name=F9]").val();
     var valLocWageFrom = $("input[name=LocWageFrom]").val();
     var valLocWageTo = $("input[name=LocWageTo]").val();
+    var valLocBusnsName = $("input[name=SecondEntityName]").val();
 
     var highlight = "<td>";
     if (valF8 == "0") {
@@ -266,7 +256,7 @@ function productBuildTableRow(id) {
         '<button type="button" onclick="productDisplay(this);" data-id=' + id + ' class="btn btn-default btn-tbl-custom"><span class="glyphicon glyphicon-edit" /></button> | ' +
         '<button type="button" onclick="productDelete(this);" data-id=' + id + ' class="btn btn-default btn-tbl-custom"><span class="glyphicon glyphicon-remove" /></button> | ' +
         '<button type="button" onclick="addSection(' + id + ');" data-id=' + id + ' class="btn btn-default btn-tbl-custom ' + classResult + '"><span class="glyphicon glyphicon-plus" /></button>' +
-        '</td><td style="display:none;"><input type="text" name="jsonValue" id="jsonValue" value=""></td><td style="display:none;" id="wageFrom">' + valLocWageFrom + '</td><td style="display:none;" id="wageTo">' + valLocWageTo+'</td></tr>';
+        '</td><td style="display:none;"><input type="text" name="jsonValue" id="jsonValue" value=""></td><td style="display:none;" id="wageFrom">' + valLocWageFrom + '</td><td style="display:none;" id="wageTo">' + valLocWageTo + '</td><td style="display:none;" id="tblSecondEntityName">' + valLocBusnsName +'</td></tr>';
     return ret;
 }
 //create a new Section (F13,F14)

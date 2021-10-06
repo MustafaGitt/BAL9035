@@ -16,6 +16,7 @@ namespace BAL9035.Models
         public string PostalCode { get; set; }
         public string LocWageFrom { get; set; }
         public string LocWageTo { get; set; }
+        public string SecondEntityName { get; set; }
         public SectionFModal FmodalObject { get; set; }
     }
 }
