@@ -21,7 +21,8 @@ namespace BAL9035
                 "~/Scripts/js/addCredentials.js",
                 "~/Scripts/js/ddlMethods.js",
                 "~/Scripts/js/saveDataLoc.js",
-                "~/Scripts/js/sectionFPopup.js"
+                "~/Scripts/js/sectionFPopup.js",
+                "~/Scripts/js/modalEvents.js"
                 ));
             bundles.Add(new ScriptBundle("~/bundles/ddlCounty").Include(
                 "~/Scripts/ddlCounty/ddlCounty.js",

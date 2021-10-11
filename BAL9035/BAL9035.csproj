@@ -296,6 +296,7 @@
     <Content Include="Scripts\js\addCredentials.js" />
     <Content Include="Scripts\js\ddlMethods.js" />
     <Content Include="Scripts\js\filter.js" />
+    <Content Include="Scripts\js\modalEvents.js" />
     <Content Include="Scripts\js\saveData.js" />
     <Content Include="Scripts\js\saveDataLoc.js" />
     <Content Include="Scripts\js\sectionFPopup.js" />

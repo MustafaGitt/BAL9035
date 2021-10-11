@@ -91,6 +91,11 @@ function tab1(errCount, errMsg) {
         errMsg = " Section B Question 1 Length should be less or equal to 50 characters. ";
         $("#req").append('<li>' + errMsg + '</li>');
     }
+    if (!valB2) {
+        errCount++;
+        errMsg = "Section B Question 2: SOC (ONET/OES) Code is required";
+        $("#req").append('<li>' + errMsg + '</li>');
+    }
     if (valB2.length > 10) {
         errCount++;
         errMsg = " Section B Question 2 Length should be less or equal to 10 characters. ";
@@ -99,6 +104,16 @@ function tab1(errCount, errMsg) {
     if (valB3.length > 60) {
         errCount++;
         errMsg = " Section B Question 3 Length should be less or equal to 60 characters. ";
+        $("#req").append('<li>' + errMsg + '</li>');
+    }
+    if (!valB4) {
+        errCount++;
+        errMsg = "Section B Question 4: Is this a full-time position must be selected";
+        $("#req").append('<li>' + errMsg + '</li>');
+    }
+    if (!valB5) {
+        errCount++;
+        errMsg = "Section B Question 5: Begin Date is required";
         $("#req").append('<li>' + errMsg + '</li>');
     }
     // greater than today's date
@@ -147,6 +162,11 @@ function tab1(errCount, errMsg) {
     if (valB5.length > 10) {
         errCount++;
         errMsg = " Section B Question 5 Length should be less or equal to 10 characters. ";
+        $("#req").append('<li>' + errMsg + '</li>');
+    }
+    if (!valB6) {
+        errCount++;
+        errMsg = "Section B Question 6: End Date is required";
         $("#req").append('<li>' + errMsg + '</li>');
     }
     if (valB6.length > 10) {
@@ -277,6 +297,7 @@ function tab3(errCount, errMsg) {
     var valF1 = $("input[name=F1]").val();
     var valF2 = $("input[name=F2]:checked").val();
     var valF3 = $("input[name=F3]").val();
+    var valF3CheckBox = $('#F3CheckBox').is(':checked');
     var valF4 = $("input[name=F4]").val();
     var valF5 = $("input[name=F5]").val();
     var valF6 = $("input[name=F6]").val();
@@ -298,7 +319,17 @@ function tab3(errCount, errMsg) {
     var valF14B = $("select[name=F14-B]").val();
     var valF14c = $("input[name=F14c]").val();
     var valF14d = $("input[name=F14d]").val();
+    var valH1 = $('input[name=H1]:checked').val();
+    var valH2 = $('input[name=H2]:checked').val();
+    var valH3 = $('input[name=H3]:checked').val();
+    var valH4 = $('input[name=H4]:checked').val();
+    var valH5 = $('input[name=H5]:checked').val();
 
+    if (!valF1) {
+        errCount++;
+        errMsg = " Section F Question 1 : Enter the estimated number of works that will perform work at this place of employment under the LCA is required";
+        $("#req").append('<li>' + errMsg + '</li>');
+    }
     //Len Check
     if (valF1.length > 0) {
         if (valF1.length > 15) {
@@ -316,6 +347,20 @@ function tab3(errCount, errMsg) {
             $("#req").append('<li>' + errMsg + '</li>');
         }
     }
+    if (!valF2) {
+        errCount++;
+        errMsg = " Section F Question 2 : Please select one option for Indicate whether the work(s) subject to this LCA will be placed with a secondary entity at this place of employment";
+        $("#req").append('<li>' + errMsg + '</li>');
+    }
+
+    if (valF2 && valF2 == 'yes') {
+        if (valF3CheckBox && !valF3) {
+            errCount++;
+            errMsg = " Section F Question 3 : provide the legal business name of the secondary entity’ is required.";
+            $("#req").append('<li>' + errMsg + '</li>');
+        }
+    }
+
     //Len Check
     if (valF3.length > 0) {
         if (valF3.length < 5) {
@@ -330,6 +375,11 @@ function tab3(errCount, errMsg) {
             errMsg = " Section F Question 3 : Length must be less or equal to 100 characters.";
             $("#req").append('<li>' + errMsg + '</li>');
         }
+    }
+    if (!valF10from) {
+        errCount++;
+        errMsg = " Section F Question 10 : Wage Rate Paid to Nonimmigrant Workers From is required";
+        $("#req").append('<li>' + errMsg + '</li>');
     }
     if (valF10from.length > 0) {
         if (valF10from.length > 9) {
@@ -463,6 +513,26 @@ function tab3(errCount, errMsg) {
                     errMsg = "Section F : Click on the '+' icon button in Location Table to provide additional required fields of Section F.13";
                     $("#req").append('<li>' + errMsg + '</li>');
                 }
+
+                if (!valF10A) {
+                    errCount++;
+                    breakLoop++;
+                    errMsg = "Section F Question 10a: Per value is required";
+                    $("#req").append('<li>' + errMsg + '</li>');
+                }
+                if (!valF11) {
+                    errCount++;
+                    breakLoop++;
+                    errMsg = "Section F Question 11: Prevailing Wage Rate value is required.";
+                    $("#req").append('<li>' + errMsg + '</li>');
+                }
+                if (!valF11A) {
+                    errCount++;
+                    breakLoop++;
+                    errMsg = "Section F Question 11a: Per value is required";
+                    $("#req").append('<li>' + errMsg + '</li>');
+                }
+
             }
 
         }
@@ -485,7 +555,7 @@ function tab3(errCount, errMsg) {
             errMsg = " Wage Range From must be provided for Section F. Click on the Edit icon for each location to provide the location-specific wage range.";
             $("#req").append('<li>' + errMsg + '</li>');
         }
-        if (!locSecEntBName) {
+        if (!valF3CheckBox && !locSecEntBName) {
             errCount++;
             breakLoop++;
             errMsg = " Secondary Entity Business Name must be provided for Section F. Click on the Edit icon for each location to provide the location-specific Secondary Entity Business Name";
@@ -495,6 +565,37 @@ function tab3(errCount, errMsg) {
             return false;
         }
     });
+
+
+
+    if (!valH1) {
+        errCount++;
+        errMsg = " Section H Question 1 :  At the time of filing this LCA, is the employer H-1B dependent value is Required";
+        $("#req").append('<li>' + errMsg + '</li>');
+    }
+    if (!valH2) {
+        errCount++;
+        errMsg = " Section H Question 2 :  At the time of filing this LCA, is the employer a willfull violator value is Required";
+        $("#req").append('<li>' + errMsg + '</li>');
+    }
+
+    if (valH1 == 'yes' && valH2 == 'yes' && !valH3) {
+        errCount++;
+        errMsg = " Section H Question 3 value is Required";
+        $("#req").append('<li>' + errMsg + '</li>');
+    }
+
+    if (valH3 && valH3 == 'yes' && !valH4) {
+        errCount++;
+        errMsg = " Section H Question 4 value is Required";
+        $("#req").append('<li>' + errMsg + '</li>');
+    }
+
+    if (valH1 == 'yes' && valH2 == 'yes' && !valH5) {
+        errCount++;
+        errMsg = " Section H Question 5 value is Required";
+        $("#req").append('<li>' + errMsg + '</li>');
+    }
     return errCount
 }
 
@@ -503,6 +604,24 @@ function tab5(errCount, errMsg) {
     var valJ2 = $("input[name=J2]").val();
     var valJ3 = $("input[name=J3]").val();
     var valJ4 = $("input[name=J4]").val();
+
+    if (!valJ1) {
+        errCount++;
+        errMsg = " Section J Question 1: Last (family) name of hiring or designated official Value is required ";
+        $("#req").append('<li>' + errMsg + '</li>');
+    }
+
+    if (!valJ2) {
+        errCount++;
+        errMsg = " Section J Question 2:  First (given) name of hiring or designated official Value is required ";
+        $("#req").append('<li>' + errMsg + '</li>');
+    }
+
+    if (!valJ4) {
+        errCount++;
+        errMsg = " Section J Question 4:  Hiring or designated official title Value is required ";
+        $("#req").append('<li>' + errMsg + '</li>');
+    }
 
     if (valJ1.length > 35) {
         errCount++;
@@ -534,6 +653,30 @@ function tab6(errCount, errMsg) {
     var valK3 = $("input[name=K3]").val();
     var valK4 = $("input[name=K4]").val();
     var valK5 = $("input[name=K5]").val();
+
+    if (!valK1) {
+        errCount++;
+        errMsg = " Section K Question 1 : Last (family) Name is required ";
+        $("#req").append('<li>' + errMsg + '</li>');
+    }
+
+    if (!valK2) {
+        errCount++;
+        errMsg = " Section K Question 2 : First (given) Name is required ";
+        $("#req").append('<li>' + errMsg + '</li>');
+    }
+
+    if (!valK4) {
+        errCount++;
+        errMsg = " Section K Question 4 : Firm/Business Name is required ";
+        $("#req").append('<li>' + errMsg + '</li>');
+    }
+
+    if (!valK5) {
+        errCount++;
+        errMsg = " Section K Question 5 : Email Address is required ";
+        $("#req").append('<li>' + errMsg + '</li>');
+    }
 
     // K SECTION
     if (valK1.length > 35) {

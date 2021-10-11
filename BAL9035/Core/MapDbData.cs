@@ -19,7 +19,7 @@ namespace BAL9035.Core
                 foreach (DataRow dataRow in dt.Rows)
                 {
                     form9035.SectionA.A1 = dataRow["CaseSubType"].ToString();
-                    if (!string.IsNullOrEmpty(dataRow["CaseSubType"].ToString()) && dataRow["CaseSubType"].ToString() == "H-1B1")
+                    if (!string.IsNullOrEmpty(dataRow["CaseSubType"].ToString()) && (dataRow["CaseSubType"].ToString() == "H-1B1" || dataRow["CaseSubType"].ToString().ToLower()=="blanket"))
                     {
                         form9035.SectionA.A1Radio = citizenshipValue(dataRow);
                     }
@@ -51,7 +51,6 @@ namespace BAL9035.Core
                     form9035.SectionF.F3CheckBox = true;
                     form9035.SectionF.F10From = dataRow["WageRangeLow"].ToString().Replace(",", "");
                     form9035.SectionF.F10To = dataRow["WageRangeHigh"].ToString().Replace(",", "");
-                    //form9035.SectionF.F3 = "test";
                     form9035.SectionF.F11 = dataRow["PrevailingWage"].ToString().Replace(",", "");
                     bool entity = false;
                     bool company = false;

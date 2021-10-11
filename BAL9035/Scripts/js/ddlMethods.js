@@ -213,7 +213,6 @@ function UpdateBusinessEntityInLocTbl(isChecked) {
 }
 
 function tblRowsUpdateF3() {
-    debugger;
     var isChecked = $('#F3CheckBox').is(':checked');
     if (isChecked) {
         $('#locTable > tbody  > tr').each(function (index, tr) {
@@ -221,3 +220,4 @@ function tblRowsUpdateF3() {
         });
     }
 }
+

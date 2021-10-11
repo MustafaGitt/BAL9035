@@ -8,12 +8,20 @@ function validateLocation() {
     var valF4 = $("input[name=F4]").val();
     var valF5 = $("input[name=F5]").val();
     var valF6 = $("input[name=F6]").val();
+    var valF8 = $("select[name=F8]").val();
     var valF9 = $("input[name=F9]").val();
     var wageFrom = $('#LocWageFrom').val();
     var wageTo = $('#LocWageTo').val();
     var secondryEntName = $('#SecondEntityName').val();
-    var isCheckedF10 = $('#F10CheckBox').is(':checked')
-    var isCheckedF3 = $('#F3CheckBox').is(':checked')
+    var isCheckedF10 = $('#F10CheckBox').is(':checked');
+    var isCheckedF3 = $('#F3CheckBox').is(':checked');
+
+    if (!valF4) {
+        errCount++;
+        errMsg = " Section F Address 1 : Address 1 is required";
+        $("#reqLoc").append('<li>' + errMsg + '</li>');
+    }
+
     if (valF4.length > 0) {
         if (valF4.length < 5) {
             errCount++;
@@ -42,6 +50,11 @@ function validateLocation() {
             $("#reqLoc").append('<li>' + errMsg + '</li>');
         }
     }
+    if (!valF6) {
+        errCount++;
+        errMsg = " Section F City : City is required";
+        $("#reqLoc").append('<li>' + errMsg + '</li>');
+    }
     //Len Check
     if (valF6.length > 0) {
         if (valF6.length > 35) {
@@ -49,6 +62,18 @@ function validateLocation() {
             errMsg = " Section F City : Length must be less or equal to 35 characters.";
             $("#reqLoc").append('<li>' + errMsg + '</li>');
         }
+    }
+
+    if (valF8 == '0') {
+        errCount++;
+        errMsg = " Section F County : County is required";
+        $("#reqLoc").append('<li>' + errMsg + '</li>');
+    }
+
+    if (!valF9) {
+        errCount++;
+        errMsg = " Section F Postal Code : Postal Code is required";
+        $("#reqLoc").append('<li>' + errMsg + '</li>');
     }
     if (valF9.length > 0) {
         if (valF9.length > 5) {
@@ -100,7 +125,8 @@ function UpdateLocationTable() {
     var valF7 = $("select[name=F7] option:selected").text()
     var valF8 = $("select[name=F8]").val();
     var valF9 = $("input[name=F9]").val();
-   
+
+
     if (valF4 != "" || valF5 != "" || valF6 != "" || valF7 != "-- SELECT --" || valF8 != "0" || valF9 != "") {
         // check validations
         var errCount = validateLocation();

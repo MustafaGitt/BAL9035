@@ -27,7 +27,10 @@ function SaveLater(isSubmit, sysid, balNo) {
 }
 // Fetch all the HTML INPUTS, Convert it into model object and calls the API
 function fetchValues(balNo, sysid, isSubmit, email) {
-
+    if (isSubmit) {
+        //close multiplePurposeModal for submit case
+        $('#multiplePurposeModal').modal('hide');
+    }
     var valA1 = $("input[name=A1]").val();
     var valA1Radio = $("input[name='A1Radio']:checked").val();
     var valB1 = $("input[name='B1']").val();
@@ -356,4 +359,20 @@ function UndefinedToNull(str) {
         str = null;
     }
     return str;
+}
+
+function ConfirmCreateAsset() {
+    var errCount = validateInputMethod();
+    if (errCount==0) {
+        $('#multiModalHeaderTitle').html($.parseHTML('<span class="glyphicon glyphicon-question-sign"></span> Are you sure to continue?'));
+        $('#multiModalBody').text('Are you sure you want to submit this LCA to the bot? You will not be able to edit any of the fields until the bot is finished drafting the LCA in FLAG.');
+        $('#btnConfirm').css("display", "initial");
+        $('#multiplePurposeModal').modal('show');
+    }
+    else {
+        document.getElementById("btnDlgOK").style.display = "none";
+        document.getElementById("btnDlgClose").style.display = "inline";
+        document.getElementById("btnDlgSL").style.display = "none";
+        $("#errorModal").modal();
+    }
 }

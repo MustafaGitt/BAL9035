@@ -395,7 +395,7 @@
                                 &laquo; Previous
                             </button>
 
-                            <button type="button" id="btnSubmit" class="btn btn-success btn-sm" onclick="CreateAssets(true,'@ViewBag.bal_no','@ViewBag.id_no','@ViewBag.email_id')">
+                            <button type="button" id="btnSubmit" class="btn btn-success btn-sm" onclick="ConfirmCreateAsset()">
                                 Submit
                             </button>
                             <button type="button" id="btnSaveLater" class="btn btn-success btn-sm" onclick="CreateAssets(false,'@ViewBag.bal_no','@ViewBag.id_no','@ViewBag.email_id')">
@@ -472,6 +472,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" id="btnBack" class="btn btn-primary btn-sm inactive" onclick="onBtnBackClick()" style="width:105px;float:left;"><span class="glyphicon glyphicon-arrow-left"></span> Back</button>
                     <button type="button" id="btnAdd" class="btn btn-success btn-sm inactive" onclick="CreateCredentialAsset('@ViewBag.id_no','@ViewBag.bal_no','@ViewBag.email_id')" style="width:100px;">Add</button>
                     <button type="button" id="btnAddKey" class="btn btn-success btn-sm" onclick="SetESKey('@ViewBag.email_id')" style="width:105px;">Add Secret Key</button>
                 </div>
@@ -498,6 +499,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" style="display:none;" id="btnConfirm" onclick="fetchValues('@ViewBag.bal_no','@ViewBag.id_no',true,'@ViewBag.email_id')">Confirm</button>
                 </div>
             </div>
         </div>
@@ -568,6 +570,7 @@
             //   fixStepIndicator(n)
         }
         function nextPrev(n, tab) {
+            debugger;
             var errCount = 0;
             if (tab == 0) {
                 errCount = validateInputsByTab(currentTab);

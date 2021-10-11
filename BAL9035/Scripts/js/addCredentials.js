@@ -39,6 +39,7 @@ function SetESKey(email) {
             $("#divUser").removeClass("inactive");
             $("#divPass").removeClass("inactive");
             $("#btnAdd").removeClass("inactive");
+            $("#btnBack").removeClass("inactive");
         }
         else {
             $('#reqCred').html(" It looks like you entered a temporary authentication code instead of your secret key. If you aren't sure where to find your secret key, click on the link for How to Find Your Secret Key or contact #automationinfo.");
@@ -122,4 +123,13 @@ function CreateCredentialAsset(id, bal_no, email) {
         setTimeout(function () { $(".alert-msg").removeClass('altShow'); }, 2000);
     }
 
+}
+
+function onBtnBackClick() {
+    $("#divKey").removeClass("inactive");
+    $("#btnAddKey").removeClass("inactive");
+    $("#divUser").addClass("inactive");
+    $("#divPass").addClass("inactive");
+    $("#btnAdd").addClass("inactive");
+    $("#btnBack").addClass("inactive");
 }
