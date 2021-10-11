@@ -101,6 +101,11 @@ function tab1(errCount, errMsg) {
         errMsg = " Section B Question 2 Length should be less or equal to 10 characters. ";
         $("#req").append('<li>' + errMsg + '</li>');
     }
+    if (!valB3) {
+        errCount++;
+        errMsg = " Section B Question 3 SOC Occupation Title is required.";
+        $("#req").append('<li>' + errMsg + '</li>');
+    }
     if (valB3.length > 60) {
         errCount++;
         errMsg = " Section B Question 3 Length should be less or equal to 60 characters. ";
