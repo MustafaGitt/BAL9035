@@ -89,6 +89,12 @@ namespace BAL9035.Core
                         string assistantFirstInitial = dataRow["Assistant First Name"].ToString();
                         string assistantLastInitial = dataRow["Assistant Last Name"].ToString();
                         form9035.SectionJ.J4 = dataRow["Signer Job"].ToString() + " (" + dataRow["BALNumber"].ToString() + "/" + assistantFirstInitial[0].ToString() + assistantLastInitial[0].ToString() + ")";
+                       
+                        
+                        form9035.SectionK.K1= dataRow["Assistant Last Name"].ToString();
+                        form9035.SectionK.K2= dataRow["Assistant First Name"].ToString();
+                        form9035.SectionK.K3= !string.IsNullOrEmpty(dataRow["Assistant Middle Name"].ToString())  ? dataRow["Assistant Middle Name"].ToString()[0].ToString() : null  ;
+                        form9035.SectionK.K5 = dataRow["Assistant Email"].ToString();
                         break;
                     }
                 }
