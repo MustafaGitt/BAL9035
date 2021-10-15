@@ -18,77 +18,81 @@ namespace BAL9035.Core
                 Form9035 form9035 = new Form9035();
                 foreach (DataRow dataRow in dt.Rows)
                 {
-                    form9035.SectionA.A1 = dataRow["CaseSubType"].ToString();
-                    if (!string.IsNullOrEmpty(dataRow["CaseSubType"].ToString()) && (dataRow["CaseSubType"].ToString() == "H-1B1" || dataRow["CaseSubType"].ToString().ToLower()=="blanket"))
+                    if (dataRow["CaseSubType"].ToString() == "H-1B" || dataRow["CaseSubType"].ToString() == "E-3" || dataRow["CaseSubType"].ToString() == "H-1B1")
                     {
-                        form9035.SectionA.A1Radio = citizenshipValue(dataRow);
-                    }
-                    form9035.SectionB.B1 = dataRow["Beneficiary Job Title"].ToString();
-                    form9035.SectionB.B2 = dataRow["SocCode"].ToString();
-                    form9035.SectionB.B3 = dataRow["SocOccupation"].ToString();
+                        form9035.SectionA.A1 = dataRow["CaseSubType"].ToString();
+                        if (!string.IsNullOrEmpty(dataRow["CaseSubType"].ToString()) && dataRow["CaseSubType"].ToString() == "H-1B1")
+                        {
+                            form9035.SectionA.A1Radio = citizenshipValue(dataRow);
+                        }
+                        form9035.SectionB.B1 = dataRow["Beneficiary Job Title"].ToString();
+                        form9035.SectionB.B2 = dataRow["SocCode"].ToString();
+                        form9035.SectionB.B3 = dataRow["SocOccupation"].ToString();
 
-                    if (dataRow["BeginOfValidity"].ToString() != null && dataRow["BeginOfValidity"].ToString() != "")
-                    {
-                        DateTime BeginDate = Convert.ToDateTime(dataRow["BeginOfValidity"].ToString());
-                        form9035.SectionB.B5 = BeginDate.ToString("MM/dd/yyyy");
+                        if (dataRow["BeginOfValidity"].ToString() != null && dataRow["BeginOfValidity"].ToString() != "")
+                        {
+                            DateTime BeginDate = Convert.ToDateTime(dataRow["BeginOfValidity"].ToString());
+                            form9035.SectionB.B5 = BeginDate.ToString("MM/dd/yyyy");
+                        }
+                        if (dataRow["EndOfValidity"].ToString() != null && dataRow["EndOfValidity"].ToString() != "")
+                        {
+                            DateTime EndDate = Convert.ToDateTime(dataRow["EndOfValidity"].ToString());
+                            form9035.SectionB.B6 = EndDate.ToString("MM/dd/yyyy");
+                        }
+                        if (!string.IsNullOrEmpty(dataRow["NumberOfPositions"].ToString()))
+                        {
+                            form9035.SectionB.B7 = dataRow["NumberOfPositions"].ToString();
+                            form9035.SectionF.F1 = dataRow["NumberOfPositions"].ToString();
+                        }
+                        else
+                        {
+                            form9035.SectionB.B7 = "1";
+                            form9035.SectionF.F1 = "1";
+                        }
+                        form9035.SectionF.F10CheckBox = true;
+                        form9035.SectionF.F3CheckBox = true;
+                        form9035.SectionF.F10From = dataRow["WageRangeLow"].ToString().Replace(",", "");
+                        form9035.SectionF.F10To = dataRow["WageRangeHigh"].ToString().Replace(",", "");
+                        form9035.SectionF.F11 = dataRow["PrevailingWage"].ToString().Replace(",", "");
+                        bool entity = false;
+                        bool company = false;
+                        if (dataRow["Company H-1B Dependent"] != null && dataRow["Company H-1B Dependent"].ToString() != "")
+                        {
+                            company = Convert.ToBoolean(dataRow["Company H-1B Dependent"]);
+                        }
+                        if (dataRow["Entity H-1B Dependent"] != null && dataRow["Entity H-1B Dependent"].ToString() != "")
+                        {
+                            entity = Convert.ToBoolean(dataRow["Entity H-1B Dependent"]);
+                        }
+                        if (dataRow["Sponsoring Entity"].ToString().Equals("") && company == true)
+                        {
+                            form9035.SectionH.H1 = true;
+                        }
+                        else if (dataRow["Sponsoring Entity"].ToString().Equals("") && company == false)
+                        {
+                            form9035.SectionH.H1 = false;
+                        }
+                        else if (!dataRow["Sponsoring Entity"].ToString().Equals("") && entity == true)
+                        {
+                            form9035.SectionH.H1 = true;
+                        }
+                        else if (!dataRow["Sponsoring Entity"].ToString().Equals("") && entity == false)
+                        {
+                            form9035.SectionH.H1 = false;
+                        }
+                        form9035.SectionJ.J1 = dataRow["Signer Last Name"].ToString();
+                        form9035.SectionJ.J2 = dataRow["Signer First Name"].ToString();
+                        if (!dataRow["Signer Middle Name"].ToString().Equals("") && dataRow["Signer Middle Name"].ToString() != null)
+                        {
+                            form9035.SectionJ.J3 = dataRow["Signer Middle Name"].ToString().Substring(0, 1);
+                        }
+                        string assistantFirstInitial = dataRow["Assistant First Name"].ToString();
+                        string assistantLastInitial = dataRow["Assistant Last Name"].ToString();
+                        form9035.SectionJ.J4 = dataRow["Signer Job"].ToString() + " (" + dataRow["BALNumber"].ToString() + "/" + assistantFirstInitial[0].ToString() + assistantLastInitial[0].ToString() + ")";
+                        break;
                     }
-                    if (dataRow["EndOfValidity"].ToString() != null && dataRow["EndOfValidity"].ToString() != "")
-                    {
-                        DateTime EndDate = Convert.ToDateTime(dataRow["EndOfValidity"].ToString());
-                        form9035.SectionB.B6 = EndDate.ToString("MM/dd/yyyy");
-                    }
-                    if (!string.IsNullOrEmpty(dataRow["NumberOfPositions"].ToString()))
-                    {
-                        form9035.SectionB.B7 = dataRow["NumberOfPositions"].ToString();
-                        form9035.SectionF.F1 = dataRow["NumberOfPositions"].ToString();
-                    }
-                    else
-                    {
-                        form9035.SectionB.B7 = "1";
-                        form9035.SectionF.F1 = "1";
-                    }
-                    form9035.SectionF.F10CheckBox = true;
-                    form9035.SectionF.F3CheckBox = true;
-                    form9035.SectionF.F10From = dataRow["WageRangeLow"].ToString().Replace(",", "");
-                    form9035.SectionF.F10To = dataRow["WageRangeHigh"].ToString().Replace(",", "");
-                    form9035.SectionF.F11 = dataRow["PrevailingWage"].ToString().Replace(",", "");
-                    bool entity = false;
-                    bool company = false;
-                    if (dataRow["Company H-1B Dependent"] != null && dataRow["Company H-1B Dependent"].ToString() != "")
-                    {
-                        company = Convert.ToBoolean(dataRow["Company H-1B Dependent"]);
-                    }
-                    if (dataRow["Entity H-1B Dependent"] != null && dataRow["Entity H-1B Dependent"].ToString() != "")
-                    {
-                        entity = Convert.ToBoolean(dataRow["Entity H-1B Dependent"]);
-                    }
-                    if (dataRow["Sponsoring Entity"].ToString().Equals("") && company == true)
-                    {
-                        form9035.SectionH.H1 = true;
-                    }
-                    else if (dataRow["Sponsoring Entity"].ToString().Equals("") && company == false)
-                    {
-                        form9035.SectionH.H1 = false;
-                    }
-                    else if (!dataRow["Sponsoring Entity"].ToString().Equals("") && entity == true)
-                    {
-                        form9035.SectionH.H1 = true;
-                    }
-                    else if (!dataRow["Sponsoring Entity"].ToString().Equals("") && entity == false)
-                    {
-                        form9035.SectionH.H1 = false;
-                    }
-                    form9035.SectionJ.J1 = dataRow["Signer Last Name"].ToString();
-                    form9035.SectionJ.J2 = dataRow["Signer First Name"].ToString();
-                    if (!dataRow["Signer Middle Name"].ToString().Equals("") && dataRow["Signer Middle Name"].ToString() != null)
-                    {
-                        form9035.SectionJ.J3 = dataRow["Signer Middle Name"].ToString().Substring(0, 1);
-                    }
-                    string assistantFirstInitial = dataRow["Assistant First Name"].ToString();
-                    string assistantLastInitial = dataRow["Assistant Last Name"].ToString();
-                    form9035.SectionJ.J4 = dataRow["Signer Job"].ToString() + " (" + dataRow["BALNumber"].ToString() + "/" + assistantFirstInitial[0].ToString() + assistantLastInitial[0].ToString() + ")";
-                    break;
                 }
+
                 return form9035;
             }
             catch (Exception ex)
