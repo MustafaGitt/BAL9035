@@ -253,9 +253,9 @@ function fetchValues(balNo, sysid, isSubmit, email) {
             $("#req").append('<li>' + json.message + '</li>');
 
             if (json.success == true) {
-                $("#regForm :input").prop("disabled", true);
-                $("#btnNext").prop("disabled", false);
-                $("#btnprev").prop("disabled", false);
+                //$("#regForm :input").prop("disabled", true);
+                //$("#btnNext").prop("disabled", false);
+                //$("#btnprev").prop("disabled", false);
                 $("#btnDlgClose").text("Close");
                 document.getElementById("btnDlgOK").style.display = "none";
                 document.getElementById("btnDlgSL").style.display = "none";
@@ -364,7 +364,7 @@ function UndefinedToNull(str) {
 function ConfirmCreateAsset() {
     var errCount = validateInputMethod();
     if (errCount==0) {
-        $('#multiModalHeaderTitle').html($.parseHTML('<span class="glyphicon glyphicon-question-sign"></span> Are you sure to continue?'));
+        $('#multiModalHeaderTitle').html($.parseHTML('<span class="glyphicon glyphicon-question-sign"></span> Are you sure you want to submit?'));
         $('#multiModalBody').text('Are you sure you want to submit this LCA to the bot? You will not be able to edit any of the fields until the bot is finished drafting the LCA in FLAG.');
         $('#btnConfirm').css("display", "initial");
         $('#multiplePurposeModal').modal('show');

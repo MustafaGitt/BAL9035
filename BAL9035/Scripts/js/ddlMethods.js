@@ -214,7 +214,8 @@ function UpdateBusinessEntityInLocTbl(isChecked) {
 
 function tblRowsUpdateF3() {
     var isChecked = $('#F3CheckBox').is(':checked');
-    if (isChecked) {
+    var F2Radio = $("input[name=F2]:checked").val();
+    if (F2Radio == 'yes' && isChecked) {
         $('#locTable > tbody  > tr').each(function (index, tr) {
             $(tr).find('#tblSecondEntityName')[0].innerText = $('#F3').val();
         });
