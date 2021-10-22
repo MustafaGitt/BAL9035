@@ -222,3 +222,13 @@ function tblRowsUpdateF3() {
     }
 }
 
+
+function onChangeB2() {
+   debugger;
+    var b2Value = $("select[name=B2]").val();
+    if (b2Value != "0") {
+        var result = getB3Value(b2Value);
+        $('#B3').val(result);
+    }
+}
+

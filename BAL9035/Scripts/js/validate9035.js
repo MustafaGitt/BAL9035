@@ -65,7 +65,7 @@ function validateInputsByTab(tabNo) {
 function tab1(errCount, errMsg) {
     var valA1 = $("input[name='A1']").val();
     var valB1 = $("input[name='B1']").val();
-    var valB2 = $("input[name='B2']").val();
+    var valB2 = $("select[name='B2']").val();
     var valB3 = $("input[name='B3']").val();
     var valB4 = $("input[name='B4']:checked").val();
     var valB5 = $("input[name='B5']").val();
@@ -91,14 +91,9 @@ function tab1(errCount, errMsg) {
         errMsg = " Section B Question 1 Length should be less or equal to 50 characters. ";
         $("#req").append('<li>' + errMsg + '</li>');
     }
-    if (!valB2) {
+    if (!valB2 || valB2=="0") {
         errCount++;
         errMsg = "Section B Question 2: SOC (ONET/OES) Code is required";
-        $("#req").append('<li>' + errMsg + '</li>');
-    }
-    if (valB2.length > 10) {
-        errCount++;
-        errMsg = " Section B Question 2 Length should be less or equal to 10 characters. ";
         $("#req").append('<li>' + errMsg + '</li>');
     }
     if (!valB3) {

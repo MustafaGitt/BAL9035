@@ -242,6 +242,7 @@ namespace BAL9035.Controllers
                     ItemData itemData = new ItemData();
                     itemData.Name = appKeys.QueueName;
                     itemData.Priority = "Normal";
+                    itemData.Reference = bodyModel.Sysid;
                     itemData.SpecificContent = content;
 
                     RootObject queueItemBody = new RootObject();

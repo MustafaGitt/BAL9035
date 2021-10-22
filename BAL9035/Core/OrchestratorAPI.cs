@@ -171,19 +171,55 @@ namespace BAL9035.Core
             }
         }
         // Get the ID of Queue
-        public string GetQueueID(string token)
+        public int GetQueueID(string token)
         {
             try
             {
                 string url = appKeys.OrchestratorUrl + "odata/QueueDefinitions?$filter=Name eq '" + appKeys.QueueName + "'";
-                string response = api.Get(url, token);
-                return response;
+                string response = string.Empty;
+                if (appKeys.isDevelopmentEnvironment == true)
+                {
+                    response = api.GetCloud(url, token);
+                }
+                else
+                {
+                    response = api.Get(url, token);
+                }
+
+                QueueDefinitionParent queueDetails = JsonConvert.DeserializeObject<QueueDefinitionParent>(response);
+                return queueDetails.value.First().Id;
             }
             catch (Exception ex)
             {
                 throw ex;
             }
         }
+
+        // Get the QueueItems By QueueId
+        public List<QueueItemCount> GetQueueItemsByID(string token,int queueId,string ticketNo)
+        {
+            try
+            {
+                string url = appKeys.OrchestratorUrl + "odata/QueueItems?$filter=QueueDefinitionId eq " + queueId + " and Reference eq '" + ticketNo + "'";
+                string response = string.Empty;
+                if (appKeys.isDevelopmentEnvironment == true)
+                {
+                    response = api.GetCloud(url, token);
+                }
+                else
+                {
+                    response = api.Get(url, token);
+                }
+
+                QueueItemCountParent queueItems = JsonConvert.DeserializeObject<QueueItemCountParent>(response);
+                return queueItems.value.OrderByDescending(q=>q.CreationTime).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         // Get the Transactions from a Queue Item
         public string GetTransactions(string token, string QueueID, string QueueCreationTime)
         {

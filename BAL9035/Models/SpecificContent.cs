@@ -19,6 +19,7 @@ namespace BAL9035.Models
     {
         public string Name { get; set; }
         public string Priority { get; set; }
+        public string Reference { get; set; }
         public SpecificContent SpecificContent { get; set; }
     }
 

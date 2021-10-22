@@ -26,6 +26,7 @@ namespace BAL9035.Models
         public object AncestorId { get; set; }
         public int RetryNumber { get; set; }
         public string SpecificData { get; set; }
+        public DateTime CreationTime { get; set; }
         public object Progress { get; set; }
         public string RowVersion { get; set; }
         public int Id { get; set; }

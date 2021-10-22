@@ -65,8 +65,11 @@
                                 </div>
                             </div>
                             <p><input placeholder="..." oninput="this.className = ''" name="B1" id="B1" value="@(Model.Form9035.SectionB.B1)" maxlength="50" style="position:absolute;left:175px;top:305px;width:600px;height:20px;font-weight:bold;"></p>
-                            <p><input placeholder="..." oninput="this.className = ''" name="B2" id="B2" value="@(Model.Form9035.SectionB.B2)" maxlength="10" style="position:absolute;left:112px;top:342px;width:200px;height:17px;font-weight:bold;"></p>
-                            <p><input placeholder="..." oninput="this.className = ''" name="B3" id="B3" value="@(Model.Form9035.SectionB.B3)" maxlength="60" style="position:absolute;left:350px;top:342px;width:430px;height:17px;font-weight:bold;"></p>
+                            <p>
+                                @{ string data = Model.Form9035.SectionB.B2; }
+                                @Html.DropDownList("B2", DDLUtil.GetSOC(data), new { style = "position:absolute;left:112px;top:341px;width:200px;height:18px;font-weight:bold;",onchange= "onChangeB2()" });
+                            </p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="B3" id="B3" style="position:absolute;left:350px;top:342px;width:430px;height:17px;font-weight:bold;" readonly></p>
                             <p><input type="radio" name="B4" id="B4Y" value="yes" @(Model.Form9035.SectionB.B4 != false ? "checked" : "") style="position:absolute;left:162px;top:380px;border:none;"></p>
                             <p><input type="radio" name="B4" id="B4N" value="no" @(Model.Form9035.SectionB.B4 == false ? "checked" : "") style="position:absolute;left:214px;top:380px;border:none;"> </p>
 
@@ -740,6 +743,7 @@
 
     $("document").ready(function () {
         EnableDisableSectionF();
+        onChangeB2();
         $('.datepicker').datepicker();
         filterValidations();
 
@@ -749,9 +753,9 @@
         }
         else if (isSubmit == "True") {
             isSubmit = true;
-            //$("#regForm :input").prop("disabled", true);
-            //$("#btnNext").prop("disabled", false);
-            //$("#btnprev").prop("disabled", false);
+            $("#regForm :input").prop("disabled", true);
+            $("#btnNext").prop("disabled", false);
+            $("#btnprev").prop("disabled", false);
         }
         if ($("input[name=I1a]:checked").is(':checked') == false) {
             $("input[name=I1a]").addClass("customRadio");
@@ -863,7 +867,6 @@
         $("#FlagProfileChkBox").change(function () {
             $("#D0").prop("disabled", !$(this).is(':checked'));
         });
-
     });
     // calls when the AJAX Start and add the loading gif
     $(document).ajaxStart(function () {

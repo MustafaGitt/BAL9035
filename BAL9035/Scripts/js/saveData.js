@@ -34,7 +34,7 @@ function fetchValues(balNo, sysid, isSubmit, email) {
     var valA1 = $("input[name=A1]").val();
     var valA1Radio = $("input[name='A1Radio']:checked").val();
     var valB1 = $("input[name='B1']").val();
-    var valB2 = $("input[name='B2']").val();
+    var valB2 = $("select[name='B2']").val();
     var valB3 = $("input[name='B3']").val();
     var valB4 = $("input[name='B4']:checked").val();
     var valB5 = $("input[name='B5']").val();
@@ -253,9 +253,9 @@ function fetchValues(balNo, sysid, isSubmit, email) {
             $("#req").append('<li>' + json.message + '</li>');
 
             if (json.success == true) {
-                //$("#regForm :input").prop("disabled", true);
-                //$("#btnNext").prop("disabled", false);
-                //$("#btnprev").prop("disabled", false);
+                $("#regForm :input").prop("disabled", true);
+                $("#btnNext").prop("disabled", false);
+                $("#btnprev").prop("disabled", false);
                 $("#btnDlgClose").text("Close");
                 document.getElementById("btnDlgOK").style.display = "none";
                 document.getElementById("btnDlgSL").style.display = "none";

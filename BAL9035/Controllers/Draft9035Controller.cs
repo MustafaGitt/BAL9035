@@ -47,7 +47,7 @@ namespace BAL9035.Controllers
                 if (url.Contains("localhost"))
                 {
                     //for staging localhost
-                     //request.State = "'+bal_no=1615.54312.7;id_no=BOT0001711;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
+                    //request.State = "'+bal_no=1615.54312.7;id_no=BOT0001711;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
                     //localhost
                     request.State = "'+bal_no=150.10781.5;id_no=BOT0000000;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
                     request.Code = "182635";
@@ -237,7 +237,21 @@ namespace BAL9035.Controllers
                             // Check and See if the ID NO is equal to the Name of the Data Asset
                             if (item.Name == ViewBag.id_no)
                             {
-                                form.isSubmit = true;
+
+                                int queueId = api.GetQueueID(token);
+                                List<QueueItemCount> queueItems = api.GetQueueItemsByID(token, queueId, ViewBag.id_no);
+                                if (queueItems.Count>0)
+                                {
+                                    string itemStatus = queueItems.FirstOrDefault().Status;
+                                    if (itemStatus.ToLower() == "deleted" || itemStatus.ToLower() == "successful" || itemStatus.ToLower() == "failed")
+                                    {
+                                        form.isSubmit = false;
+                                    }
+                                    else
+                                    {
+                                        form.isSubmit = true;
+                                    }
+                                }
                             }
                         }
                     }
