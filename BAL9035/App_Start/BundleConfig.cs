@@ -49,7 +49,7 @@ namespace BAL9035
                       ));
 
             bundles.Add(new StyleBundle("~/Content/jqueryUIcss").Include(
-                      "~/Content/themes/base/jquery-ui.min.css"
+                      "~/Content/themes/base/jquery-ui.css"
                       ));
         }
     }
