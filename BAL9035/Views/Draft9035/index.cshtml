@@ -15,6 +15,28 @@
         background-color: green !important;
         color: white !important;
     }
+
+    .custom-combobox {
+        position: relative;
+        display: inline-block;
+    }
+
+    .custom-combobox-toggle {
+        height: 18px;
+        margin-bottom: 2px;
+    }
+
+    .custom-combobox-input {
+        height: 18px;
+        width: 155px;
+    }
+
+    .ui-autocomplete {
+        max-height: 250px;
+        overflow-y: auto;
+        /* prevent horizontal scrollbar */
+        overflow-x: hidden;
+    }
 </style>
 <html>
 <head>
@@ -22,6 +44,7 @@
     <title>Draft 9035</title>
     <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
     @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/jqueryUIcss")
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.standalone.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
     @Scripts.Render("~/bundles/modernizr")
@@ -65,10 +88,12 @@
                                 </div>
                             </div>
                             <p><input placeholder="..." oninput="this.className = ''" name="B1" id="B1" value="@(Model.Form9035.SectionB.B1)" maxlength="50" style="position:absolute;left:175px;top:305px;width:600px;height:20px;font-weight:bold;"></p>
-                            <p>
+                            <div class="ui-widget" style="position:absolute;left:110px;top:340px;">
                                 @{ string data = Model.Form9035.SectionB.B2; }
-                                @Html.DropDownList("B2", DDLUtil.GetSOC(data), new { style = "position:absolute;left:112px;top:341px;width:200px;height:18px;font-weight:bold;",onchange= "onChangeB2()" });
-                            </p>
+                                @Html.DropDownList("B2", DDLUtil.GetSOC(data), new { style = "position:absolute;left:112px;top:341px;width:200px;height:18px;font-weight:bold;" })
+                            </div>
+
+                            @*<p><input id="tags" style = "position:absolute;left:112px;top:341px;width:200px;height:18px;"></p>*@
                             <p><input placeholder="..." oninput="this.className = ''" name="B3" id="B3" style="position:absolute;left:350px;top:342px;width:430px;height:17px;font-weight:bold;" readonly></p>
                             <p><input type="radio" name="B4" id="B4Y" value="yes" @(Model.Form9035.SectionB.B4 != false ? "checked" : "") style="position:absolute;left:162px;top:380px;border:none;"></p>
                             <p><input type="radio" name="B4" id="B4N" value="no" @(Model.Form9035.SectionB.B4 == false ? "checked" : "") style="position:absolute;left:214px;top:380px;border:none;"> </p>
@@ -516,6 +541,7 @@
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/js")
     @Scripts.Render("~/bundles/ddlCounty")
+    @Scripts.Render("~/bundles/jqueryUI")
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script>
@@ -743,6 +769,7 @@
 
     $("document").ready(function () {
         EnableDisableSectionF();
+        B2ComboBox();
         onChangeB2();
         $('.datepicker').datepicker();
         filterValidations();

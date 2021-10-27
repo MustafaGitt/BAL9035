@@ -14,6 +14,11 @@ namespace BAL9035
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
 
+
+            bundles.Add(new ScriptBundle("~/bundles/jqueryUI").Include(
+                       "~/Scripts/jquery-ui-1.12.1.min.js"));
+
+
             bundles.Add(new ScriptBundle("~/bundles/js").Include(
                 "~/Scripts/js/validate9035.js",
                 "~/Scripts/js/filter.js",
@@ -22,7 +27,8 @@ namespace BAL9035
                 "~/Scripts/js/ddlMethods.js",
                 "~/Scripts/js/saveDataLoc.js",
                 "~/Scripts/js/sectionFPopup.js",
-                "~/Scripts/js/modalEvents.js"
+                "~/Scripts/js/modalEvents.js",
+                "~/Scripts/js/comboBoxUiWidget.js"
                 ));
             bundles.Add(new ScriptBundle("~/bundles/ddlCounty").Include(
                 "~/Scripts/ddlCounty/ddlCounty.js",
@@ -40,6 +46,10 @@ namespace BAL9035
                       "~/Content/bootstrap.css",
                       "~/Content/site.css",
                       "~/Content/style.css"
+                      ));
+
+            bundles.Add(new StyleBundle("~/Content/jqueryUIcss").Include(
+                      "~/Content/themes/base/jquery-ui.min.css"
                       ));
         }
     }

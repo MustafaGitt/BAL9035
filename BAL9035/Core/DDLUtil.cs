@@ -134,7 +134,7 @@ namespace BAL9035.Core
             }
             return new List<SelectListItem>
         {
-            new SelectListItem{ Text="-- SELECT --", Value = "0", Selected = "0" == selectedValue.ToString()},
+            new SelectListItem{ Text="", Value = "0", Selected = "0" == selectedValue.ToString()},
             new SelectListItem{ Text="11-1011.00", Value = "11-1011.00", Selected = "11-1011.00" == selectedValue.ToString()},
 new SelectListItem{ Text="11-1021.00", Value = "11-1021.00", Selected = "11-1021.00" == selectedValue.ToString()},
 new SelectListItem{ Text="11-1031.00", Value = "11-1031.00", Selected = "11-1031.00" == selectedValue.ToString()},
