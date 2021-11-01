@@ -594,6 +594,99 @@ namespace BAL9035.Core
         }
 
 
+        public List<EsResultObj> GetAllCobaltAssetES(string ticketNo)
+        {
+            string body = "";
+            List<EsResultObj> result = new List<EsResultObj>();
+            string authority = appKeys.ElasticSearch_Authority;
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    body = "{\"query\":{\"wildcard\":{\"AssetName.keyword\":{\"value\":\"" + ticketNo + "*\",\"boost\":1,\"rewrite\":\"constant_score\"}}}}";
+                    var content = new StringContent(body, System.Text.Encoding.UTF8, "application/json");
+                    // HTTP POST
+                    HttpResponseMessage response = client.PostAsync(authority + "9035_assets/_search", content).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string responseString = response.Content.ReadAsStringAsync().Result;
+                        result = JToken.Parse(responseString).SelectTokens("hits.hits[*]._source").Select(t => t.ToObject<EsResultObj>()).ToList();
+                    }
 
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public bool CreateCobaltAssetES(string assetType,string assetName,string assetValue,string status,string extraInfo)
+        {
+            string body = "";
+            string authority = appKeys.ElasticSearch_Authority;
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    body = "{\"AssetType\":\"" + assetType + "\",\"Status\":\"" + status + "\",\"AssetName\":\"" + assetName + "\",\"AssetValue\":\"" + assetValue + "\",\"ExtraInfo\":\"" + extraInfo + "\"}";
+                    var content = new StringContent(body, System.Text.Encoding.UTF8, "application/json");
+                    // HTTP POST
+                    HttpResponseMessage response = client.PostAsync(authority + "9035_assets/_doc", content).Result;
+                    return response.IsSuccessStatusCode;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public void DeleteCobaltAssetES(string assetName)
+        {
+            string body = "";
+            string authority = appKeys.ElasticSearch_Authority;
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    body = "{\"query\":{\"bool\":{\"must\":[{\"match\":{\"AssetName.keyword\":\"" + assetName + "\"}}]}}}";
+                    var content = new StringContent(body, System.Text.Encoding.UTF8, "application/json");
+                    // HTTP POST
+                    HttpResponseMessage response = client.PostAsync(authority + "9035_assets/_delete_by_query", content).Result;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public EsResultObj GetCobaltAssetByTicketNoES(string ticketNo)
+        {
+            string body = "";
+            List<EsResultObj> result = new List<EsResultObj>();
+            string authority = appKeys.ElasticSearch_Authority;
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    body = "{\"query\":{\"match\":{\"AssetName.keyword\":\"" + ticketNo + "\"}}}";
+                    var content = new StringContent(body, System.Text.Encoding.UTF8, "application/json");
+                    // HTTP POST
+                    HttpResponseMessage response = client.PostAsync(authority + "9035_assets/_search", content).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string responseString = response.Content.ReadAsStringAsync().Result;
+                        result = JToken.Parse(responseString).SelectTokens("hits.hits[*]._source").Select(t => t.ToObject<EsResultObj>()).ToList();
+                    }
+
+                    return result.FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

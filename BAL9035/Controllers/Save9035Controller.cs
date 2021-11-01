@@ -43,132 +43,64 @@ namespace BAL9035.Controllers
                     api.AddErrorQueueItem(bodyModel.Sysid, "Data Asset Parameter Missing", "Technical", "Data Asset Parameter Missing", "In Progress");
                     return Json(assetResponse);
                 }
-                string filter = "";
                 // configuration getting from Appsetting
                 AppSettingsValues appKeys = GetAppSettings.GetAppSettingsValues();
-
                 //Set which tenant to use
                 appKeys.tenancyName = bodyModel.Sysid.StartsWith("COB") ? appKeys.cobaltDtenancyName : appKeys.tenancyName;
-                // Saving all keys in a class object
-                string token = api.Authentication(appKeys);
-                // check if token is generated or not
-                if (string.IsNullOrEmpty(token))
+
+                // GETS all the Assets against the ticket Number
+                string assetName = bodyModel.Sysid;
+                List<EsResultObj> cobaltESAssets = es.GetAllCobaltAssetES(bodyModel.Sysid);
+                if (cobaltESAssets.Count > 0)
                 {
-                    outResponse.success = false;
-                    outResponse.message = "Sorry, there seems to be an issue with your request.  Please send an email to #automationinfo with your ServiceNow ticket number and we will contact you shortly.";
-                    logMsg = "Bal Number" + bodyModel.BalNumber + " , Process : Save9035 Create Asset, Message : UIPATH Token has not been generated. Token : " + token;
-                    Log.Info(logMsg);
-                    es.AddErrorESLog(bodyModel.Sysid, "Technical", "UIPATH Token not generated. Authentication Failed.", out errorMessage);
-                    api.AddErrorQueueItem(bodyModel.Sysid, "UIPATH Token not generated. Authentication Failed.", "Technical", "UIPATH Token not generated. Authentication Failed.", "In Progress");
+                    cobaltESAssets.ForEach(result =>
+                    {
+                        if (!result.AssetName.Contains("Credentials"))
+                        {
+                            es.DeleteCobaltAssetES(result.AssetName);
+                        }
+                    });
                 }
+
+
+                //create FormData on ElasticSearch
+                string FormDataCompressValue = CompressString.Zip(bodyModel.JsonString);
+                string FormDataEncryptValue = SecureData.AesEncryptString(appKeys.SecretKey, FormDataCompressValue);
+                es.CreateCobaltAssetES("Text", bodyModel.Sysid + ".FormData", FormDataEncryptValue, "In Progress", string.Empty);
+                logMsg = "Bal Number" + bodyModel.BalNumber + " , Process : Save9035 Create Asset, Message : FormData Asset has been created on ES successfully";
+                Log.Info(logMsg);
+
+                //creaete Lists on ElasticSearch
+                string ListsDataCompressValue = CompressString.Zip(bodyModel.ListJsonString);
+                string ListsDataEncryptValue = SecureData.AesEncryptString(appKeys.SecretKey, ListsDataCompressValue);
+                bool isSuccess= es.CreateCobaltAssetES("Text", bodyModel.Sysid + ".Lists", ListsDataEncryptValue, "In Progress", string.Empty);
+                logMsg = "Bal Number" + bodyModel.BalNumber + " , Process : Save9035 Create Asset, Message : Lists Asset has been created on ES successfully";
+                Log.Info(logMsg);
+
+               // List<EsResultObj> verifyAssets = es.GetAllCobaltAssetES(bodyModel.Sysid);
+                // In Case of submit sends the message
+                if (isSuccess && bodyModel.isSubmit == true)
+                {
+                    logMsg = "Bal Number" + bodyModel.BalNumber + " , Process : Save9035 Create Asset, Message : Submit 9035 has been executed.";
+                    outResponse.success = true;
+                    outResponse.message = "Your 9035 will be drafted on the DOL ETA site and a copy will be uploaded to Cobalt.  You will receive a notification from ServiceNow when it is complete.  If you have any questions, contact #automationinfo.";
+                }
+                // in case of save Later
+                else if (isSuccess && bodyModel.isSubmit == false)
+                {
+                    logMsg = "Bal Number" + bodyModel.BalNumber + " , Process : Save9035 Create Asset, Message : Save Later has been executed";
+                    outResponse.success = true;
+                    outResponse.message = @"Your progress has been saved.  To access your draft 9035 in the future, click on the ""Access My Draft 9035"" button in your ServiceNow ticket and you will be redirected to the form.";
+                }
+                // In case of any error
                 else
                 {
-                    // GETS all the Assets against the BAL Number
-                    string assetName = bodyModel.BalNumber;
-                    filter = "?$filter=Name eq '" + bodyModel.BalNumber + "'";
-                    AssetModel assetModel = api.GetAsset(token, filter);
-                    // Removing List asset from the assetModel Object
-                    if (assetModel.value.Count > 1)
-                    {
-                        foreach (var item in assetModel.value)
-                        {
-                            if (item.Name.Contains("Lists"))
-                            {
-                                assetModel.value.Remove(item);
-                                break;
-                            }
-                        }
-                    }
-                    // create or update asset
-                    Dictionary<string, object> assetBody = new Dictionary<string, object>();
-                    assetBody.Add("Name", assetName);
-                    assetBody.Add("ValueScope", "Global");
-                    assetBody.Add("ValueType", "Text");
-                    //Object to JSON
-                    //string jsonString = JsonConvert.SerializeObject(bodyModel.JsonString);
-                    //Compressing JSON
-                    string compressValue = CompressString.Zip(bodyModel.JsonString);
-                    //Encoding JSON
-                    string encodeValue = SecureData.AesEncryptString(appKeys.SecretKey, compressValue);
-                    int chkStrLen = encodeValue.Length;
-                    // If length is greater than 4000 Create 2 Assets elsse 1
-                    if (chkStrLen > 4000)
-                    {
-                        assetBody.Add("StringValue", encodeValue.Substring(0, 4000));
-                        assetResponse = api.CreateAsset(assetModel, token, assetBody);
-                        string secondAsset = encodeValue.Substring(4000);
-                        // get n check if asset exist
-                        string filter1 = "?$filter=Name eq '" + bodyModel.BalNumber + " A" + "'";
-                        assetModel = api.GetAsset(token, filter1);
-                        //second asset
-                        Dictionary<string, object> asset2Body = new Dictionary<string, object>();
-                        asset2Body.Add("ValueScope", "Global");
-                        asset2Body.Add("ValueType", "Text");
-                        asset2Body.Add("Name", bodyModel.BalNumber + " A");
-                        asset2Body.Add("StringValue", secondAsset);
-                        assetResponse = api.CreateAsset(assetModel, token, asset2Body);
-                        logMsg = "Bal Number" + bodyModel.BalNumber + " , Process : Save9035 Create Asset, Message : 2 Assets has been created successfully";
-                        Log.Info(logMsg);
+                    logMsg = "Bal Number" + bodyModel.BalNumber + " , Process : Save9035 Create Asset, Message : Some error occurred while returning an asset";
+                    outResponse.success = false;
+                    outResponse.message = "Sorry, there seems to be an issue with your request.  Please send an email to #automationinfo with your ServiceNow ticket number and we will contact you shortly.";
 
-                    }
-                    else
-                    {
-                        // Delete the current existing assets first
-                        if (assetModel.value.Count == 2)
-                        {
-                            string id = assetModel.value[1].Id.ToString();
-                            string deleteAsset = api.DeleteAsset(id, token);
-                            logMsg = "Bal Number" + bodyModel.BalNumber + " , Process : Save9035 Create Asset, Message : Extra Asset has been deleted";
-                            Log.Info(logMsg);
-                        }
-                        assetBody.Add("StringValue", encodeValue);
-                        assetResponse = api.CreateAsset(assetModel, token, assetBody);
-                        logMsg = "Bal Number" + bodyModel.BalNumber + " , Process : Save9035 Create Asset, Message : Data asset has been created";
-                        Log.Info(logMsg);
-                    }
-                    //Compressing JSON
-                    compressValue = CompressString.Zip(bodyModel.ListJsonString);
-                    //Encoding JSON
-                    encodeValue = SecureData.AesEncryptString(appKeys.SecretKey, compressValue);
-                    // getting lists assets
-                    filter = "?$filter=Name eq '" + bodyModel.BalNumber + ".Lists'";
-                    AssetModel ListAssetModel = api.GetAsset(token, filter);
-                    // Adding or updating Lits Assets
-                    Dictionary<string, object> assetListBody = new Dictionary<string, object>();
-                    assetListBody.Add("Name", bodyModel.BalNumber + ".Lists");
-                    assetListBody.Add("ValueScope", "Global");
-                    assetListBody.Add("ValueType", "Text");
-                    assetListBody.Add("StringValue", encodeValue);
-
-                    assetResponse = api.CreateAsset(ListAssetModel, token, assetListBody);
-                    // get n check if asset exist
-                    logMsg = "Bal Number" + bodyModel.BalNumber + " , Process : Save9035 Create Asset, Message : List Asset has been created";
-                    Log.Info(logMsg);
-                    assetModel = api.GetAsset(token, filter);
-                    // In Case of submit sends the message
-                    if (assetModel.value.Count > 0 && bodyModel.isSubmit == true)
-                    {
-                        logMsg = "Bal Number" + bodyModel.BalNumber + " , Process : Save9035 Create Asset, Message : Submit 9035 has been executed.";
-                        outResponse.success = true;
-                        outResponse.message = "Your 9035 will be drafted on the DOL ETA site and a copy will be uploaded to Cobalt.  You will receive a notification from ServiceNow when it is complete.  If you have any questions, contact #automationinfo.";
-                    }
-                    // in case of save Later
-                    else if (assetModel.value.Count > 0 && bodyModel.isSubmit == false)
-                    {
-                        logMsg = "Bal Number" + bodyModel.BalNumber + " , Process : Save9035 Create Asset, Message : Save Later has been executed";
-                        outResponse.success = true;
-                        outResponse.message = @"Your progress has been saved.  To access your draft 9035 in the future, click on the ""Access My Draft 9035"" button in your ServiceNow ticket and you will be redirected to the form.";
-                    }
-                    // In case of any error
-                    else
-                    {
-                        logMsg = "Bal Number" + bodyModel.BalNumber + " , Process : Save9035 Create Asset, Message : Some error occurred while returning an asset";
-                        outResponse.success = false;
-                        outResponse.message = "Sorry, there seems to be an issue with your request.  Please send an email to #automationinfo with your ServiceNow ticket number and we will contact you shortly.";
-
-                    }
-                    Log.Info(logMsg);
                 }
+                Log.Info(logMsg);
             }
             catch (Exception ex)
             {

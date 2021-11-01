@@ -16,5 +16,7 @@ namespace BAL9035.Models
         public string AssetName { get; set; }
         [JsonProperty(PropertyName = "AssetValue")]
         public string AssetValue { get; set; }
+        [JsonProperty(PropertyName = "Status")]
+        public string Status { get; set; }
     }
 }

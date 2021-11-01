@@ -92,8 +92,6 @@
                                 @{ string data = Model.Form9035.SectionB.B2; }
                                 @Html.DropDownList("B2", DDLUtil.GetSOC(data), new { style = "position:absolute;left:112px;top:341px;width:200px;height:18px;font-weight:bold;" })
                             </div>
-
-                            @*<p><input id="tags" style = "position:absolute;left:112px;top:341px;width:200px;height:18px;"></p>*@
                             <p><input placeholder="..." oninput="this.className = ''" name="B3" id="B3" style="position:absolute;left:350px;top:342px;width:430px;height:17px;font-weight:bold;" readonly></p>
                             <p><input type="radio" name="B4" id="B4Y" value="yes" @(Model.Form9035.SectionB.B4 != false ? "checked" : "") style="position:absolute;left:162px;top:380px;border:none;"></p>
                             <p><input type="radio" name="B4" id="B4N" value="no" @(Model.Form9035.SectionB.B4 == false ? "checked" : "") style="position:absolute;left:214px;top:380px;border:none;"> </p>

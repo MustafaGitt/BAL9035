@@ -32,6 +32,7 @@ namespace BAL9035.Controllers
             ParentModel obj = new ParentModel();
             Form9035 form = new Form9035();
             Lists allLists = new Lists();
+            CredentialAsset credentialsAsset = new CredentialAsset();
             OrchestratorAPI api = new OrchestratorAPI();
             // Add starting point on ES
             ElasticSearch es = new ElasticSearch();
@@ -53,11 +54,12 @@ namespace BAL9035.Controllers
                     request.Code = "182635";
                 }
                 TempData["Error"] = "";
-                string filter = "";
+               // string filter = "";
                 string encryptedData = "";
                 string decodeData = "";
                 string data = "";
                 string ListencryptedData = "";
+                string CredentialsencryptedData = "";
                 if ((request.Code != null && request.Code != "") && (request.State != null && request.State != ""))
                 {
                     // GET The username which try to access this page
@@ -87,9 +89,26 @@ namespace BAL9035.Controllers
                     // Getting UIPATH Token
                     string token = api.Authentication(appKeys);
                     Log.Info("Bal Number : " + bal_no + " Process : Draft 9035 Page Loading, Message :  All variables has been initialized successfully.");
+
                     // get n check if asset exist
-                    filter = "?$filter=Name eq '" + bal_no + "'";
-                    AssetModel assetModel = api.GetAsset(token, filter);
+                    //filter = "?$filter=Name eq '" + bal_no + "'";
+                    //AssetModel assetModel = api.GetAsset(token, filter);
+
+
+
+                    // get n check if asset exist
+                    AssetModel assetModel = new AssetModel() {value= new List<AssetValueArrayModel>() };
+                    List<EsResultObj> cobaltESAssets = es.GetAllCobaltAssetES(ViewBag.id_no);
+                    if (cobaltESAssets.Count>0)
+                    {
+                        cobaltESAssets.ForEach(asset =>
+                        {
+                            assetModel.value.Add(new AssetValueArrayModel { Name = asset.AssetName, Value = asset.AssetValue, StringValue = asset.AssetValue });
+                        });
+                    }
+
+
+
                     //get Cobalt-D Asset from ElasticSearch
                     if (ViewBag.id_no.ToString().StartsWith("COB") && assetModel.value.Count <= 0)
                     {
@@ -102,31 +121,33 @@ namespace BAL9035.Controllers
                             });
                         }
                     }
+                 
+                    
                     // Extracting the Encrypted Data String
                     foreach (var item in assetModel.value)
                     {
                         // 9035 Model Value
-                        if (!item.Name.Contains("Lists"))
+                        if (item.Name.Contains("FormData"))
                         {
-                            if (encryptedData == "")
+                            if (string.IsNullOrEmpty(encryptedData))
                             {
                                 encryptedData = item.Value;
-                            }
-                            else
-                            {
-                                encryptedData += item.Value;
                             }
                         }
                         // List Model Value
                         else if (item.Name.Contains("Lists"))
                         {
-                            if (ListencryptedData == "")
+                            if (string.IsNullOrEmpty(ListencryptedData))
                             {
                                 ListencryptedData = item.Value;
                             }
-                            else
+                        }
+                        else if(item.Name.Contains("Credentials"))
+                        {
+                            if (string.IsNullOrEmpty(CredentialsencryptedData))
                             {
-                                ListencryptedData += item.Value;
+                                CredentialsencryptedData = item.Value;
+
                             }
                         }
                     }
@@ -153,53 +174,65 @@ namespace BAL9035.Controllers
                             Log.Info("Bal Number : " + bal_no + " Process : Draft 9035 Page Loading, Message :  Lists Data has been decrypted successfully.");
                         }
                     }
+                    //Credentials Decryption
+                    if (!string.IsNullOrEmpty(CredentialsencryptedData))
+                    {
+                        decodeData = SecureData.AesDecryptString(appKeys.SecretKey, CredentialsencryptedData);
+                        if (!string.IsNullOrEmpty(decodeData))
+                        {
+                            data = CompressString.Unzip(decodeData);
+                            credentialsAsset = JsonConvert.DeserializeObject<CredentialAsset>(data);
+                            Log.Info("Bal Number : " + bal_no + " Process : Draft 9035 Page Loading, Message :  Credentials Data has been decrypted successfully.");
+                        }
+                    }
+
                     // if data not exist check from SQL
                     if (assetModel.value.Count <= 0)
                     {
                         //string query = @"select * from BAL9035";
-                        //string query = @"select * from BAL9035 where BALNumber='20000.50054.51'";
-                        string query = @"select c.CompanyName, c.CompanyNumber, c.IsH1BDependent as 'Company H-1B Dependent', ce.EntityName as 'Sponsoring Entity', ce.IsH1BDependent as 'Entity H-1B Dependent',
-                        b.MatterNumber, b.FullName as 'Beneficiary', cc.JobPosition as 'Beneficiary Job Title',
-                        cc.BALNumber, cst.CaseSubType, --max of 6
-                        lca.SocCode, lca.SocOccupation, lca.BeginOfValidity, lca.EndOfValidity, lca.WageRangeLow, lca.WageRangeHigh, lca.WageLevel, lca.NumberOfPositions,
-                        bt1.StaffFirstName as 'Attorney First Name', bt1.StaffMiddleName as 'Attorney Middle Name', bt1.StaffLastName as 'Attorney Last Name', bt1.StaffEmail as 'Attorney Email',
-                        bt2.StaffFirstName as 'Assistant First Name', bt2.StaffMiddleName as 'Assistant Middle Name', bt2.StaffLastName as 'Assistant Last Name', bt2.StaffEmail as 'Assistant Email',
-                        bt3.ContactFirstName as 'Signer First Name', bt3.ContactMiddleName as 'Signer Middle Name', bt3.ContactLastName as 'Signer Last Name', bt3.JobTitle as 'Signer Job',
-                        ca.AddressLine1, ca.AddressLine2, ca.Suite, ca.City, ca.State, ca.ZipCode, l.PrevailingWage, l.PrevailingWageSource, l.PrevailingWagePublishedYear, l.PrevailingWageOther,
-                        p.BALNumber as 'Parent Case Number', ps.CaseSubType as 'ParentCaseSubType',
-                        c1.CountryName as 'Citizenship 1', c2.CountryName as 'Citizenship 2', c3.CountryName as 'Citizenship 3',
-                        c4.CountryName as 'Citizenship 4', c5.CountryName as 'Citizenship 5', c6.CountryName as 'Citizenship 6',
-                        c7.CountryName as 'Citizenship 7', c8.CountryName as 'Citizenship 8', c9.CountryName as 'Citizenship 9', c10.CountryName as 'Citizenship 10'
-                        from ClientCase cc
-                        inner join Beneficiary b on b.beneid = cc.BeneId
-                        inner join Company c on c.CompanyId = b.CompanyId
-                        inner join LCADetail lca on lca.CaseId = cc.CaseId
-                        left join CompanyEntity ce on ce.CompanyEntityId = cc.SponsorEntityId
-                        inner join casecontacts cc1 (nolock) on cc.caseid = cc1.caseid and cc1.casecontacttype = 'BAL_MANAGER' and cc1.isprimary = 1
-                        inner join balteam bt1 (nolock) on cc1.userid = bt1.userid
-                        inner join casecontacts cc2 (nolock) on cc.caseid = cc2.caseid and cc2.casecontacttype = 'BAL_ASSISTANT' and cc2.isprimary = 1
-                        inner join balteam bt2 (nolock) on cc2.userid = bt2.userid
-                        left join casecontacts cc3 (nolock) on cc.caseid = cc3.caseid and cc3.casecontacttype = 'SIGNER'
-                        left join CompanyContacts bt3 (nolock) on cc3.userid = bt3.userid
-                        --inner join CaseAddress a on a.CaseId = cc.CaseId
-                        left join CaseCompanyAddressLink l on l.CaseId = cc.CaseId
-                        left join CompanyAddress ca on ca.CompanyAddressId = l.CompanyAddressId
-                        inner join CaseSubTypeRel r on r.CaseId = cc.CaseId
-                        inner join CaseSubTypes cst on cst.MetaDataId = r.MetaDataId
-                        left join ClientCase p on cc.ParentCaseId = p.CaseId
-                        left join CaseSubTypeRel pr on pr.CaseId = p.CaseId
-                        left join CaseSubTypes ps on ps.MetaDataId = pr.MetaDataId
-                        left join Country c1 on c1.CountryCode = b.NationalityCountryCode1
-                        left join Country c2 on c2.CountryCode = b.NationalityCountryCode2
-                        left join Country c3 on c3.CountryCode = b.NationalityCountryCode3
-                        left join Country c4 on c4.CountryCode = b.NationalityCountryCode4
-                        left join Country c5 on c5.CountryCode = b.NationalityCountryCode5
-                        left join Country c6 on c6.CountryCode = b.NationalityCountryCode6
-                        left join Country c7 on c7.CountryCode = b.NationalityCountryCode7
-                        left join Country c8 on c8.CountryCode = b.NationalityCountryCode8
-                        left join Country c9 on c9.CountryCode = b.NationalityCountryCode9
-                        left join Country c10 on c10.CountryCode = b.NationalityCountryCode10
-                        where CC.BALNumber ='" + bal_no + "'order by cc.BALNumber";
+                        string query = @"select * from BAL9035 where BALNumber='20000.50054.51'";
+                        //string query = @"select c.CompanyName, c.CompanyNumber, c.IsH1BDependent as 'Company H-1B Dependent', ce.EntityName as 'Sponsoring Entity', ce.IsH1BDependent as 'Entity H-1B Dependent',
+                        //b.MatterNumber, b.FullName as 'Beneficiary', cc.JobPosition as 'Beneficiary Job Title',
+                        //cc.BALNumber, cst.CaseSubType, --max of 6
+                        //lca.SocCode, lca.SocOccupation, lca.BeginOfValidity, lca.EndOfValidity, lca.WageRangeLow, lca.WageRangeHigh, lca.WageLevel, lca.NumberOfPositions,
+                        //bt1.StaffFirstName as 'Attorney First Name', bt1.StaffMiddleName as 'Attorney Middle Name', bt1.StaffLastName as 'Attorney Last Name', bt1.StaffEmail as 'Attorney Email',
+                        //bt2.StaffFirstName as 'Assistant First Name', bt2.StaffMiddleName as 'Assistant Middle Name', bt2.StaffLastName as 'Assistant Last Name', bt2.StaffEmail as 'Assistant Email',
+                        //bt3.ContactFirstName as 'Signer First Name', bt3.ContactMiddleName as 'Signer Middle Name', bt3.ContactLastName as 'Signer Last Name', bt3.JobTitle as 'Signer Job',
+                        //ca.AddressLine1, ca.AddressLine2, ca.Suite, ca.City, ca.State, ca.ZipCode, l.PrevailingWage, l.PrevailingWageSource, l.PrevailingWagePublishedYear, l.PrevailingWageOther,
+                        //p.BALNumber as 'Parent Case Number', ps.CaseSubType as 'ParentCaseSubType',
+                        //c1.CountryName as 'Citizenship 1', c2.CountryName as 'Citizenship 2', c3.CountryName as 'Citizenship 3',
+                        //c4.CountryName as 'Citizenship 4', c5.CountryName as 'Citizenship 5', c6.CountryName as 'Citizenship 6',
+                        //c7.CountryName as 'Citizenship 7', c8.CountryName as 'Citizenship 8', c9.CountryName as 'Citizenship 9', c10.CountryName as 'Citizenship 10'
+                        //from ClientCase cc
+                        //inner join Beneficiary b on b.beneid = cc.BeneId
+                        //inner join Company c on c.CompanyId = b.CompanyId
+                        //inner join LCADetail lca on lca.CaseId = cc.CaseId
+                        //left join CompanyEntity ce on ce.CompanyEntityId = cc.SponsorEntityId
+                        //inner join casecontacts cc1 (nolock) on cc.caseid = cc1.caseid and cc1.casecontacttype = 'BAL_MANAGER' and cc1.isprimary = 1
+                        //inner join balteam bt1 (nolock) on cc1.userid = bt1.userid
+                        //inner join casecontacts cc2 (nolock) on cc.caseid = cc2.caseid and cc2.casecontacttype = 'BAL_ASSISTANT' and cc2.isprimary = 1
+                        //inner join balteam bt2 (nolock) on cc2.userid = bt2.userid
+                        //left join casecontacts cc3 (nolock) on cc.caseid = cc3.caseid and cc3.casecontacttype = 'SIGNER'
+                        //left join CompanyContacts bt3 (nolock) on cc3.userid = bt3.userid
+                        //--inner join CaseAddress a on a.CaseId = cc.CaseId
+                        //left join CaseCompanyAddressLink l on l.CaseId = cc.CaseId
+                        //left join CompanyAddress ca on ca.CompanyAddressId = l.CompanyAddressId
+                        //inner join CaseSubTypeRel r on r.CaseId = cc.CaseId
+                        //inner join CaseSubTypes cst on cst.MetaDataId = r.MetaDataId
+                        //left join ClientCase p on cc.ParentCaseId = p.CaseId
+                        //left join CaseSubTypeRel pr on pr.CaseId = p.CaseId
+                        //left join CaseSubTypes ps on ps.MetaDataId = pr.MetaDataId
+                        //left join Country c1 on c1.CountryCode = b.NationalityCountryCode1
+                        //left join Country c2 on c2.CountryCode = b.NationalityCountryCode2
+                        //left join Country c3 on c3.CountryCode = b.NationalityCountryCode3
+                        //left join Country c4 on c4.CountryCode = b.NationalityCountryCode4
+                        //left join Country c5 on c5.CountryCode = b.NationalityCountryCode5
+                        //left join Country c6 on c6.CountryCode = b.NationalityCountryCode6
+                        //left join Country c7 on c7.CountryCode = b.NationalityCountryCode7
+                        //left join Country c8 on c8.CountryCode = b.NationalityCountryCode8
+                        //left join Country c9 on c9.CountryCode = b.NationalityCountryCode9
+                        //left join Country c10 on c10.CountryCode = b.NationalityCountryCode10
+                        //where CC.BALNumber ='" + bal_no + "'order by cc.BALNumber";
                         //20000.55.52,20000.50054.51
                         // Calling db object and sending the query and returning the DataTable
                         Database db = new Database();
@@ -226,31 +259,22 @@ namespace BAL9035.Controllers
 
                     // Check Credential Asset and see if it is submit case
                     form.isSubmit = false;
-                    filter = "?$filter=Name eq '" + ViewBag.id_no + "'";
-                    //Getting Credential Asset if its Exist or not
-                    AssetModel idModel = api.GetAsset(token, filter);
-                    // If Both Credential and Data Asset Exists set the boolean value to TRUE
-                    if (idModel.value.Count > 0 && assetModel.value.Count > 0)
+                    if (!string.IsNullOrEmpty(credentialsAsset.Username) && !string.IsNullOrEmpty(credentialsAsset.Password))
                     {
-                        foreach (var item in idModel.value)
+                        if (credentialsAsset.Name == ViewBag.id_no)
                         {
-                            // Check and See if the ID NO is equal to the Name of the Data Asset
-                            if (item.Name == ViewBag.id_no)
+                            int queueId = api.GetQueueID(token);
+                            List<QueueItemCount> queueItems = api.GetQueueItemsByID(token, queueId, ViewBag.id_no);
+                            if (queueItems.Count > 0)
                             {
-
-                                int queueId = api.GetQueueID(token);
-                                List<QueueItemCount> queueItems = api.GetQueueItemsByID(token, queueId, ViewBag.id_no);
-                                if (queueItems.Count>0)
+                                string itemStatus = queueItems.FirstOrDefault().Status;
+                                if (itemStatus.ToLower() == "deleted" || itemStatus.ToLower() == "successful" || itemStatus.ToLower() == "failed")
                                 {
-                                    string itemStatus = queueItems.FirstOrDefault().Status;
-                                    if (itemStatus.ToLower() == "deleted" || itemStatus.ToLower() == "successful" || itemStatus.ToLower() == "failed")
-                                    {
-                                        form.isSubmit = false;
-                                    }
-                                    else
-                                    {
-                                        form.isSubmit = true;
-                                    }
+                                    form.isSubmit = false;
+                                }
+                                else
+                                {
+                                    form.isSubmit = true;
                                 }
                             }
                         }

@@ -66,7 +66,7 @@ namespace BAL9035.Controllers
 
         // POST: api/AddCredentials
         // Create the Credential Asset on UIPATH Orchestrator
-        public IHttpActionResult Post([FromBody]CredentialAsset bodyModel)
+        public IHttpActionResult Post([FromBody] CredentialAsset bodyModel)
         {
             string assetResponse = "";
             Response outResponse = new Response();
@@ -85,71 +85,65 @@ namespace BAL9035.Controllers
                     logMsg = "Bal Number : " + bodyModel.Name + ", Proecess : Create Credential Asset, Message : Parameter : Username : " + bodyModel.Username + "Password : " + bodyModel.Password + " Name : " + bodyModel.Name + " Email : " + bodyModel.Email + " : Parameter is required.";
                     Log.Info(logMsg);
                     es.AddErrorESLog(bodyModel.Name, "Technical", "Credential Asset Parameter Missing", out errorMessage);
-                    api.AddErrorQueueItem(bodyModel.Name, "Credential Asset Parameter Missing","Technical", "Credential Asset Parameter Missing","In Progress");
+                    api.AddErrorQueueItem(bodyModel.Name, "Credential Asset Parameter Missing", "Technical", "Credential Asset Parameter Missing", "In Progress");
                     return Json(assetResponse);
                 }
-                string filter = "";
+                //string filter = "";
                 //  Get the Config from AppSettings
                 AppSettingsValues appKeys = GetAppSettings.GetAppSettingsValues();
                 //Set which tenant to use
                 appKeys.tenancyName = bodyModel.Name.StartsWith("COB") ? appKeys.cobaltDtenancyName : appKeys.tenancyName;
-                // UIPATH TOKEN
-                string token = api.Authentication(appKeys);
-                // Send error message if the token is null
-                if (string.IsNullOrEmpty(token))
+                List<EsResultObj> cobaltESAssets = es.GetAllCobaltAssetES(bodyModel.Name);
+                if (cobaltESAssets.Count > 0)
                 {
-                    outResponse.success = false;
-                    outResponse.message = "Sorry, there seems to be an issue with your request.  Please send an email to #automationinfo with your ServiceNow ticket number and we will contact you shortly.";
-                    logMsg = "Bal Number : "+ bodyModel.Name + ", Proecess : Create Credential Asset, Message : You are not been able to authenticated. Token : " + token;
+                    cobaltESAssets.ForEach(res =>
+                    {
+                        if (res.AssetName.Contains("Credentials"))
+                        {
+                            es.DeleteCobaltAssetES(res.AssetName);
+                        }
+                    });
+                }
+                // create credentials asset on es
+                string result = JsonConvert.SerializeObject(bodyModel);
+                string compressValue = CompressString.Zip(result);
+                string encodeValue = SecureData.AesEncryptString(appKeys.SecretKey, compressValue);
+                bool isSuccess= es.CreateCobaltAssetES("Credentials", bodyModel.Name + ".Credentials", encodeValue, "In Progress", string.Empty);
+                logMsg = "Ticket Number" + bodyModel.Name + " , Process : Save9035 Create Credentials Asset, Message : Credentials Asset has been created on ES successfully";
+                Log.Info(logMsg);
+
+
+                // get n check if asset exist
+                var credResult = es.GetCobaltAssetByTicketNoES(bodyModel.Name+".Credentials");
+                if (isSuccess)
+                {
+                    // Gets user old records and sets the new updated key against it
+                    string esKeyID = "";
+                    // gets the KeyID
+                    string[] esResults = es.GetESKey(bodyModel.Email, appKeys.LookupKey, out errorMessage);
+                    string initalKeyID = "";
+                    if (esResults != null)
+                    {
+                        initalKeyID = esResults[1];
+                    }
+                    // Set the SecretKey against the KeyID
+                    es.SetESKey(initalKeyID, bodyModel.Email, bodyModel.SecretKey, appKeys.LookupKey, out errorMessage, out esKeyID);
+
+                    outResponse.success = true;
+                    outResponse.message = esKeyID;
+                    logMsg = "Bal Number : " + bodyModel.Name + ",UserName: " + bodyModel.Username + " Process : Create Credential Asset, Message :  The method has been successfully exexuted.";
                     Log.Info(logMsg);
-                    es.AddErrorESLog(bodyModel.Name, "Technical", "UIPATH Token not generated. Authentication Failed.", out errorMessage);
-                    api.AddErrorQueueItem(bodyModel.Name, "UIPATH Token not generated. Authentication Failed.", "Technical", "UIPATH Token not generated. Authentication Failed.", "In Progress");
                 }
                 else
                 {
-                    // get n check if asset exist
-                    filter = "?$filter=Name eq '" + bodyModel.Name + "'";
-                    AssetModel assetModel = api.GetAsset(token, filter);
-                    // create or update asset
-                    Dictionary<string, object> assetBody = new Dictionary<string, object>();
-                    assetBody.Add("Name", bodyModel.Name);
-                    assetBody.Add("ValueScope", "Global");
-                    assetBody.Add("ValueType", "Credential");
-                    assetBody.Add("StringValue", "no idea");
-                    assetBody.Add("CredentialUsername", bodyModel.Username);
-                    assetBody.Add("CredentialPassword", bodyModel.Password);
-                    assetResponse = api.CreateAsset(assetModel, token, assetBody);
-                    // get n check if asset exist
-                    assetModel = api.GetAsset(token, filter);
-                    if (assetModel.value.Count > 0)
-                    {
-                        // Gets user old records and sets the new updated key against it
-                        string esKeyID = "";
-                        // gets the KeyID
-                        string[] esResults = es.GetESKey(bodyModel.Email, appKeys.LookupKey, out errorMessage);
-                        string initalKeyID = "";
-                        if(esResults != null)
-                        {
-                            initalKeyID = esResults[1];
-                        }
-                        // Set the SecretKey against the KeyID
-                        es.SetESKey(initalKeyID, bodyModel.Email, bodyModel.SecretKey, appKeys.LookupKey, out errorMessage, out esKeyID);
-
-                        outResponse.success = true;
-                        outResponse.message = esKeyID;
-                        logMsg = "Bal Number : " + bodyModel.Name +",UserName: "+ bodyModel.Username+" Process : Create Credential Asset, Message :  The method has been successfully exexuted.";
-                        Log.Info(logMsg);
-                    }
-                    else
-                    {
-                        outResponse.success = false;
-                        outResponse.message = "Sorry, there seems to be an issue with your request.  Please send an email to #automationinfo with your ServiceNow ticket number and we will contact you shortly.";
-                        logMsg = "Bal Number : "+ bodyModel.Name + " Process : Create Credential Asset, Message :  The asset has not been found";
-                        Log.Info(logMsg);
-                        es.AddErrorESLog(bodyModel.Name, "Technical", "The Credential Asset has not been created", out errorMessage);
-                        api.AddErrorQueueItem(bodyModel.Name, "The Credential Asset has not been created", "Technical", "The Credential Asset has not been created", "In Progress");
-                    }
+                    outResponse.success = false;
+                    outResponse.message = "Sorry, there seems to be an issue with your request.  Please send an email to #automationinfo with your ServiceNow ticket number and we will contact you shortly.";
+                    logMsg = "Bal Number : " + bodyModel.Name + " Process : Create Credential Asset, Message :  The asset has not been found";
+                    Log.Info(logMsg);
+                    es.AddErrorESLog(bodyModel.Name, "Technical", "The Credential Asset has not been created", out errorMessage);
+                    api.AddErrorQueueItem(bodyModel.Name, "The Credential Asset has not been created", "Technical", "The Credential Asset has not been created", "In Progress");
                 }
+                // }
             }
             catch (Exception ex)
             {
