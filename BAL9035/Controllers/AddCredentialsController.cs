@@ -88,7 +88,6 @@ namespace BAL9035.Controllers
                     api.AddErrorQueueItem(bodyModel.Name, "Credential Asset Parameter Missing", "Technical", "Credential Asset Parameter Missing", "In Progress");
                     return Json(assetResponse);
                 }
-                //string filter = "";
                 //  Get the Config from AppSettings
                 AppSettingsValues appKeys = GetAppSettings.GetAppSettingsValues();
                 //Set which tenant to use
