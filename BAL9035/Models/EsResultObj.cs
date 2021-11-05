@@ -19,14 +19,4 @@ namespace BAL9035.Models
         [JsonProperty(PropertyName = "Status")]
         public string Status { get; set; }
     }
-
-
-    public class ElasticSearchDto
-    {
-        public string _id { get; set; }
-        public string AssetType { get; set; }
-        public string AssetValue_IsEncrypted { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-    }
 }

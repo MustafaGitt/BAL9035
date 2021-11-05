@@ -10,8 +10,6 @@ using Newtonsoft.Json;
 using BAL9035.Core;
 using _9035BL;
 using System.Web.Configuration;
-using Accelirate.ElasticSearch.Common;
-using System.Text;
 
 namespace BAL9035.Controllers
 {
@@ -30,8 +28,6 @@ namespace BAL9035.Controllers
             string logMsg = "";
             Response outResponse = new Response();
             OrchestratorAPI api = new OrchestratorAPI();
-           // var test = new Accelirate.ElasticSearch.Common.ElasticBasicClient(,);
-          
             string errorMessage = "";
             try
             {
@@ -51,54 +47,46 @@ namespace BAL9035.Controllers
                 AppSettingsValues appKeys = GetAppSettings.GetAppSettingsValues();
                 //Set which tenant to use
                 appKeys.tenancyName = bodyModel.Sysid.StartsWith("COB") ? appKeys.cobaltDtenancyName : appKeys.tenancyName;
-                ElasticResponse response;
-                var key = Encoding.ASCII.GetBytes(appKeys.SecretKey);
-                var client9035 = new ElasticSearchOps(appKeys.ElasticSearch_Authority, "9035_assets", null, null, key);
+
+                // GETS all the Assets against the ticket Number
+                string assetName = bodyModel.Sysid;
+                List<EsResultObj> cobaltESAssets = es.GetAllCobaltAssetES(bodyModel.Sysid);
+                if (cobaltESAssets.Count > 0)
+                {
+                    cobaltESAssets.ForEach(result =>
+                    {
+                        if (!result.AssetName.Contains("Credentials"))
+                        {
+                            es.DeleteCobaltAssetES(result.AssetName);
+                        }
+                    });
+                }
+
 
                 //create FormData on ElasticSearch
-                response = client9035.SetAsset("FormData", bodyModel.Sysid, bodyModel.JsonString, true);
-                if (!response.Success)
-                {
-                    throw response.OriginalException;
-                }
+                string FormDataCompressValue = CompressString.Zip(bodyModel.JsonString);
+                string FormDataEncryptValue = SecureData.AesEncryptString(appKeys.SecretKey, FormDataCompressValue);
+                es.CreateCobaltAssetES("Text", bodyModel.Sysid + ".FormData", FormDataEncryptValue, "In Progress", string.Empty);
                 logMsg = "Bal Number" + bodyModel.BalNumber + " , Process : Save9035 Create Asset, Message : FormData Asset has been created on ES successfully";
                 Log.Info(logMsg);
 
-
-                response = client9035.SetAsset("Lists", bodyModel.Sysid, bodyModel.ListJsonString, true);
-                if (!response.Success)
-                {
-                    throw response.OriginalException;
-                }
+                //creaete Lists on ElasticSearch
+                string ListsDataCompressValue = CompressString.Zip(bodyModel.ListJsonString);
+                string ListsDataEncryptValue = SecureData.AesEncryptString(appKeys.SecretKey, ListsDataCompressValue);
+                bool isSuccess= es.CreateCobaltAssetES("Text", bodyModel.Sysid + ".Lists", ListsDataEncryptValue, "In Progress", string.Empty);
                 logMsg = "Bal Number" + bodyModel.BalNumber + " , Process : Save9035 Create Asset, Message : Lists Asset has been created on ES successfully";
                 Log.Info(logMsg);
 
-
-                // GETS all the Assets against the ticket Number
-                //string assetName = bodyModel.Sysid;
-                //List<EsResultObj> cobaltESAssets = es.GetAllCobaltAssetES(bodyModel.Sysid);
-                //if (cobaltESAssets.Count > 0)
-                //{
-                //    cobaltESAssets.ForEach(result =>
-                //    {
-                //        if (!result.AssetName.Contains("Credentials"))
-                //        {
-                //            es.DeleteCobaltAssetES(result.AssetName);
-                //        }
-                //    });
-                //}
-
-
-               
+               // List<EsResultObj> verifyAssets = es.GetAllCobaltAssetES(bodyModel.Sysid);
                 // In Case of submit sends the message
-                if (response.Success && bodyModel.isSubmit == true)
+                if (isSuccess && bodyModel.isSubmit == true)
                 {
                     logMsg = "Bal Number" + bodyModel.BalNumber + " , Process : Save9035 Create Asset, Message : Submit 9035 has been executed.";
                     outResponse.success = true;
                     outResponse.message = "Your 9035 will be drafted on the DOL ETA site and a copy will be uploaded to Cobalt.  You will receive a notification from ServiceNow when it is complete.  If you have any questions, contact #automationinfo.";
                 }
                 // in case of save Later
-                else if (response.Success && bodyModel.isSubmit == false)
+                else if (isSuccess && bodyModel.isSubmit == false)
                 {
                     logMsg = "Bal Number" + bodyModel.BalNumber + " , Process : Save9035 Create Asset, Message : Save Later has been executed";
                     outResponse.success = true;
