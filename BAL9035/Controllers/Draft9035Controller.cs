@@ -12,6 +12,9 @@ using Newtonsoft.Json;
 using _9035BL;
 using System.Net;
 using System.Web.Configuration;
+using System.Text;
+using Accelirate.ElasticSearch.Common;
+using Newtonsoft.Json.Linq;
 
 namespace BAL9035.Controllers
 {
@@ -43,6 +46,9 @@ namespace BAL9035.Controllers
             {
                 AppSettingsValues appKeys = GetAppSettings.GetAppSettingsValues();
                 string url = Request.Url.ToString();
+                ElasticResponse response;
+                var key = Encoding.ASCII.GetBytes(appKeys.SecretKey);
+                var client9035 = new ElasticSearchOps(appKeys.ElasticSearch_Authority, "9035_assets", null, null, key);
                 // LOCAL USE : Comment this 2 lines whenever you need to publish and push the code these are only for local use
                 // add the case no. and the id no. whenever you're debugging and using this as local
                 if (url.Contains("localhost"))
@@ -50,7 +56,7 @@ namespace BAL9035.Controllers
                     //for staging localhost
                     //request.State = "'+bal_no=1615.54312.7;id_no=BOT0001711;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
                     //localhost
-                    request.State = "'+bal_no=20000.50386.18;id_no=BOT0000000;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
+                    request.State = "'+bal_no=20000.50386.18;id_no=BOT0002815;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
                     request.Code = "182635";
                 }
                 TempData["Error"] = "";
@@ -89,6 +95,15 @@ namespace BAL9035.Controllers
                     string token = api.Authentication(appKeys);
                     Log.Info("Bal Number : " + bal_no + " Process : Draft 9035 Page Loading, Message :  All variables has been initialized successfully.");
 
+
+                    response = client9035.RawSearch("{\"query\":{\"script\":{\"script\":\"doc['_id'][0].indexOf('" + ViewBag.id_no + "') > -1\"}}}");
+                    if (!response.Success)
+                    {
+                        throw response.OriginalException;
+                    }
+
+                    var jsonRes = response.Body.ToString();
+                    var abc = JToken.Parse(jsonRes).SelectTokens("hits.hits[*]._source").Select(t => t.ToObject<ElasticSearchDto>()).ToList();
                     // get n check if asset exist
                     AssetModel assetModel = new AssetModel() {value= new List<AssetValueArrayModel>() };
                     List<EsResultObj> cobaltESAssets = es.GetAllCobaltAssetES(ViewBag.id_no);
