@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Web.Configuration;
 using System.Web.Http;
 using _9035BL;
+using Accelirate.ElasticSearch.Common;
 using BAL9035.Core;
 using BAL9035.Models;
 using Newtonsoft.Json;
@@ -90,31 +92,44 @@ namespace BAL9035.Controllers
                 }
                 //  Get the Config from AppSettings
                 AppSettingsValues appKeys = GetAppSettings.GetAppSettingsValues();
-                //Set which tenant to use
-                appKeys.tenancyName = bodyModel.Name.StartsWith("COB") ? appKeys.cobaltDtenancyName : appKeys.tenancyName;
-                List<EsResultObj> cobaltESAssets = es.GetAllCobaltAssetES(bodyModel.Name);
-                if (cobaltESAssets.Count > 0)
+
+                ElasticResponse response;
+                var key = Encoding.ASCII.GetBytes(appKeys.SecretKey);
+                var client9035 = new ElasticSearchOps(appKeys.ElasticSearch_Authority, "9035_assets", null, null, key);
+
+
+                response = client9035.SetCredential("Credentials", bodyModel.Name,bodyModel.Username,bodyModel.Password);
+                if (!response.Success)
                 {
-                    cobaltESAssets.ForEach(res =>
-                    {
-                        if (res.AssetName.Contains("Credentials"))
-                        {
-                            es.DeleteCobaltAssetES(res.AssetName);
-                        }
-                    });
+                    throw response.OriginalException;
                 }
+
+
+                //Set which tenant to use
+                //appKeys.tenancyName = bodyModel.Name.StartsWith("COB") ? appKeys.cobaltDtenancyName : appKeys.tenancyName;
+                //List<EsResultObj> cobaltESAssets = es.GetAllCobaltAssetES(bodyModel.Name);
+                //if (cobaltESAssets.Count > 0)
+                //{
+                //    cobaltESAssets.ForEach(res =>
+                //    {
+                //        if (res.AssetName.Contains("Credentials"))
+                //        {
+                //            es.DeleteCobaltAssetES(res.AssetName);
+                //        }
+                //    });
+                //}
                 // create credentials asset on es
-                string result = JsonConvert.SerializeObject(bodyModel);
-                string compressValue = CompressString.Zip(result);
-                string encodeValue = SecureData.AesEncryptString(appKeys.SecretKey, compressValue);
-                bool isSuccess= es.CreateCobaltAssetES("Credentials", bodyModel.Name + ".Credentials", encodeValue, "In Progress", string.Empty);
-                logMsg = "Ticket Number" + bodyModel.Name + " , Process : Save9035 Create Credentials Asset, Message : Credentials Asset has been created on ES successfully";
-                Log.Info(logMsg);
+                //string result = JsonConvert.SerializeObject(bodyModel);
+                //string compressValue = CompressString.Zip(result);
+                //string encodeValue = SecureData.AesEncryptString(appKeys.SecretKey, compressValue);
+                //bool isSuccess= es.CreateCobaltAssetES("Credentials", bodyModel.Name + ".Credentials", encodeValue, "In Progress", string.Empty);
+                //logMsg = "Ticket Number" + bodyModel.Name + " , Process : Save9035 Create Credentials Asset, Message : Credentials Asset has been created on ES successfully";
+                //Log.Info(logMsg);
 
 
                 // get n check if asset exist
-                var credResult = es.GetCobaltAssetByTicketNoES(bodyModel.Name+".Credentials");
-                if (isSuccess)
+                // var credResult = es.GetCobaltAssetByTicketNoES(bodyModel.Name+".Credentials");
+                if (response.Success)
                 {
                     // Gets user old records and sets the new updated key against it
                     string esKeyID = "";
