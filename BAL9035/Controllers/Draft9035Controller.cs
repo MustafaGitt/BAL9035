@@ -46,7 +46,6 @@ namespace BAL9035.Controllers
             {
                 AppSettingsValues appKeys = GetAppSettings.GetAppSettingsValues();
                 string url = Request.Url.ToString();
-                ElasticResponse response;
                 var key = Encoding.ASCII.GetBytes(appKeys.SecretKey);
                 var client9035 = new ElasticSearchOps(appKeys.ElasticSearch_Authority, "9035_assets", null, null, key);
                 // LOCAL USE : Comment this 2 lines whenever you need to publish and push the code these are only for local use
@@ -60,11 +59,9 @@ namespace BAL9035.Controllers
                     request.Code = "182635";
                 }
                 TempData["Error"] = "";
-                string encryptedData = "";
-                string decodeData = "";
-                string data = "";
-                string ListencryptedData = "";
-                string CredentialsencryptedData = "";
+                string dolUserName = string.Empty;
+                string dolPassword = string.Empty;
+
                 if ((request.Code != null && request.Code != "") && (request.State != null && request.State != ""))
                 {
                     // GET The username which try to access this page
@@ -95,104 +92,40 @@ namespace BAL9035.Controllers
                     string token = api.Authentication(appKeys);
                     Log.Info("Bal Number : " + bal_no + " Process : Draft 9035 Page Loading, Message :  All variables has been initialized successfully.");
 
-
-                    response = client9035.RawSearch("{\"query\":{\"script\":{\"script\":\"doc['_id'][0].indexOf('" + ViewBag.id_no + "') > -1\"}}}");
-                    if (!response.Success)
+                    ElasticResponse FormDataResponse = client9035.GetAsset("FormData", ViewBag.id_no, out object formDataResult);
+                    if (FormDataResponse.Success)
                     {
-                        throw response.OriginalException;
+                        form = JsonConvert.DeserializeObject<Form9035>((string)formDataResult);
+                        Log.Info("Bal Number : " + bal_no + " Process : Draft 9035 Page Loading, Message :  Form9035 Data has been decrypted successfully.");
                     }
-
-                    var jsonRes = response.Body.ToString();
-                    var abc = JToken.Parse(jsonRes).SelectTokens("hits.hits[*]._source").Select(t => t.ToObject<ElasticSearchDto>()).ToList();
-                    // get n check if asset exist
-                    AssetModel assetModel = new AssetModel() {value= new List<AssetValueArrayModel>() };
-                    List<EsResultObj> cobaltESAssets = es.GetAllCobaltAssetES(ViewBag.id_no);
-                    if (cobaltESAssets.Count>0)
+                    ElasticResponse ListsResponse = client9035.GetAsset("Lists", ViewBag.id_no, out object ListsResult);
+                    if (ListsResponse.Success)
                     {
-                        cobaltESAssets.ForEach(asset =>
-                        {
-                            assetModel.value.Add(new AssetValueArrayModel { Name = asset.AssetName, Value = asset.AssetValue, StringValue = asset.AssetValue });
-                        });
+                        allLists = JsonConvert.DeserializeObject<Lists>((string)ListsResult);
+                        Log.Info("Bal Number : " + bal_no + " Process : Draft 9035 Page Loading, Message :  Lists Data has been decrypted successfully.");
                     }
+                    ElasticResponse CredentialsResponse = client9035.GetCredential("Credentials", ViewBag.id_no, out dolUserName, out dolPassword);
 
                     //get Cobalt-D Asset from ElasticSearch
-                    if (ViewBag.id_no.ToString().StartsWith("COB") && assetModel.value.Count <= 0)
+                    if (ViewBag.id_no.ToString().StartsWith("COB") && !FormDataResponse.Success)
                     {
-                        List<EsResultObj> EsAsset = es.GetElasticSearchAsset(bal_no);
-                        if (EsAsset.Count > 0)
+                        var cobaltDclient9035 = new ElasticSearchOps(appKeys.ElasticSearch_Authority, "cobaltd_assets", null, null, key);
+                        ElasticResponse cobaltDFormDataResponse = cobaltDclient9035.GetAsset("FormData", ViewBag.id_no, out object cobaltDformDataResult);
+                        if (cobaltDFormDataResponse.Success)
                         {
-                            EsAsset.ForEach(asset =>
-                            {
-                                assetModel.value.Add(new AssetValueArrayModel { Name = asset.AssetName, Value = asset.AssetValue, StringValue = asset.AssetValue });
-                            });
+                            form = JsonConvert.DeserializeObject<Form9035>((string)cobaltDformDataResult);
+                            Log.Info("Bal Number : " + bal_no + " Process : Draft 9035 Page Loading, Message : Cobalt-D Form9035 Data has been decrypted successfully.");
                         }
-                    }
-                    
-                    // Extracting the Encrypted Data String
-                    foreach (var item in assetModel.value)
-                    {
-                        // 9035 Model Value
-                        if (item.Name.Contains("FormData"))
+                        ElasticResponse CobaltDListsResponse = cobaltDclient9035.GetAsset("Lists", ViewBag.id_no, out object cobaltDListsResult);
+                        if (CobaltDListsResponse.Success)
                         {
-                            if (string.IsNullOrEmpty(encryptedData))
-                            {
-                                encryptedData = item.Value;
-                            }
-                        }
-                        // List Model Value
-                        else if (item.Name.Contains("Lists"))
-                        {
-                            if (string.IsNullOrEmpty(ListencryptedData))
-                            {
-                                ListencryptedData = item.Value;
-                            }
-                        }
-                        else if(item.Name.Contains("Credentials"))
-                        {
-                            if (string.IsNullOrEmpty(CredentialsencryptedData))
-                            {
-                                CredentialsencryptedData = item.Value;
-
-                            }
-                        }
-                    }
-                    // decode and deserialize data if exists form9035 object
-                    if (encryptedData != "")
-                    {
-                        // 9035 Object Decryption
-                        decodeData = SecureData.AesDecryptString(appKeys.SecretKey, encryptedData);
-                        if (decodeData != "")
-                        {
-                            data = CompressString.Unzip(decodeData);
-                            form = JsonConvert.DeserializeObject<Form9035>(data);
-                            Log.Info("Bal Number : " + bal_no + " Process : Draft 9035 Page Loading, Message :  Form9035 Data has been decrypted successfully.");
-                        }
-                    }
-                    // List Object Data Decryption
-                    if (!string.IsNullOrEmpty(ListencryptedData))
-                    {
-                        decodeData = SecureData.AesDecryptString(appKeys.SecretKey, ListencryptedData);
-                        if (decodeData != "")
-                        {
-                            data = CompressString.Unzip(decodeData);
-                            allLists = JsonConvert.DeserializeObject<Lists>(data);
-                            Log.Info("Bal Number : " + bal_no + " Process : Draft 9035 Page Loading, Message :  Lists Data has been decrypted successfully.");
-                        }
-                    }
-                    //Credentials Decryption
-                    if (!string.IsNullOrEmpty(CredentialsencryptedData))
-                    {
-                        decodeData = SecureData.AesDecryptString(appKeys.SecretKey, CredentialsencryptedData);
-                        if (!string.IsNullOrEmpty(decodeData))
-                        {
-                            data = CompressString.Unzip(decodeData);
-                            credentialsAsset = JsonConvert.DeserializeObject<CredentialAsset>(data);
-                            Log.Info("Bal Number : " + bal_no + " Process : Draft 9035 Page Loading, Message :  Credentials Data has been decrypted successfully.");
+                            allLists = JsonConvert.DeserializeObject<Lists>((string)cobaltDListsResult);
+                            Log.Info("Bal Number : " + bal_no + " Process : Draft 9035 Page Loading, Message : Cobalt-D Lists Data has been decrypted successfully.");
                         }
                     }
 
                     // if data not exist check from SQL
-                    if (assetModel.value.Count <= 0)
+                    if (!ViewBag.id_no.ToString().StartsWith("COB") && !FormDataResponse.Success)
                     {
                         //string query = @"select * from BAL9035";
                         //string query = @"select * from BAL9035 where BALNumber='20000.50054.51'";
@@ -264,23 +197,20 @@ namespace BAL9035.Controllers
 
                     // Check Credential Asset and see if it is submit case
                     form.isSubmit = false;
-                    if (!string.IsNullOrEmpty(credentialsAsset.Username) && !string.IsNullOrEmpty(credentialsAsset.Password))
+                    if (CredentialsResponse.Success && !string.IsNullOrEmpty(dolUserName) && !string.IsNullOrEmpty(dolPassword))
                     {
-                        if (credentialsAsset.Name == ViewBag.id_no)
+                        int queueId = api.GetQueueID(token);
+                        List<QueueItemCount> queueItems = api.GetQueueItemsByID(token, queueId, ViewBag.id_no);
+                        if (queueItems.Count > 0)
                         {
-                            int queueId = api.GetQueueID(token);
-                            List<QueueItemCount> queueItems = api.GetQueueItemsByID(token, queueId, ViewBag.id_no);
-                            if (queueItems.Count > 0)
+                            string itemStatus = queueItems.FirstOrDefault().Status;
+                            if (itemStatus.ToLower() == "deleted" || itemStatus.ToLower() == "successful" || itemStatus.ToLower() == "failed")
                             {
-                                string itemStatus = queueItems.FirstOrDefault().Status;
-                                if (itemStatus.ToLower() == "deleted" || itemStatus.ToLower() == "successful" || itemStatus.ToLower() == "failed")
-                                {
-                                    form.isSubmit = false;
-                                }
-                                else
-                                {
-                                    form.isSubmit = true;
-                                }
+                                form.isSubmit = false;
+                            }
+                            else
+                            {
+                                form.isSubmit = true;
                             }
                         }
                     }
@@ -289,7 +219,6 @@ namespace BAL9035.Controllers
                     obj.Lists = allLists;
                     Log.Info("Bal Number : " + bal_no + " Process : Draft 9035 Page Loading, Message : Process has been executued successfully returning an object to View.");
                     return View(obj);
-
                 }
                 else
                 {

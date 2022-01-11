@@ -72,23 +72,6 @@ namespace BAL9035.Controllers
                 }
                 logMsg = "Bal Number" + bodyModel.BalNumber + " , Process : Save9035 Create Asset, Message : Lists Asset has been created on ES successfully";
                 Log.Info(logMsg);
-
-
-                // GETS all the Assets against the ticket Number
-                //string assetName = bodyModel.Sysid;
-                //List<EsResultObj> cobaltESAssets = es.GetAllCobaltAssetES(bodyModel.Sysid);
-                //if (cobaltESAssets.Count > 0)
-                //{
-                //    cobaltESAssets.ForEach(result =>
-                //    {
-                //        if (!result.AssetName.Contains("Credentials"))
-                //        {
-                //            es.DeleteCobaltAssetES(result.AssetName);
-                //        }
-                //    });
-                //}
-
-
                
                 // In Case of submit sends the message
                 if (response.Success && bodyModel.isSubmit == true)
@@ -146,6 +129,8 @@ namespace BAL9035.Controllers
             string assetResponse = "";
             Response outResponse = new Response();
             OrchestratorAPI api = new OrchestratorAPI();
+           
+           
             string logMsg = "";
             string errorMessage = "";
             try
@@ -164,12 +149,17 @@ namespace BAL9035.Controllers
                 string filter = "?$filter=Name eq '" + bodyModel.BalNumber + "'";
                 // configuration
                 AppSettingsValues appKeys = GetAppSettings.GetAppSettingsValues();
+               
                 //Set which tenant to use
                 appKeys.tenancyName = bodyModel.Sysid.StartsWith("COB") ? appKeys.cobaltDtenancyName : appKeys.tenancyName;
                 string token = api.Authentication(appKeys);
+               
+                var key = Encoding.ASCII.GetBytes(appKeys.SecretKey);
+                var client9035 = new ElasticSearchOps(appKeys.ElasticSearch_Authority, "9035_assets", null, null, key);
+                ElasticResponse FormDataResponse = client9035.GetAsset("FormData", bodyModel.Sysid, out object formDataResult);
 
-                AssetModel assetModel = api.GetAsset(token, filter);
-                if (assetModel.value.Count > 0)
+               // AssetModel assetModel = api.GetAsset(token, filter);
+                if (FormDataResponse.Success)
                 {
                     SpecificContent content = new SpecificContent();
                     content.ID = bodyModel.Sysid;
@@ -178,11 +168,6 @@ namespace BAL9035.Controllers
                     content.Note = null;
                     content.Status = null;
                     content.Data = "[{'CaseNo':'" + bodyModel.BalNumber + "','Email':'" + bodyModel.Email + "','EsIdNo':'" + bodyModel.EsIdNo + "', 'ExtraAsset':''}]";
-                    if (assetModel.value.Count > 2)
-                    {
-                        content.Data = "[{'CaseNo':'" + bodyModel.BalNumber + "','Email':'" + bodyModel.Email + "','EsIdNo':'" + bodyModel.EsIdNo + "', 'ExtraAsset':'" + bodyModel.BalNumber + " A" + "'}]";
-                    }
-
                     ItemData itemData = new ItemData();
                     itemData.Name = appKeys.QueueName;
                     itemData.Priority = "Normal";
