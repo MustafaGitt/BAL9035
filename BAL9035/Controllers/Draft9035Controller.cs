@@ -52,14 +52,14 @@ namespace BAL9035.Controllers
                 // add the case no. and the id no. whenever you're debugging and using this as local
                 if (url.Contains("localhost"))
                 {
-                    //for staging localhost
+                    //for staging localhost  
                     //request.State = "'+bal_no=1615.54312.7;id_no=BOT0001711;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
                     //localhost
-                    request.State = "'+bal_no=20000.50386.18;id_no=BOT0002815;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
+                    request.State = "'+bal_no=20000.50294.14;id_no=BOT0000000;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
                     request.Code = "182635";
                 }
                 TempData["Error"] = "";
-                string dolUserName = string.Empty;
+                string dolUserName = string.Empty; 
                 string dolPassword = string.Empty;
 
                 if ((request.Code != null && request.Code != "") && (request.State != null && request.State != ""))

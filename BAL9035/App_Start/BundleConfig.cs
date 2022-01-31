@@ -48,7 +48,11 @@ namespace BAL9035
                       "~/Content/style.css"
                       ));
 
-            bundles.Add(new StyleBundle("~/Content/jqueryUIcss").Include(
+            //bundles.Add(new StyleBundle("~/Content/jqueryUIcss").Include(
+            //          "~/Content/themes/base/jquery-ui.css"
+            //          ));
+
+            bundles.Add(new StyleBundle("~/Content/themes/base/jqueryUIcss").Include(
                       "~/Content/themes/base/jquery-ui.css"
                       ));
         }

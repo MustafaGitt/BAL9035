@@ -44,7 +44,7 @@
     <title>Draft 9035</title>
     <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
     @Styles.Render("~/Content/css")
-    @Styles.Render("~/Content/jqueryUIcss")
+    @Styles.Render("~/Content/themes/base/jqueryUIcss")
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.standalone.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
     @Scripts.Render("~/bundles/modernizr")
@@ -232,7 +232,7 @@
                                                     <button type="button" onclick="productDisplay(this);" class="btn btn-default btn-tbl-custom"><span class="glyphicon glyphicon-edit" /></button> |
                                                     <button type="button" onclick="productDelete(this);" class="btn btn-default btn-tbl-custom"><span class="glyphicon glyphicon-remove" /></button> |
                                                     @{
-                                                        bool addClass = true;
+                                                        bool addGreenClass = true;
                                                         if (item.FmodalObject.F13 == true)
                                                         {
                                                             //F13 Case
@@ -242,12 +242,19 @@
                                                             //F14 Case
                                                             if (string.IsNullOrEmpty(item.FmodalObject.F14a) || string.IsNullOrEmpty(item.FmodalObject.F14b))
                                                             {
-                                                                addClass = false;
+                                                                addGreenClass = false;
+                                                            }
+                                                            if (!string.IsNullOrEmpty(item.FmodalObject.F14a) && item.FmodalObject.F14a.ToLower()=="other")
+                                                            {
+                                                                if (string.IsNullOrEmpty(item.FmodalObject.F14c) || string.IsNullOrEmpty(item.FmodalObject.F14d))
+                                                                {
+                                                                    addGreenClass = false;
+                                                                }
                                                             }
                                                         }
 
                                                     }
-                                                    <button type="button" onclick="addSection(@item.LocationId);" class="btn btn-default btn-tbl-custom  @( addClass == true ? "greenAddSection" : "redAddSection")"><span class="glyphicon glyphicon-plus" /></button>
+                                                    <button type="button" onclick="addSection(@item.LocationId);" class="btn btn-default btn-tbl-custom  @( addGreenClass == true ? "greenAddSection" : "redAddSection")"><span class="glyphicon glyphicon-plus" /></button>
                                                 </td>
                                                 <td style="display:none;"><input type="text" name="jsonValue" id="jsonValue" value="@Json.Encode(item.FmodalObject)"></td>
 
@@ -484,7 +491,7 @@
                     </div>
                     <div id="divUser" class="form-group inactive">
                         <label for="exampleInputEmail1">Username *</label>
-                        <input type="text" id="username" class="form-control" placeholder="Enter Username" name="username" maxlength="50">
+                        <input type="email" id="username" class="form-control" placeholder="Enter Username" name="username" maxlength="50">
 
                     </div>
                     <div id="divPass" class="form-group inactive">
@@ -636,6 +643,7 @@
             }
         }
         function displayImage(element, selectedImage) {
+            debugger;
             //var errCount = validateInputsByTab(currentTab);
             //if (errCount == 0) {
             var divList = document.getElementsByClassName("active-item");

@@ -42,12 +42,14 @@ function validateInputsByTab(tabNo) {
         errCount = tab1(errCount, errMsg);
         errCount = tab2(errCount, errMsg);
         errCount = tab3(errCount, errMsg);
+        errCount = tab4(errCount, errMsg);
     }
 
     if (tabNo == 4) {
         errCount = tab1(errCount, errMsg);
         errCount = tab2(errCount, errMsg);
         errCount = tab3(errCount, errMsg);
+        errCount = tab4(errCount, errMsg);
         errCount = tab5(errCount, errMsg);
     }
 
@@ -55,6 +57,7 @@ function validateInputsByTab(tabNo) {
         errCount = tab1(errCount, errMsg);
         errCount = tab2(errCount, errMsg);
         errCount = tab3(errCount, errMsg);
+        errCount = tab4(errCount, errMsg);
         errCount = tab5(errCount, errMsg);
         errCount = tab6(errCount, errMsg);
     }
@@ -79,6 +82,12 @@ function tab1(errCount, errMsg) {
     var valB7f = $("input[name='B7-F']").val();
     var valD0 = $("input[name='D0']").val();
 
+
+    if (!valB1) {
+        errCount++;
+        errMsg = " Section B Question 1 Job Title is required.";
+        $("#req").append('<li>' + errMsg + '</li>');
+    }
     if (valB1.length > 0) {
         if (valB1.length < 5) {
             errCount++;
@@ -172,6 +181,12 @@ function tab1(errCount, errMsg) {
     if (valB6.length > 10) {
         errCount++;
         errMsg = " Section B Question 6 Length should be less or equal to 10 characters. ";
+        $("#req").append('<li>' + errMsg + '</li>');
+    }
+
+    if (!valB7) {
+        errCount++;
+        errMsg = "Section B Question 7: Total Worker Positions value is required";
         $("#req").append('<li>' + errMsg + '</li>');
     }
     if (valB7.length > 5) {
@@ -274,7 +289,7 @@ function tab1(errCount, errMsg) {
 
         //}
     }
-    return errCount
+    return errCount;
 }
 
 function tab2(errCount, errMsg) {
@@ -319,11 +334,7 @@ function tab3(errCount, errMsg) {
     var valF14B = $("select[name=F14-B]").val();
     var valF14c = $("input[name=F14c]").val();
     var valF14d = $("input[name=F14d]").val();
-    var valH1 = $('input[name=H1]:checked').val();
-    var valH2 = $('input[name=H2]:checked').val();
-    var valH3 = $('input[name=H3]:checked').val();
-    var valH4 = $('input[name=H4]:checked').val();
-    var valH5 = $('input[name=H5]:checked').val();
+    
 
     if (!valF1) {
         errCount++;
@@ -568,6 +579,17 @@ function tab3(errCount, errMsg) {
 
 
 
+    
+    return errCount;
+}
+
+
+function tab4(errCount, errMsg) {
+    var valH1 = $('input[name=H1]:checked').val();
+    var valH2 = $('input[name=H2]:checked').val();
+    var valH3 = $('input[name=H3]:checked').val();
+    var valH4 = $('input[name=H4]:checked').val();
+    var valH5 = $('input[name=H5]:checked').val();
     if (!valH1) {
         errCount++;
         errMsg = " Section H Question 1 :  At the time of filing this LCA, is the employer H-1B dependent value is Required";
@@ -579,7 +601,7 @@ function tab3(errCount, errMsg) {
         $("#req").append('<li>' + errMsg + '</li>');
     }
 
-    if (valH1 == 'yes' && valH2 == 'yes' && !valH3) {
+    if ((valH1 == 'yes' || valH2 == 'yes') && !valH3) {
         errCount++;
         errMsg = " Section H Question 3 value is Required";
         $("#req").append('<li>' + errMsg + '</li>');
@@ -591,14 +613,13 @@ function tab3(errCount, errMsg) {
         $("#req").append('<li>' + errMsg + '</li>');
     }
 
-    if (valH1 == 'yes' && valH2 == 'yes' && !valH5) {
+    if ((valH1 == 'yes' || valH2 == 'yes') && !valH5) {
         errCount++;
         errMsg = " Section H Question 5 value is Required";
         $("#req").append('<li>' + errMsg + '</li>');
     }
-    return errCount
+    return errCount;
 }
-
 function tab5(errCount, errMsg) {
     var valJ1 = $("input[name=J1]").val();
     var valJ2 = $("input[name=J2]").val();
