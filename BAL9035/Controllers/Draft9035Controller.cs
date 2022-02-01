@@ -130,7 +130,7 @@ namespace BAL9035.Controllers
                         //string query = @"select * from BAL9035";
                         //string query = @"select * from BAL9035 where BALNumber='20000.50054.51'";
                         string query = @"select c.CompanyName, c.CompanyNumber, c.IsH1BDependent as 'Company H-1B Dependent', ce.EntityName as 'Sponsoring Entity', ce.IsH1BDependent as 'Entity H-1B Dependent',
-b.MatterNumber, b.FullName as 'Beneficiary', b.JobPosition as 'Beneficiary Job Title',
+b.MatterNumber, b.FullName as 'Beneficiary', cc.JobPosition as 'Beneficiary Job Title',
 cc.BALNumber, cst.CaseSubType, --max of 6
 lca.SocCode, lca.SocOccupation, lca.BeginOfValidity, lca.EndOfValidity, lca.WageRangeLow, lca.WageRangeHigh, lca.WageLevel, lca.NumberOfPositions,
 bt1.StaffFirstName as 'Attorney First Name', bt1.StaffMiddleName as 'Attorney Middle Name', bt1.StaffLastName as 'Attorney Last Name', bt1.StaffEmail as 'Attorney Email',
