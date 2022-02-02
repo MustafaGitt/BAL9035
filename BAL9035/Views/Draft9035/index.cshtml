@@ -236,6 +236,10 @@
                                                         if (item.FmodalObject.F13 == true)
                                                         {
                                                             //F13 Case
+                                                            if (string.IsNullOrEmpty(item.FmodalObject.F13a))
+                                                            {
+                                                                addGreenClass = false;
+                                                            }
                                                         }
                                                         else
                                                         {

@@ -510,18 +510,24 @@ function tab3(errCount, errMsg) {
                     errMsg = "Section F : Click on the '+' icon button in Location Table to provide additional required fields of Section F.13";
                     $("#req").append('<li>' + errMsg + '</li>');
                 }
-            }
-            else if (popUpObj.F14 == true) {
-                if (popUpObj.F14a == null || popUpObj.F14b == "0") {
+                if (!popUpObj.F13a) {
                     errCount++;
                     breakLoop++;
                     errMsg = "Section F : Click on the '+' icon button in Location Table to provide additional required fields of Section F.13";
                     $("#req").append('<li>' + errMsg + '</li>');
                 }
+            }
+            else if (popUpObj.F14 == true) {
+                if (popUpObj.F14a == null || popUpObj.F14b == "0") {
+                    errCount++;
+                    breakLoop++;
+                    errMsg = "Section F : Click on the '+' icon button in Location Table to provide additional required fields of Section F.14";
+                    $("#req").append('<li>' + errMsg + '</li>');
+                }
                 else if (popUpObj.F14a.toLowerCase() == "other" && (popUpObj.F14c == null || popUpObj.F14d == null)) {
                     errCount++;
                     breakLoop++;
-                    errMsg = "Section F : Click on the '+' icon button in Location Table to provide additional required fields of Section F.13";
+                    errMsg = "Section F : Click on the '+' icon button in Location Table to provide additional required fields of Section F.14";
                     $("#req").append('<li>' + errMsg + '</li>');
                 }
 
