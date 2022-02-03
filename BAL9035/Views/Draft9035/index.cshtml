@@ -215,20 +215,20 @@
                                         {
                                             <tr id="Row-@item.LocationId">
                                                 @*<td style="display:none;">@item.LocationId</td>*@
-                                                <td scope="row">@item.Address1</td>
-                                                <td>@item.Address2</td>
-                                                <td>@item.City</td>
-                                                <td>@item.State.ToString().ToUpper()</td>
+                                                <td scope="row" style="width: 100px; max-width: 100px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; ">@item.Address1</td>
+                                                <td style="width: 100px; max-width: 100px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; ">@item.Address2</td>
+                                                <td style="width:100px;max-width:100px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;">@item.City</td>
+                                                <td style="width:100px;max-width:100px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;">@item.State.ToString().ToUpper()</td>
                                                 @if (string.IsNullOrEmpty(item.County))
                                                 {
-                                                    <td class="highlight">@item.County</td>
+                                                    <td class="highlight" style="width: 100px; max-width: 100px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; ">@item.County</td>
                                                 }
                                                 else
                                                 {
-                                                    <td>@item.County</td>
+                                                    <td style="width: 100px; max-width: 100px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; ">@item.County</td>
                                                 }
-                                                <td>@item.PostalCode</td>
-                                                <td>
+                                                <td style="width: 100px; max-width: 100px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; ">@item.PostalCode</td>
+                                                <td style="width:20%;">
                                                     <button type="button" onclick="productDisplay(this);" class="btn btn-default btn-tbl-custom"><span class="glyphicon glyphicon-edit" /></button> |
                                                     <button type="button" onclick="productDelete(this);" class="btn btn-default btn-tbl-custom"><span class="glyphicon glyphicon-remove" /></button> |
                                                     @{
@@ -258,7 +258,7 @@
                                                         }
 
                                                     }
-                                                    <button type="button" onclick="addSection(@item.LocationId);" class="btn btn-default btn-tbl-custom  @( addGreenClass == true ? "greenAddSection" : "redAddSection")"><span class="glyphicon glyphicon-plus" /></button>
+                                                    <button type="button" onclick="addSection(this);" class="btn btn-default btn-tbl-custom  @( addGreenClass == true ? "greenAddSection" : "redAddSection")"><span class="glyphicon glyphicon-plus" /></button>
                                                 </td>
                                                 <td style="display:none;"><input type="text" name="jsonValue" id="jsonValue" value="@Json.Encode(item.FmodalObject)"></td>
 
@@ -803,6 +803,7 @@
             $("#btnLocSav1").text("Add Location");
             //$('#btnCopyValues').addClass('hidden');
             $("#sectionFPopUp").modal();
+            $('#parentTableRowNo').val('');
             var valueJson = "";
             if ($('#locTable tr').length > 1) {
                 valueJson = $('#locTable tr').eq(1).find('#jsonValue').val();

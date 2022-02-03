@@ -9,7 +9,9 @@ function SectionFModalPopUp() {
     var chkCount = validateSectionFModal();
     if (chkCount == 0) {
         var jsonSaveValue = createSectionFObj();
-        if ($('#parentTableRowNo').val().length > 0) {
+        //create or update location
+        var tableRows = $('#locTable tr').length - 1;
+        if (tableRows > 0 && $('#parentTableRowNo').val().length > 0) {
             var tablRowId = parseInt($('#parentTableRowNo').val());
             $('#locTable tr').eq(tablRowId).find('#jsonValue').val(jsonSaveValue);
             // empty the td with Area Value and highlight td

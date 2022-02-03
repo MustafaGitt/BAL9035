@@ -166,7 +166,10 @@ function productDelete(ctl) {
 function productDisplay(ctl) {
     var row = $(ctl).parents("tr");
     var cols = row.children("td");
-    EditId = row.attr('id').split('-')[1];
+
+
+    EditId=$("#locTable tr").index(ctl.closest('tr'));
+    //EditId = row.attr('id').split('-')[1];
     $("input[name=F4]").val(cols[0].innerText);
     $("input[name=F5]").val(cols[1].innerText);
     $("input[name=F6]").val(cols[2].innerText);
@@ -215,8 +218,12 @@ function AddLocationTable(jsonObject) {
     }
     var tblID = 0;
     if ($('#locTable tr').length > 1) {
-        var lastTD = $('#locTable tr:last').attr('id').split('-');
-        tblID = lastTD[1];
+        //var lastTD = $('#locTable tr:last').attr('id').split('-');
+        //tblID = lastTD[1];
+
+
+        // -1 to remove headers name row from count
+        tblID = $('#locTable tr').length - 1;
     }
     else {
         tblID = 0;
@@ -227,7 +234,7 @@ function AddLocationTable(jsonObject) {
             '</td><td>' +
             '<button type="button" onclick="productDisplay(this);" class="btn btn-default btn-tbl-custom"><span class="glyphicon glyphicon-edit" /></button> | ' +
             '<button type="button" onclick="productDelete(this);" class="btn btn-default btn-tbl-custom"><span class="glyphicon glyphicon-remove" /></button> | ' +
-            '<button type="button" onclick="addSection(' + inc + ');" class="btn btn-default btn-tbl-custom redAddSection"><span class="glyphicon glyphicon-plus" /></button>' +
+            '<button type="button" onclick="addSection(this);" class="btn btn-default btn-tbl-custom redAddSection"><span class="glyphicon glyphicon-plus" /></button>' +
             '</td><td style="display:none;"><input type="text" name="jsonValue" id="jsonValue" value=""></td><td style="display:none;" id="wageFrom">' + valLocWageFrom + '</td><td style="display:none;" id="wageTo">' + valLocWageTo + '</td><td style="display:none;" id="tblSecondEntityName">' + valLocBusnsName +'</td></tr>');
         $('#locTable tr').eq(inc).find('#jsonValue').val(jsonObject);
     }
@@ -235,7 +242,8 @@ function AddLocationTable(jsonObject) {
 }
 function productUpdateInTable(id) {
     // Find Product in <table>
-    var row = $("#Row-" + id + "").closest("tr");
+    //var row = $("#Row-" + id + "").closest("tr");
+    var row = $('#locTable').find('tr').eq(id);;
     // Add changed product to table
     $(row).after(productBuildTableRow(id));
     // Remove original product
@@ -254,10 +262,10 @@ function productBuildTableRow(id) {
     var valLocWageTo = $("input[name=LocWageTo]").val();
     var valLocBusnsName = $("input[name=SecondEntityName]").val();
 
-    var highlight = "<td>";
+    var highlight = '<td style="width: 100px; max-width: 100px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; ">';
     if (valF8 == "0") {
         valF8 = "";
-        highlight = "<td  class='highlight'>";
+        highlight = '<td  class="highlight" style="width: 100px; max-width: 100px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">';
     }
     if ($("select[name=F7]").val() == "0") {
         valF7 = "";
@@ -284,16 +292,18 @@ function productBuildTableRow(id) {
     else {
         classResult = 'redAddSection';
     }
-    var ret = '<tr id="Row-' + id + '"><td>' + valF4 + '</td><td>' + valF5 + '</td><td>' + valF6 + '</td><td>' + valF7 + '</td>' + highlight + valF8 + '</td><td>' + valF9 +
-        '</td><td>' +
+    var ret = '<tr id="Row-' + id + '"><td style="width: 100px; max-width: 100px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; ">' + valF4 + '</td><td style="width: 100px; max-width: 100px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; ">' + valF5 + '</td><td style="width:100px;max-width:100px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;">' + valF6 + '</td><td style="width:100px;max-width:100px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;">' + valF7 + '</td>' + highlight + valF8 + '</td><td style="width: 100px; max-width: 100px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; ">' + valF9 +
+        '</td><td style="width:20%;">' +
         '<button type="button" onclick="productDisplay(this);" data-id=' + id + ' class="btn btn-default btn-tbl-custom"><span class="glyphicon glyphicon-edit" /></button> | ' +
         '<button type="button" onclick="productDelete(this);" data-id=' + id + ' class="btn btn-default btn-tbl-custom"><span class="glyphicon glyphicon-remove" /></button> | ' +
-        '<button type="button" onclick="addSection(' + id + ');" data-id=' + id + ' class="btn btn-default btn-tbl-custom ' + classResult + '"><span class="glyphicon glyphicon-plus" /></button>' +
+        '<button type="button" onclick="addSection(this);" data-id=' + id + ' class="btn btn-default btn-tbl-custom ' + classResult + '"><span class="glyphicon glyphicon-plus" /></button>' +
         '</td><td style="display:none;"><input type="text" name="jsonValue" id="jsonValue" value=""></td><td style="display:none;" id="wageFrom">' + valLocWageFrom + '</td><td style="display:none;" id="wageTo">' + valLocWageTo + '</td><td style="display:none;" id="tblSecondEntityName">' + valLocBusnsName +'</td></tr>';
     return ret;
 }
 //create a new Section (F13,F14)
-function addSection(tableRowNo) {
+function addSection(ctl) {
+    var $tr = ctl.closest('tr');
+    var tableRowNo = $("#locTable tr").index($tr);
     if (Number.isInteger(tableRowNo)) {
         if (!$("#btnCopyValues").hasClass("header")) {
             // below line send the table row number to modal so modal data can be stored in that row 
