@@ -22,6 +22,27 @@ function SectionFModalPopUp() {
         else {
             AddLocationTable(jsonSaveValue);
             $('#LocPopUp').modal();
+
+            var F3isChecked = $('#F3CheckBox').is(':checked');
+            if (F3isChecked) {
+                $('#SecondEntityName').val($('#F3').val());
+            }
+            else {
+                $('#SecondEntityName').val('');
+            }
+
+            var F10isChecked = $('#F10CheckBox').is(':checked');
+            if (F10isChecked) {
+                var fromWageResult = $('#F10fromP').val() ? $('#F10from').val() + "." + $('#F10fromP').val() : $('#F10from').val();
+                var toWageResult = $('#F10ToP').val() ? $('#F10To').val() + "." + $('#F10ToP').val() : $('#F10To').val();
+                $('#LocWageFrom').val(fromWageResult);
+                $('#LocWageTo').val(toWageResult);
+            }
+            else {
+                $('#LocWageFrom').val('');
+                $('#LocWageTo').val('');
+            }
+
         }
         if ($('#locTable tr').eq(tablRowId).find('.redAddSection').length > 0) {
             $('#locTable tr').eq(tablRowId).find('.redAddSection').removeClass('redAddSection').addClass('greenAddSection');

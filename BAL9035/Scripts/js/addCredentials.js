@@ -11,6 +11,12 @@ function validateCredentialsInputs() {
         $('#reqCred').html(errMsg)
         return errCount
     }
+    if (!isEmail(username)) {
+        errCount++;
+        errMsg += "Invalid User Name. Please include '@' in user name";
+        $('#reqCred').html(errMsg)
+        return errCount
+    }
     if (password.length <= 0) {
         errCount++;
         errMsg += " Please Enter Password ";
@@ -25,6 +31,10 @@ function validateCredentialsInputs() {
     }
     return errCount
 
+}
+function isEmail(email) {
+    var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    return regex.test(email);
 }
 // validate Secret Key Input
 function SetESKey(email) {

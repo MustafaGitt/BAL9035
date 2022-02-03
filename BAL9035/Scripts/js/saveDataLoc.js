@@ -8,6 +8,7 @@ function validateLocation() {
     var valF4 = $("input[name=F4]").val();
     var valF5 = $("input[name=F5]").val();
     var valF6 = $("input[name=F6]").val();
+    var valF7 = $("select[name=F7]").val();
     var valF8 = $("select[name=F8]").val();
     var valF9 = $("input[name=F9]").val();
     var wageFrom = $('#LocWageFrom').val();
@@ -64,6 +65,11 @@ function validateLocation() {
         }
     }
 
+    if (valF7 == '0') {
+        errCount++;
+        errMsg = " Section F State : State is required";
+        $("#reqLoc").append('<li>' + errMsg + '</li>');
+    }
     if (valF8 == '0') {
         errCount++;
         errMsg = " Section F County : County is required";
@@ -89,11 +95,11 @@ function validateLocation() {
             errMsg = " Section F Wage Range From Is Required";
             $("#reqLoc").append('<li>' + errMsg + '</li>');
         }
-        if (!wageTo) {
-            errCount++;
-            errMsg = " Section F Wage Range To Is Required";
-            $("#reqLoc").append('<li>' + errMsg + '</li>');
-        }
+        //if (!wageTo) {
+        //    errCount++;
+        //    errMsg = " Section F Wage Range To Is Required";
+        //    $("#reqLoc").append('<li>' + errMsg + '</li>');
+        //}
     }
     if (!isCheckedF3) {
         if (!secondryEntName) {
@@ -237,6 +243,7 @@ function productUpdateInTable(id) {
 }
 // Creates a new Table Row
 function productBuildTableRow(id) {
+    debugger;
     var valF4 = $("input[name=F4]").val();
     var valF5 = $("input[name=F5]").val();
     var valF6 = $("input[name=F6]").val();
