@@ -55,7 +55,7 @@ namespace BAL9035.Controllers
                     //for staging localhost  
                     //request.State = "'+bal_no=1615.54312.7;id_no=BOT0001711;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
                     //localhost
-                    request.State = "'+bal_no=20000.53640.5;id_no=BOT0002946;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
+                    request.State = "'+bal_no=1615.73214.2;id_no=COB0063103;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
                     request.Code = "182635";
                 }
                 TempData["Error"] = "";
@@ -88,6 +88,12 @@ namespace BAL9035.Controllers
                     ViewBag.email_id = sUserName;
                     //Set which tenant to use
                     appKeys.tenancyName = ViewBag.id_no.ToString().StartsWith("COB") ? appKeys.cobaltDtenancyName : appKeys.tenancyName;
+
+                    if (!ViewBag.id_no.ToString().StartsWith("COB") && bal_no.StartsWith("1615."))
+                    {
+                        TempData["Error"] = "You have entered an invalid case matter number. Please submit a new request with the correct matter number";
+                        return RedirectToAction("Error");
+                    }
                     // Getting UIPATH Token
                     string token = api.Authentication(appKeys);
                     Log.Info("Bal Number : " + bal_no + " Process : Draft 9035 Page Loading, Message :  All variables has been initialized successfully.");
@@ -199,7 +205,7 @@ where CC.BALNumber ='" + bal_no + "' and ca.IsActive = 1 order by cc.BALNumber";
                     form.isSubmit = false;
                     if (CredentialsResponse.Success && !string.IsNullOrEmpty(dolUserName) && !string.IsNullOrEmpty(dolPassword))
                     {
-                        int queueId = api.GetQueueID(token);
+                        int queueId = api.GetQueueID(token,appKeys.QueueName);
                         List<QueueItemCount> queueItems = api.GetQueueItemsByID(token, queueId, ViewBag.id_no);
                         if (queueItems.Count > 0)
                         {

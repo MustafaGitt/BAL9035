@@ -22,6 +22,7 @@ namespace BAL9035.Core
                 var appSettings = ConfigurationManager.GetSection("appSettings") as NameValueCollection;
                 keys.OrchestratorUrl = appSettings["OrchestratorUrl"];
                 keys.QueueName = SecureData.Base64Decode(appSettings["QueueName"]);
+                keys.CobaltDQueueName = SecureData.Base64Decode(appSettings["CobaltDQueueName"]);
                 keys.ResponseQueueName = SecureData.Base64Decode(appSettings["ResponseQueueName"]);
                 keys.tenancyName = SecureData.Base64Decode(appSettings["tenancyName"]);
                 keys.cobaltDtenancyName = SecureData.Base64Decode(appSettings["CobaltDtenancyName"]);

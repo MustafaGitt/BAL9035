@@ -26,7 +26,7 @@ function validateLocation() {
     if (valF4.length > 0) {
         if (valF4.length < 5) {
             errCount++;
-            errMsg = " Section F Address 1 : Length must be less or equal to 5 characters.";
+            errMsg = " Section F Address 1 : Length must be greater or equal to 5 characters.";
             $("#reqLoc").append('<li>' + errMsg + '</li>');
         }
     }
@@ -84,7 +84,7 @@ function validateLocation() {
     if (valF9.length > 0) {
         if (valF9.length > 5) {
             errCount++;
-            errMsg = " Section F Postal Code : Length must be less or equal to 5 characters.";
+            errMsg = " Section F Postal Code : Length must be greater or equal to 5 characters.";
             $("#reqLoc").append('<li>' + errMsg + '</li>');
         }
     }

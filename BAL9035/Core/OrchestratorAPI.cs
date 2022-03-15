@@ -171,11 +171,11 @@ namespace BAL9035.Core
             }
         }
         // Get the ID of Queue
-        public int GetQueueID(string token)
+        public int GetQueueID(string token,string queueName)
         {
             try
             {
-                string url = appKeys.OrchestratorUrl + "odata/QueueDefinitions?$filter=Name eq '" + appKeys.QueueName + "'";
+                string url = appKeys.OrchestratorUrl + "odata/QueueDefinitions?$filter=Name eq '" + queueName + "'";
                 string response = string.Empty;
                 if (appKeys.isDevelopmentEnvironment == true)
                 {
