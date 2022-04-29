@@ -61,7 +61,7 @@ function SetESKey(email) {
 
 }
 // Call Save Credential Asset API
-function CreateCredentialAsset(id, bal_no, email) {
+function CreateCredentialAsset(id, bal_no, email,tenancyName) {
     $('#reqCred').html("");
     // Validate inputs
     var errCount = validateCredentialsInputs();
@@ -99,7 +99,8 @@ function CreateCredentialAsset(id, bal_no, email) {
                         'JsonString': "",
                         'isSubmit': true,
                         'Email': email,
-                        'EsIdNo': esKeyId
+                        'EsIdNo': esKeyId,
+                        'tenantName':tenancyName
                     }
                     // Adding a queue item by calling an API
                     $.ajax({

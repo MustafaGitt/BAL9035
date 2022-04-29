@@ -14,5 +14,6 @@ namespace BAL9035.Models
         public string Email { get; set; }
         public string EsIdNo { get; set; }
         public string ListJsonString { get; set; }
+        public string tenantName { get; set; }
     }
 }

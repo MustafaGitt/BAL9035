@@ -24,5 +24,7 @@ namespace BAL9035.Models
         public string LookupKey { get; set; }
         public string DbAutomation_Authority { get; set; }
         public bool isDevelopmentEnvironment { get; set; }
+        public string DataLakeUserName { get; set; }
+        public string DataLakePassword { get; set; }
     }
 }

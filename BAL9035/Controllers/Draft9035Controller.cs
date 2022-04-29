@@ -15,6 +15,7 @@ using System.Web.Configuration;
 using System.Text;
 using Accelirate.ElasticSearch.Common;
 using Newtonsoft.Json.Linq;
+using System.Data.Odbc;
 
 namespace BAL9035.Controllers
 {
@@ -52,10 +53,8 @@ namespace BAL9035.Controllers
                 // add the case no. and the id no. whenever you're debugging and using this as local
                 if (url.Contains("localhost"))
                 {
-                    //for staging localhost  
-                    //request.State = "'+bal_no=1615.54312.7;id_no=BOT0001711;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
                     //localhost
-                    request.State = "'+bal_no=1615.73214.2;id_no=COB0063103;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
+                    request.State = "'+bal_no=A006.311.7;id_no=BOT0000000;cobalt=cobaltD;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
                     request.Code = "182635";
                 }
                 TempData["Error"] = "";
@@ -86,10 +85,14 @@ namespace BAL9035.Controllers
                     ViewBag.id_no = queryString["id_no"];
                     ViewBag.bal_no = bal_no;
                     ViewBag.email_id = sUserName;
-                    //Set which tenant to use
-                    appKeys.tenancyName = ViewBag.id_no.ToString().StartsWith("COB") ? appKeys.cobaltDtenancyName : appKeys.tenancyName;
+                    string tenantName = queryString["cobalt"];
+                    ViewBag.cobaltTenant = !string.IsNullOrEmpty(tenantName) && tenantName.ToLower() == "cobaltd" ? "COB" : "BOT";
 
-                    if (!ViewBag.id_no.ToString().StartsWith("COB") && bal_no.StartsWith("1615."))
+
+                    //Set which tenant to use
+                    appKeys.tenancyName = ViewBag.cobaltTenant.ToString().StartsWith("COB") ? appKeys.cobaltDtenancyName : appKeys.tenancyName;
+
+                    if (!ViewBag.cobaltTenant.ToString().StartsWith("COB") && bal_no.StartsWith("1615."))
                     {
                         TempData["Error"] = "You have entered an invalid case matter number. Please submit a new request with the correct matter number";
                         return RedirectToAction("Error");
@@ -113,25 +116,40 @@ namespace BAL9035.Controllers
                     ElasticResponse CredentialsResponse = client9035.GetCredential("Credentials", ViewBag.id_no, out dolUserName, out dolPassword);
 
                     //get Cobalt-D Asset from ElasticSearch
-                    if (ViewBag.id_no.ToString().StartsWith("COB") && !FormDataResponse.Success)
+                    if (ViewBag.cobaltTenant.ToString().StartsWith("COB") && !FormDataResponse.Success)
                     {
-                        var cobaltDclient9035 = new ElasticSearchOps(appKeys.ElasticSearch_Authority, "cobaltd_assets", null, null, key);
-                        ElasticResponse cobaltDFormDataResponse = cobaltDclient9035.GetAsset("FormData", ViewBag.id_no, out object cobaltDformDataResult);
-                        if (cobaltDFormDataResponse.Success)
+                        var connnectionString = "DSN=" + appKeys.DataLakeUserName + ";PWD=" + appKeys.DataLakePassword + ";";
+                        var cnn = new OdbcConnection(connnectionString);
+                        cnn.Open();
+                        // var selectSql = "SELECT * FROM doleta_9035 WHERE BALNumber = 'A006.329.7'";
+                        var selectSql = "SELECT * FROM doleta_9035 WHERE BALNumber = '" + bal_no + "' ";
+                        var cmd = new OdbcCommand(selectSql, cnn);
+                        var da = new OdbcDataAdapter(cmd);
+                        var dtResult = new DataTable();
+                        da.Fill(dtResult);
+                        cnn.Close();
+                        if (dtResult.Rows.Count > 0)
                         {
-                            form = JsonConvert.DeserializeObject<Form9035>((string)cobaltDformDataResult);
-                            Log.Info("Bal Number : " + bal_no + " Process : Draft 9035 Page Loading, Message : Cobalt-D Form9035 Data has been decrypted successfully.");
+                            MapDataBricks dbData = new MapDataBricks();
+                            form = dbData.MapBricksResult(dtResult);
+                            allLists = dbData.CreateBricksLists(dtResult, bal_no);
+                            dbData.AssignValue(form, allLists.parentCaseSubTypes);
+                            Log.Info("Bal Number : " + bal_no + " Process : Draft 9035 Page Loading, Message :  Data from SQL Query has been generated successfully.");
                         }
-                        ElasticResponse CobaltDListsResponse = cobaltDclient9035.GetAsset("Lists", ViewBag.id_no, out object cobaltDListsResult);
-                        if (CobaltDListsResponse.Success)
+                        else
                         {
-                            allLists = JsonConvert.DeserializeObject<Lists>((string)cobaltDListsResult);
-                            Log.Info("Bal Number : " + bal_no + " Process : Draft 9035 Page Loading, Message : Cobalt-D Lists Data has been decrypted successfully.");
+                            Log.Info("Bal Number : " + bal_no + ": Process : Draft9035 -  No Data Found from the SQL Query.");
+                            TempData["Error"] = "You have entered an invalid case matter number. Please submit a new request with the correct matter number";
+                            es.AddErrorESLog(ViewBag.id_no, "Business", "No Data Found from the SQL Query.", out errorMessage);
+                            api.AddErrorQueueItem(ViewBag.id_no, TempData["Error"].ToString(), "Business", TempData["Error"].ToString(), "Failed", bal_no);
+                            return RedirectToAction("Error");
                         }
+
+
                     }
 
                     // if data not exist check from SQL
-                    if (!ViewBag.id_no.ToString().StartsWith("COB") && !FormDataResponse.Success)
+                    if (!ViewBag.cobaltTenant.ToString().StartsWith("COB") && !FormDataResponse.Success)
                     {
                         //string query = @"select * from BAL9035";
                         //string query = @"select * from BAL9035 where BALNumber='20000.50054.51'";
@@ -205,7 +223,7 @@ where CC.BALNumber ='" + bal_no + "' and ca.IsActive = 1 order by cc.BALNumber";
                     form.isSubmit = false;
                     if (CredentialsResponse.Success && !string.IsNullOrEmpty(dolUserName) && !string.IsNullOrEmpty(dolPassword))
                     {
-                        int queueId = api.GetQueueID(token,appKeys.QueueName);
+                        int queueId = api.GetQueueID(token, appKeys.QueueName);
                         List<QueueItemCount> queueItems = api.GetQueueItemsByID(token, queueId, ViewBag.id_no);
                         if (queueItems.Count > 0)
                         {

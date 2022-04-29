@@ -1,10 +1,10 @@
 ﻿// Create Data Asset
-function CreateAssets(isSubmit, sysid, balNo, email) {
+function CreateAssets(isSubmit, sysid, balNo, email,tenancyName) {
     // validate inputs
     var errCount = validateInputMethod();
     if (errCount == 0) {
         // Fetch Values and Call the Data Asset API
-        fetchValues(sysid, balNo, isSubmit, email);
+        fetchValues(sysid, balNo, isSubmit, email, tenancyName);
     }
     else {
         document.getElementById("btnDlgOK").style.display = "none";
@@ -21,12 +21,12 @@ function CreateAssets(isSubmit, sysid, balNo, email) {
 
 }
 // Call the Asset Data do not check the validation
-function SaveLater(isSubmit, sysid, balNo) {
-    fetchValues(sysid, balNo, isSubmit);
+function SaveLater(isSubmit, balNo,sysid) {
+    fetchValues(balNo,sysid, isSubmit);
     document.getElementById("btnDlgSL").style.display = "none";
 }
 // Fetch all the HTML INPUTS, Convert it into model object and calls the API
-function fetchValues(balNo, sysid, isSubmit, email) {
+function fetchValues(balNo, sysid, isSubmit, email, tenancyName) {
     if (isSubmit) {
         //close multiplePurposeModal for submit case
         $('#multiplePurposeModal').modal('hide');
@@ -236,7 +236,8 @@ function fetchValues(balNo, sysid, isSubmit, email) {
         'ListJsonString': JSON.stringify(Lists),
         'isSubmit': isSubmit,
         'Email': email,
-        'EsIdNo': ''
+        'EsIdNo': '',
+        'tenantName': tenancyName
     }
     var appUrl = window.location.href;
     appUrl = appUrl.slice(0, appUrl.lastIndexOf('/'));

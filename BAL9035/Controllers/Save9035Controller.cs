@@ -50,7 +50,7 @@ namespace BAL9035.Controllers
                 // configuration getting from Appsetting
                 AppSettingsValues appKeys = GetAppSettings.GetAppSettingsValues();
                 //Set which tenant to use
-                appKeys.tenancyName = bodyModel.Sysid.StartsWith("COB") ? appKeys.cobaltDtenancyName : appKeys.tenancyName;
+                appKeys.tenancyName = bodyModel.tenantName.StartsWith("COB") ? appKeys.cobaltDtenancyName : appKeys.tenancyName;
                 ElasticResponse response;
                 var key = Encoding.ASCII.GetBytes(appKeys.SecretKey);
                 var client9035 = new ElasticSearchOps(appKeys.ElasticSearch_Authority, "9035_assets", null, null, key);
@@ -151,7 +151,7 @@ namespace BAL9035.Controllers
                 AppSettingsValues appKeys = GetAppSettings.GetAppSettingsValues();
                
                 //Set which tenant to use
-                appKeys.tenancyName = bodyModel.Sysid.StartsWith("COB") ? appKeys.cobaltDtenancyName : appKeys.tenancyName;
+                appKeys.tenancyName = bodyModel.tenantName.StartsWith("COB") ? appKeys.cobaltDtenancyName : appKeys.tenancyName;
                 string token = api.Authentication(appKeys);
                
                 var key = Encoding.ASCII.GetBytes(appKeys.SecretKey);

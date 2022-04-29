@@ -37,6 +37,8 @@ namespace BAL9035.Core
                 keys.LookupKey = appSettings["LookupKey"];
                 keys.DbAutomation_Authority = appSettings["DbAutomation:Authority"];
                 keys.isDevelopmentEnvironment = Convert.ToBoolean(appSettings["isDevelopmentEnvironment"]);
+                keys.DataLakeUserName = SecureData.Base64Decode(appSettings["DataLakeUserName"]);
+                keys.DataLakePassword = SecureData.Base64Decode(appSettings["DataLakePassword"]);
                 return keys;
             }
             catch (Exception ex)
