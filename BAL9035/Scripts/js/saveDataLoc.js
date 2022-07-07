@@ -30,13 +30,13 @@ function validateLocation() {
             $("#reqLoc").append('<li>' + errMsg + '</li>');
         }
     }
-    if (valF5.length > 0) {
-        if (valF5.length < 5) {
-            errCount++;
-            errMsg = " Section F Address 2 : Length must be less or equal to 5 characters.";
-            $("#reqLoc").append('<li>' + errMsg + '</li>');
-        }
-    }
+    //if (valF5.length > 0) {
+    //    if (valF5.length < 5) {
+    //        errCount++;
+    //        errMsg = " Section F Address 2 : Length must be less or equal to 5 characters.";
+    //        $("#reqLoc").append('<li>' + errMsg + '</li>');
+    //    }
+    //}
     if (valF4.length > 60) {
         errCount++;
         errMsg = " Section F Address 1 : Length must be less or equal to 60 characters.";
