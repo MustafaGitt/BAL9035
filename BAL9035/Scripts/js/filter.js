@@ -198,7 +198,7 @@ function filterValidations() {
 
 
 function getB3Value(value) {
-
+    debugger;
     if (value == "11-1011.00") return "Chief Executives";
     if (value == "11-1021.00") return "General and Operations Managers";
     if (value == "11-1031.00") return "Legislators";

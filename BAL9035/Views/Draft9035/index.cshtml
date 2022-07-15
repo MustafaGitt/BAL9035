@@ -500,7 +500,10 @@
                     </div>
                     <div id="divPass" class="form-group inactive">
                         <label for="exampleInputPassword1">Password *</label>
-                        <input type="password" class="form-control" id="password" placeholder="Enter Password" name="password" maxlength="50">
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="password" placeholder="Enter Password" name="password" maxlength="50">
+                            <span class="input-group-btn"><button class="btn btn-default" type="button" onclick="showHidePassword()" ><i class="glyphicon glyphicon-eye-close" id="btnShowHidePassword"></i></button></span>
+                        </div>
                     </div>
                     <div id="divKey" class="form-group">
                         <label for="exampleInputKey1">Secret Key *</label>

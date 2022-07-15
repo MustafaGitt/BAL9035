@@ -144,3 +144,15 @@ function onBtnBackClick() {
     $("#btnAdd").addClass("inactive");
     $("#btnBack").addClass("inactive");
 }
+
+function showHidePassword() {
+    var inputField = $("#password");
+    if (inputField.attr('type')==='password') {
+        inputField.attr('type', 'text');
+        $('#btnShowHidePassword').removeClass('glyphicon glyphicon-eye-close').addClass('glyphicon glyphicon-eye-open');
+    }
+    else {
+        inputField.attr('type', 'password');
+        $('#btnShowHidePassword').removeClass('glyphicon glyphicon-eye-open').addClass('glyphicon glyphicon-eye-close');
+    }
+}
