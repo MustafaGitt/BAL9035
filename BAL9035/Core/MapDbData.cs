@@ -166,8 +166,52 @@ namespace BAL9035.Core
                         sectionFModal.F14 = true;
                         sectionFModal.F14a = "Other";
                         sectionFModal.F14b = dataRow["PrevailingWagePublishedYear"].ToString();
-                        sectionFModal.F14c = dataRow["PrevailingWageOther"].ToString();
-                        sectionFModal.F14d = dataRow["PrevailingWageOther"].ToString();
+
+                        if (dataRow["PrevailingWageOther"].ToString()== "WTW General Industry Professional (Administrative and Sales)")
+                        {
+                            sectionFModal.F14c = "Willis Towers Watson";
+                            sectionFModal.F14d = "General Industry Professional(Administrative and Sales)";
+                        }
+                        else if (dataRow["PrevailingWageOther"].ToString() == "WTW General Industry Professional (Technical and Operations)")
+                        {
+                            sectionFModal.F14c = "Willis Towers Watson";
+                            sectionFModal.F14d = "General Industry Professional(Technical and Operations)";
+                        }
+                        else if (dataRow["PrevailingWageOther"].ToString() == "WTW General Industry Supervisory and Middle Management")
+                        {
+                            sectionFModal.F14c = "Willis Towers Watson";
+                            sectionFModal.F14d = "General Industry Supervisory and Middle Management Report";
+                        }
+                        else if (dataRow["PrevailingWageOther"].ToString() == "Pearl Meyer AEC Compensation Survey Engineering")
+                        {
+                            sectionFModal.F14c = "Pearl Meyer";
+                            sectionFModal.F14d = "AEC Compensation Survey Engineering";
+                        }
+                        else if (dataRow["PrevailingWageOther"].ToString() == "Radford Global Technology Survey")
+                        {
+                            sectionFModal.F14c = "Radford";
+                            sectionFModal.F14d = "Radford Global Technology Survey";
+                        }
+                        else if (dataRow["PrevailingWageOther"].ToString() == "Radford Global Life Sciences Survey")
+                        {
+                            sectionFModal.F14c = "Radford";
+                            sectionFModal.F14d = "Radford Global Life Sciences Survey";
+                        }
+                        else if (dataRow["PrevailingWageOther"].ToString() == "Mercer HR Consulting Benchmark Database Survey")
+                        {
+                            sectionFModal.F14c = "Mercer Human Resource Consulting Inc.";
+                            sectionFModal.F14d = "Mercer Benchmark Database Survey";
+                        }
+                        else if (dataRow["PrevailingWageOther"].ToString() == "Mercer Benchmark Database Mercer/Gartner Info. Tech. Survey")
+                        {
+                            sectionFModal.F14c = "Mercer Human Resource Consulting Inc.";
+                            sectionFModal.F14d = "Mercer Benchmark Database Mercer/Gartner Info. Tech. Survey";
+                        }
+                        else
+                        {
+                            sectionFModal.F14c = dataRow["PrevailingWageOther"].ToString();
+                            sectionFModal.F14d = dataRow["PrevailingWageOther"].ToString();
+                        }
                     }
                     // Creating Case Subtypes
                     if (dataRow["CaseSubType"].ToString() != null && dataRow["CaseSubType"].ToString() != "")
