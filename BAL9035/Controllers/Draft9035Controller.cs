@@ -55,7 +55,7 @@ namespace BAL9035.Controllers
                 {
                     //localhost
                     request.State = "'+bal_no=20000.51610.25;id_no=BOT0000000;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
-                    //request.State = "'+bal_no=A006.311.7;id_no=BOT0000000;cobalt=cobaltD;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
+                   // request.State = "'+bal_no=A002.306.12;id_no=BOT0000000;cobalt=cobaltD;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
                     request.Code = "182635";
                 }
                 TempData["Error"] = "";

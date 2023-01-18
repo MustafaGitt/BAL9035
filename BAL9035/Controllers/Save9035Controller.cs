@@ -184,8 +184,8 @@ namespace BAL9035.Controllers
                     if (messageResult != null && !string.IsNullOrEmpty(messageResult.ID))
                     {
                         // Entry point on ES
-                        //  if (es.AddESLog(bodyModel.BalNumber, bodyModel.Sysid, out errorMessage) == HttpStatusCode.BadRequest)
-                        //    Log.Info(bodyModel.BalNumber + ": Process : Draft9089 -  Error Occurred while Calling ES. See ES Log File for further details");
+                        if (es.AddESLog(bodyModel.BalNumber, bodyModel.Sysid, out errorMessage) == HttpStatusCode.BadRequest)
+                            Log.Info(bodyModel.BalNumber + ": Process : Save9035 -  Error Occurred while Calling ES. See ES Log File for further details");
                     }
                     outResponse.success = true;
                     outResponse.message = "Your 9035 will be drafted on FLAG and a copy will be updated to Cobalt. You will receive a notification from ServiceNow when it is complete. if you have any questions, contact #automationinfo";
