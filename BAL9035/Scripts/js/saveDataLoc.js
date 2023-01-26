@@ -190,6 +190,7 @@ function productDisplay(ctl) {
     $("input[name=LocWageFrom]").val(cols[8].innerText);
     $("input[name=LocWageTo]").val(cols[9].innerText);
     $("input[name=SecondEntityName]").val($(row).find('#tblSecondEntityName').text());
+    $("input[name=AddressRadio][value=" + $(row).find('#tblAddress2RadioButton').text() + "]").prop('checked', true);
     $('#LocPopUp').modal();
     // Change Update Button Text
     $("#btnLocSav1").text("Update Location");
@@ -204,7 +205,7 @@ function AddLocationTable(jsonObject) {
     var valLocWageFrom = $("input[name=LocWageFrom]").val();
     var valLocWageTo = $("input[name=LocWageTo]").val();
     var valLocBusnsName = $("input[name=SecondEntityName]").val();
-
+    var valaddress2Radio = $('input[name="AddressRadio"]:checked').val();
     var highlight = "<td>";
     if (valF8 == "0") {
         valF8 = "";
@@ -235,7 +236,7 @@ function AddLocationTable(jsonObject) {
             '<button type="button" onclick="productDisplay(this);" class="btn btn-default btn-tbl-custom"><span class="glyphicon glyphicon-edit" /></button> | ' +
             '<button type="button" onclick="productDelete(this);" class="btn btn-default btn-tbl-custom"><span class="glyphicon glyphicon-remove" /></button> | ' +
             '<button type="button" onclick="addSection(this);" class="btn btn-default btn-tbl-custom redAddSection"><span class="glyphicon glyphicon-plus" /></button>' +
-            '</td><td style="display:none;"><input type="text" name="jsonValue" id="jsonValue" value=""></td><td style="display:none;" id="wageFrom">' + valLocWageFrom + '</td><td style="display:none;" id="wageTo">' + valLocWageTo + '</td><td style="display:none;" id="tblSecondEntityName">' + valLocBusnsName +'</td></tr>');
+            '</td><td style="display:none;"><input type="text" name="jsonValue" id="jsonValue" value=""></td><td style="display:none;" id="wageFrom">' + valLocWageFrom + '</td><td style="display:none;" id="wageTo">' + valLocWageTo + '</td><td style="display:none;" id="tblSecondEntityName">' + valLocBusnsName + '</td><td style="display:none;" id="tblAddress2RadioButton">' + valaddress2Radio +'</td></tr>');
         $('#locTable tr').eq(inc).find('#jsonValue').val(jsonObject);
     }
 
@@ -261,6 +262,7 @@ function productBuildTableRow(id) {
     var valLocWageFrom = $("input[name=LocWageFrom]").val();
     var valLocWageTo = $("input[name=LocWageTo]").val();
     var valLocBusnsName = $("input[name=SecondEntityName]").val();
+    var valaddress2Radio = $('input[name="AddressRadio"]:checked').val();
 
     var highlight = '<td style="width: 100px; max-width: 100px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; ">';
     if (valF8 == "0") {
@@ -297,7 +299,7 @@ function productBuildTableRow(id) {
         '<button type="button" onclick="productDisplay(this);" data-id=' + id + ' class="btn btn-default btn-tbl-custom"><span class="glyphicon glyphicon-edit" /></button> | ' +
         '<button type="button" onclick="productDelete(this);" data-id=' + id + ' class="btn btn-default btn-tbl-custom"><span class="glyphicon glyphicon-remove" /></button> | ' +
         '<button type="button" onclick="addSection(this);" data-id=' + id + ' class="btn btn-default btn-tbl-custom ' + classResult + '"><span class="glyphicon glyphicon-plus" /></button>' +
-        '</td><td style="display:none;"><input type="text" name="jsonValue" id="jsonValue" value=""></td><td style="display:none;" id="wageFrom">' + valLocWageFrom + '</td><td style="display:none;" id="wageTo">' + valLocWageTo + '</td><td style="display:none;" id="tblSecondEntityName">' + valLocBusnsName +'</td></tr>';
+        '</td><td style="display:none;"><input type="text" name="jsonValue" id="jsonValue" value=""></td><td style="display:none;" id="wageFrom">' + valLocWageFrom + '</td><td style="display:none;" id="wageTo">' + valLocWageTo + '</td><td style="display:none;" id="tblSecondEntityName">' + valLocBusnsName + '</td><td style="display:none;" id="tblAddress2RadioButton">' + valaddress2Radio +'</td></tr>';
     return ret;
 }
 //create a new Section (F13,F14)

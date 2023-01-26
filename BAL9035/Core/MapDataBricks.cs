@@ -245,6 +245,8 @@ namespace BAL9035.Core
                         {
                             loc.Address2 = dataRow["Suite"].ToString();
                         }
+
+                        loc.Address2Radio= dataRow["UnitType"].ToString();
                         loc.City = dataRow["City"].ToString();
                         City = loc.City;
                         loc.State = dataRow["State"].ToString();

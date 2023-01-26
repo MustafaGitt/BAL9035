@@ -9,6 +9,7 @@ namespace BAL9035.Models
     {
         public int? LocationId { get; set; }
         public string Address1 { get; set; }
+        public string Address2Radio { get; set; }
         public string Address2 { get; set; }
         public string City { get; set; }
         public string County { get; set; }

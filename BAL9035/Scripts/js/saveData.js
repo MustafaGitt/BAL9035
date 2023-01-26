@@ -200,6 +200,7 @@ function fetchValues(balNo, sysid, isSubmit, email, tenancyName) {
                 "LocWageFrom": $(this).find('#wageFrom').text(),
                 "LocWageTo": $(this).find('#wageTo').text(),
                 "SecondEntityName": $(this).find('#tblSecondEntityName').text(),
+                "Address2Radio": $(this).find('#tblAddress2RadioButton').text(),
                 //'FmodalObject': $("td", this).eq(7).text(),
                 'FmodalObject': jsonObj
             };
