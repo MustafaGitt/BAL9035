@@ -269,6 +269,175 @@ namespace BAL9035.Core
                 throw ex;
             }
         }
+
+
+
+
+
+        public Lists CreateBricksListsCobaltD(DataTable dt, string balno)
+        {
+            try
+            {
+                string AddressLine1 = "";
+                string City = "";
+                Lists lists = new Lists();
+                lists.BALNumber = balno;
+                List<string> caseSubType = new List<string>();
+                List<string> parentCaseSubType = new List<string>();
+                List<Location> locations = new List<Location>();
+                int increment = 1;
+                foreach (DataRow dataRow in dt.Rows)
+                {
+                    SectionFModal sectionFModal = new SectionFModal();
+                    // Creating SectionFModal Lists
+                    if (dataRow["PrevailingWageSource"].ToString().ToLower().Equals("oflc online data center"))
+                    {
+                        sectionFModal.F13 = true;
+                        if (dataRow["WageLevel"].ToString() != null && dataRow["WageLevel"].ToString() != "")
+                        {
+                            switch (dataRow["WageLevel"].ToString())
+                            {
+                                case "1":
+                                    sectionFModal.F13a = "I";
+                                    break;
+                                case "2":
+                                    sectionFModal.F13a = "II";
+                                    break;
+                                case "3":
+                                    sectionFModal.F13a = "III";
+                                    break;
+                                case "4":
+                                    sectionFModal.F13a = "IV";
+                                    break;
+                                case "N/A":
+                                    sectionFModal.F13a = "NA";
+                                    break;
+                                default:
+                                    {
+                                        sectionFModal.F13a = "";
+                                        break;
+                                    }
+                            }
+                        }
+
+
+                        //Set By Defaule Values
+                        sectionFModal.CollectionType = true;
+                        sectionFModal.AreaBasedOn = true;
+                        sectionFModal.RnDPosition = false;
+                        sectionFModal.HCPosition = false;
+                        sectionFModal.Per = "Year";
+                    }
+                    else if (dataRow["PrevailingWageSource"].ToString().ToLower().Equals("other"))
+                    {
+                        sectionFModal.F14 = true;
+                        sectionFModal.F14a = "Other";
+                        sectionFModal.F14b = dataRow["PrevailingWagePublishedYear"].ToString();
+
+
+                        if (dataRow["PrevailingWageOther"].ToString() == "WTW General Industry Professional (Administrative and Sales)")
+                        {
+                            sectionFModal.F14c = "Willis Towers Watson";
+                            sectionFModal.F14d = "General Industry Professional(Administrative and Sales)";
+                        }
+                        else if (dataRow["PrevailingWageOther"].ToString() == "WTW General Industry Professional (Technical and Operations)")
+                        {
+                            sectionFModal.F14c = "Willis Towers Watson";
+                            sectionFModal.F14d = "General Industry Professional(Technical and Operations)";
+                        }
+                        else if (dataRow["PrevailingWageOther"].ToString() == "WTW General Industry Supervisory and Middle Management")
+                        {
+                            sectionFModal.F14c = "Willis Towers Watson";
+                            sectionFModal.F14d = "General Industry Supervisory and Middle Management Report";
+                        }
+                        else if (dataRow["PrevailingWageOther"].ToString() == "Pearl Meyer AEC Compensation Survey Engineering")
+                        {
+                            sectionFModal.F14c = "Pearl Meyer";
+                            sectionFModal.F14d = "AEC Compensation Survey Engineering";
+                        }
+                        else if (dataRow["PrevailingWageOther"].ToString() == "Radford Global Technology Survey")
+                        {
+                            sectionFModal.F14c = "Radford";
+                            sectionFModal.F14d = "Radford Global Technology Survey";
+                        }
+                        else if (dataRow["PrevailingWageOther"].ToString() == "Radford Global Life Sciences Survey")
+                        {
+                            sectionFModal.F14c = "Radford";
+                            sectionFModal.F14d = "Radford Global Life Sciences Survey";
+                        }
+                        else if (dataRow["PrevailingWageOther"].ToString() == "Mercer HR Consulting Benchmark Database Survey")
+                        {
+                            sectionFModal.F14c = "Mercer Human Resource Consulting Inc.";
+                            sectionFModal.F14d = "Mercer Benchmark Database Survey";
+                        }
+                        else if (dataRow["PrevailingWageOther"].ToString() == "Mercer Benchmark Database Mercer/Gartner Info. Tech. Survey")
+                        {
+                            sectionFModal.F14c = "Mercer Human Resource Consulting Inc.";
+                            sectionFModal.F14d = "Mercer Benchmark Database Mercer/Gartner Info. Tech. Survey";
+                        }
+                        else
+                        {
+                            sectionFModal.F14c = dataRow["PrevailingWageOther"].ToString();
+                            sectionFModal.F14d = dataRow["PrevailingWageOther"].ToString();
+                        }
+                    }
+                    // Creating Case Subtypes
+                    if (dataRow["CaseSubType"].ToString() != null && dataRow["CaseSubType"].ToString() != "")
+                    {
+                        caseSubType.AddRange(dataRow["CaseSubType"].ToString().Split(',').ToList());
+                    }
+                    // Creating Parent Case Subtypes
+                    if (dataRow["ParentCaseSubType"].ToString() != null && dataRow["ParentCaseSubType"].ToString() != "")
+                    {
+                        parentCaseSubType.AddRange(dataRow["ParentCaseSubType"].ToString().Split(',').ToList());
+                    }
+                    // Creating Location Rows
+                    if (!string.IsNullOrEmpty(dataRow["AddressLine1"].ToString()) || !string.IsNullOrEmpty(dataRow["City"].ToString()))
+                    {
+                        Location loc = new Location();
+                        if (AddressLine1 != dataRow["AddressLine1"].ToString() || City != dataRow["City"].ToString())
+                        {
+                            loc.LocationId = increment;
+                            increment++;
+                        }
+                        loc.Address1 = dataRow["AddressLine1"].ToString();
+                        AddressLine1 = loc.Address1;
+                        loc.Address2 = dataRow["AddressLine2"].ToString();
+                        if (!string.IsNullOrEmpty(dataRow["AddressLine2"].ToString()) && !string.IsNullOrEmpty(dataRow["Suite"].ToString()))
+                        {
+                            loc.Address2 += ", " + dataRow["Suite"].ToString();
+                        }
+                        else if (string.IsNullOrEmpty(dataRow["AddressLine2"].ToString()) && !string.IsNullOrEmpty(dataRow["Suite"].ToString()))
+                        {
+                            loc.Address2 = dataRow["Suite"].ToString();
+                        }
+                      //  loc.Address2Radio = dataRow["UnitType"].ToString();
+                        //loc.Address2Radio = string.Empty;
+ 
+                        loc.City = dataRow["City"].ToString();
+                        City = loc.City;
+                        loc.State = dataRow["State"].ToString();
+                        loc.PostalCode = dataRow["ZipCode"].ToString();
+
+                        loc.LocWageFrom = dataRow["WageRangeLow"].ToString().Replace(",", "");
+                        loc.LocWageTo = dataRow["WageRangeHigh"].ToString().Replace(",", "");
+
+                        loc.FmodalObject = sectionFModal;
+                        locations.Add(loc);
+                    }
+                }
+                lists.caseSubTypes = caseSubType.Distinct().ToList();
+                lists.parentCaseSubTypes = parentCaseSubType.Distinct().ToList();
+                lists.LocationsList = locations.GroupBy(i => new { i.Address1, i.City }).Select(g => g.First()).ToList();
+                return lists;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
         public void AssignValue(Form9035 form, List<string> pSubTypes)
         {
             if (form.SectionA.A1 == "H-1B" && form.SectionB.B7 == "1" && pSubTypes.Count > 0)

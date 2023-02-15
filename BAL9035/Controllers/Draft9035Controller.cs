@@ -54,8 +54,8 @@ namespace BAL9035.Controllers
                 if (url.Contains("localhost"))
                 {
                     //localhost
-                    request.State = "'+bal_no=20000.53388.39;id_no=BOT0000090;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
-                    // request.State = "'+bal_no=A002.306.12;id_no=BOT0000000;cobalt=cobaltD;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
+                    //request.State = "'+bal_no=20000.53388.39;id_no=BOT0000090;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
+                    request.State = "'+bal_no=A002.369.6;id_no=BOT000012;cobalt=cobaltD;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
                     request.Code = "182635";
                 }
                 TempData["Error"] = "";
@@ -122,8 +122,12 @@ namespace BAL9035.Controllers
                         var connnectionString = "DSN=" + appKeys.DataLakeUserName + ";PWD=" + appKeys.DataLakePassword + ";";
                         var cnn = new OdbcConnection(connnectionString);
                         cnn.Open();
-                        // var selectSql = "SELECT * FROM doleta_9035 WHERE BALNumber = 'A006.329.7'";
-                        var selectSql = "SELECT * FROM doleta_9035 WHERE BALNumber = '" + bal_no + "' ";
+                        //var selectSql = "SELECT * FROM hive_metastore.prd_Gold_Automation.d_doleta_9035 WHERE BALNumber = '1615.49792.16'";
+                        // var selectSql = "SELECT * FROM doleta_9035 WHERE BALNumber = '" + bal_no + "' ";
+                        // SELECT* FROM hive_metastore.prd_Gold_Automation.d_doleta_9035 WHERE BALNumber
+                        var selectSql = WebConfigurationManager.AppSettings["EnvironmentName"] == "stg" ?
+                             "SELECT * FROM hive_metastore.stg_gold_automation.d_doleta_9035 WHERE BALNumber = '" + bal_no + "'" :
+                              "SELECT * FROM hive_metastore.prd_Gold_Automation.d_doleta_9035 WHERE BALNumber = '" + bal_no + "'";
                         var cmd = new OdbcCommand(selectSql, cnn);
                         var da = new OdbcDataAdapter(cmd);
                         var dtResult = new DataTable();
@@ -133,7 +137,7 @@ namespace BAL9035.Controllers
                         {
                             MapDataBricks dbData = new MapDataBricks();
                             form = dbData.MapBricksResult(dtResult);
-                            allLists = dbData.CreateBricksLists(dtResult, bal_no);
+                            allLists = dbData.CreateBricksListsCobaltD(dtResult, bal_no);
                             dbData.AssignValue(form, allLists.parentCaseSubTypes);
                             Log.Info("Bal Number : " + bal_no + " Process : Draft 9035 Page Loading, Message :  Data from SQL Query has been generated successfully.");
                         }

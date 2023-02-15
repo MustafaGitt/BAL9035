@@ -163,7 +163,7 @@ function productDelete(ctl) {
     $(ctl).parents("tr").remove();
 }
 // Display the Location table row in a popup
-function productDisplay(ctl) {
+function productDisplay(ctl,tenant) {
     var row = $(ctl).parents("tr");
     var cols = row.children("td");
 
@@ -190,7 +190,12 @@ function productDisplay(ctl) {
     $("input[name=LocWageFrom]").val(cols[8].innerText);
     $("input[name=LocWageTo]").val(cols[9].innerText);
     $("input[name=SecondEntityName]").val($(row).find('#tblSecondEntityName').text());
-    $("input[name=AddressRadio][value=" + $(row).find('#tblAddress2RadioButton').text() + "]").prop('checked', true);
+
+
+    if (tenant=='BOT') {
+        $("input[name=AddressRadio][value=" + $(row).find('#tblAddress2RadioButton').text() + "]").prop('checked', true);
+    }
+
     $('#LocPopUp').modal();
     // Change Update Button Text
     $("#btnLocSav1").text("Update Location");

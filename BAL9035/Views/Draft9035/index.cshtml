@@ -229,8 +229,8 @@
                                                 }
                                                 <td style="width: 100px; max-width: 100px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; ">@item.PostalCode</td>
                                                 <td style="width:20%;">
-                                                    <button type="button" onclick="productDisplay(this);" class="btn btn-default btn-tbl-custom"><span class="glyphicon glyphicon-edit" /></button> |
-                                                    <button type="button" onclick="productDelete(this);" class="btn btn-default btn-tbl-custom"><span class="glyphicon glyphicon-remove" /></button> |
+                                                    <button type="button" onclick="productDisplay(this,'@ViewBag.cobaltTenant');" class="btn btn-default btn-tbl-custom"><span class="glyphicon glyphicon-edit" /></button> |
+                                                    <button type="button" onclick="productDelete(this,'@ViewBag.cobaltTenant');" class="btn btn-default btn-tbl-custom"><span class="glyphicon glyphicon-remove" /></button> |
                                                     @{
                                                         bool addGreenClass = true;
                                                         if (item.FmodalObject.F13 == true)
