@@ -54,13 +54,17 @@ namespace BAL9035.Controllers
                 if (url.Contains("localhost"))
                 {
                     //localhost
-                    //request.State = "'+bal_no=20000.53388.39;id_no=BOT0000090;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
-                    request.State = "'+bal_no=A002.369.6;id_no=BOT000012;cobalt=cobaltD;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
+                    request.State = "'+bal_no=20000.54050.16;id_no=BOT0000090;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
+                    //request.State = "'+bal_no=20000.54050.90;id_no=BOT000030;cobalt=cobaltD;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
                     request.Code = "182635";
                 }
                 TempData["Error"] = "";
                 string dolUserName = string.Empty;
                 string dolPassword = string.Empty;
+
+
+                Log.Info("Request Initiated with State: " + request.State);
+
 
                 if ((request.Code != null && request.Code != "") && (request.State != null && request.State != ""))
                 {
@@ -146,7 +150,7 @@ namespace BAL9035.Controllers
                             Log.Info("Bal Number : " + bal_no + ": Process : Draft9035 -  No Data Found from the SQL Query.");
                             TempData["Error"] = "You have entered an invalid case matter number. Please submit a new request with the correct matter number";
                             es.AddErrorESLog(ViewBag.id_no, "Business", "No Data Found from the SQL Query.", out errorMessage);
-                            api.AddErrorQueueItem(ViewBag.id_no, TempData["Error"].ToString(), "Business", TempData["Error"].ToString(), "Failed", bal_no);
+                            api.AddErrorQueueItem(ViewBag.cobaltTenant, ViewBag.id_no, TempData["Error"].ToString(), "Business", TempData["Error"].ToString(), "Failed", bal_no);
                             return RedirectToAction("Error");
                         }
 
@@ -182,7 +186,7 @@ namespace BAL9035.Controllers
                             Log.Info("Bal Number : " + bal_no + ": Process : Draft9035 -  No Data Found from the SQL Query.");
                             TempData["Error"] = "You have entered an invalid case matter number. Please submit a new request with the correct matter number";
                             es.AddErrorESLog(ViewBag.id_no, "Business", "No Data Found from the SQL Query.", out errorMessage);
-                            api.AddErrorQueueItem(ViewBag.id_no, TempData["Error"].ToString(), "Business", TempData["Error"].ToString(), "Failed", bal_no);
+                            api.AddErrorQueueItem(ViewBag.cobaltTenant,ViewBag.id_no, TempData["Error"].ToString(), "Business", TempData["Error"].ToString(), "Failed", bal_no);
                             return RedirectToAction("Error");
                         }
                     }
@@ -226,11 +230,11 @@ namespace BAL9035.Controllers
                 bool isSqlException = ex.GetType().Name == "SqlException" ? true : false;
                 if (isSqlException)
                 {
-                    api.AddErrorQueueItem(ViewBag.id_no, "There is an intermittent database issue that is preventing the bot from proceeding with your 9035. Please try resubmitting your request in 30 minutes. If you have any questions, please contact #automationinfo.", "Business", "There is an intermittent database issue that is preventing the bot from proceeding with your 9035. Please try resubmitting your request in 30 minutes. If you have any questions, please contact #automationinfo.", "Failed", bal_no);
+                    api.AddErrorQueueItem(ViewBag.cobaltTenant,ViewBag.id_no, "There is an intermittent database issue that is preventing the bot from proceeding with your 9035. Please try resubmitting your request in 30 minutes. If you have any questions, please contact #automationinfo.", "Business", "There is an intermittent database issue that is preventing the bot from proceeding with your 9035. Please try resubmitting your request in 30 minutes. If you have any questions, please contact #automationinfo.", "Failed", bal_no);
                 }
                 else
                 {
-                    api.AddErrorQueueItem(ViewBag.id_no, ex.Message, "Technical", ex.Message, "In Progress", bal_no);
+                    api.AddErrorQueueItem(ViewBag.cobaltTenant,ViewBag.id_no, ex.Message, "Technical", ex.Message, "In Progress", bal_no);
                 }
 
                 if (WebConfigurationManager.AppSettings["EnvironmentName"] == "prod")

@@ -87,7 +87,7 @@ namespace BAL9035.Controllers
                     logMsg = "Bal Number : " + bodyModel.Name + ", Proecess : Create Credential Asset, Message : Parameter : Username : " + bodyModel.Username + "Password : " + bodyModel.Password + " Name : " + bodyModel.Name + " Email : " + bodyModel.Email + " : Parameter is required.";
                     Log.Info(logMsg);
                     es.AddErrorESLog(bodyModel.Name, "Technical", "Credential Asset Parameter Missing", out errorMessage);
-                    api.AddErrorQueueItem(bodyModel.Name, "Credential Asset Parameter Missing", "Technical", "Credential Asset Parameter Missing", "In Progress");
+                    api.AddErrorQueueItem(bodyModel.tenantName,bodyModel.Name, "Credential Asset Parameter Missing", "Technical", "Credential Asset Parameter Missing", "In Progress");
                     return Json(assetResponse);
                 }
                 //  Get the Config from AppSettings
@@ -155,7 +155,7 @@ namespace BAL9035.Controllers
                     logMsg = "Bal Number : " + bodyModel.Name + " Process : Create Credential Asset, Message :  The asset has not been found";
                     Log.Info(logMsg);
                     es.AddErrorESLog(bodyModel.Name, "Technical", "The Credential Asset has not been created", out errorMessage);
-                    api.AddErrorQueueItem(bodyModel.Name, "The Credential Asset has not been created", "Technical", "The Credential Asset has not been created", "In Progress");
+                    api.AddErrorQueueItem(bodyModel.tenantName,bodyModel.Name, "The Credential Asset has not been created", "Technical", "The Credential Asset has not been created", "In Progress");
                 }
                 // }
             }
@@ -165,7 +165,7 @@ namespace BAL9035.Controllers
                 outResponse.message = "Sorry, there seems to be an issue with your request.  Please send an email to #automationinfo with your ServiceNow ticket number and we will contact you shortly.";
                 Log.Error(ex, bodyModel.Name);
                 es.AddErrorESLog(bodyModel.Name, "Technical", ex.Message, out errorMessage);
-                api.AddErrorQueueItem(bodyModel.Name, ex.Message, "Technical", ex.Message, "In Progress");
+                api.AddErrorQueueItem(bodyModel.tenantName, bodyModel.Name, ex.Message, "Technical", ex.Message, "In Progress");
 
                 if (WebConfigurationManager.AppSettings["EnvironmentName"] == "prod")
                 {

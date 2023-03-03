@@ -44,7 +44,7 @@ namespace BAL9035.Controllers
                     Log.Info(logMsg);
                     assetResponse = JsonConvert.SerializeObject(outResponse);
                     es.AddErrorESLog(bodyModel.Sysid, "Technical", "Data Asset Parameter Missing", out errorMessage);
-                    api.AddErrorQueueItem(bodyModel.Sysid, "Data Asset Parameter Missing", "Technical", "Data Asset Parameter Missing", "In Progress");
+                    api.AddErrorQueueItem(bodyModel.tenantName, bodyModel.Sysid, "Data Asset Parameter Missing", "Technical", "Data Asset Parameter Missing", "In Progress");
                     return Json(assetResponse);
                 }
                 // configuration getting from Appsetting
@@ -103,7 +103,7 @@ namespace BAL9035.Controllers
                 outResponse.message = "Sorry, there seems to be an issue with your request.  Please send an email to #automationinfo with your ServiceNow ticket number and we will contact you shortly.";
                 Log.Error(ex, bodyModel.BalNumber);
                 es.AddErrorESLog(bodyModel.Sysid, "Technical", ex.Message, out errorMessage);
-                api.AddErrorQueueItem(bodyModel.Sysid, ex.Message, "Technical", ex.Message, "In Progress");
+                api.AddErrorQueueItem(bodyModel.tenantName, bodyModel.Sysid, ex.Message, "Technical", ex.Message, "In Progress");
 
                 if (WebConfigurationManager.AppSettings["EnvironmentName"] == "prod")
                 {
@@ -143,7 +143,7 @@ namespace BAL9035.Controllers
                     Log.Info(logMsg);
                     assetResponse = JsonConvert.SerializeObject(outResponse);
                     es.AddErrorESLog(bodyModel.Sysid, "Technical", "QueueItem API Parameter Missing", out errorMessage);
-                    api.AddErrorQueueItem(bodyModel.Sysid, "QueueItem API Parameter Missing", "Technical", "QueueItem API Parameter Missing", "In Progress");
+                    api.AddErrorQueueItem(bodyModel.tenantName, bodyModel.Sysid, "QueueItem API Parameter Missing", "Technical", "QueueItem API Parameter Missing", "In Progress");
                     return Json(assetResponse);
                 }
                 string filter = "?$filter=Name eq '" + bodyModel.BalNumber + "'";
@@ -199,7 +199,7 @@ namespace BAL9035.Controllers
                 outResponse.message = "Sorry, there seems to be an issue with your request.  Please send an email to #automationinfo with your ServiceNow ticket number and we will contact you shortly.";
                 Log.Error(ex, bodyModel.BalNumber);
                 es.AddErrorESLog(bodyModel.Sysid, "Technical", ex.Message, out errorMessage);
-                api.AddErrorQueueItem(bodyModel.Sysid, ex.Message, "Technical", ex.Message, "In Progress");
+                api.AddErrorQueueItem(bodyModel.tenantName, bodyModel.Sysid, ex.Message, "Technical", ex.Message, "In Progress");
 
                 if (WebConfigurationManager.AppSettings["EnvironmentName"] == "prod")
                 {

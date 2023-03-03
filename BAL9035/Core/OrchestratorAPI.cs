@@ -234,7 +234,7 @@ namespace BAL9035.Core
                 throw ex;
             }
         }
-        public void AddErrorQueueItem(string ID, string Err_Message, string Err_Type, string Note, string Status, string BALNumber = "")
+        public void AddErrorQueueItem(string Tenant,string ID, string Err_Message, string Err_Type, string Note, string Status, string BALNumber = "")
         {
             try
             {
@@ -253,7 +253,7 @@ namespace BAL9035.Core
                 itemData.SpecificContent = content;
 
                 //Set which tenant to use
-                appKeys.tenancyName = ID.StartsWith("COB") ? appKeys.cobaltDtenancyName : appKeys.tenancyName;
+                appKeys.tenancyName = Tenant.StartsWith("COB") ? appKeys.cobaltDtenancyName : appKeys.tenancyName;
 
                 RootObject queueItemBody = new RootObject();
                 queueItemBody.itemData = itemData;
