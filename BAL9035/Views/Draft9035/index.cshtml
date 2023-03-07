@@ -87,7 +87,7 @@
                                     <input type="radio" name="A1Radio" id="singapore" value="Singapore" @(Model.Form9035.SectionA.A1Radio == "Singapore" ? "checked" : "")><b>Singapore</b>
                                 </div>
                             </div>
-                            <p><input placeholder="..." oninput="this.className = ''" name="B1" id="B1" value="@(Model.Form9035.SectionB.B1)" maxlength="50" style="position:absolute;left:175px;top:305px;width:600px;height:20px;font-weight:bold;"></p>
+                            <p><input placeholder="..." oninput="this.className = ''" name="B1" id="B1" value="@(Model.Form9035.SectionB.B1)" maxlength="60" style="position:absolute;left:175px;top:305px;width:600px;height:20px;font-weight:bold;"></p>
                             <div class="ui-widget" style="position:absolute;left:110px;top:340px;">
                                 @{ string data = Model.Form9035.SectionB.B2; }
                                 @Html.DropDownList("B2", DDLUtil.GetSOC(data), new { style = "position:absolute;left:112px;top:341px;width:200px;height:18px;font-weight:bold;" })

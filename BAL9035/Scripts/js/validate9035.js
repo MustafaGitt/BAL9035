@@ -95,9 +95,9 @@ function tab1(errCount, errMsg) {
             $("#req").append('<li>' + errMsg + '</li>');
         }
     }
-    if (valB1.length > 50) {
+    if (valB1.length > 60) {
         errCount++;
-        errMsg = " Section B Question 1 Length should be less or equal to 50 characters. ";
+        errMsg = " Section B Question 1 Length should be less or equal to 60 characters. ";
         $("#req").append('<li>' + errMsg + '</li>');
     }
     if (!valB2 || valB2=="0") {
