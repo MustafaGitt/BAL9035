@@ -54,7 +54,7 @@ namespace BAL9035.Controllers
                 if (url.Contains("localhost"))
                 {
                     //localhost
-                    request.State = "'+bal_no=20000.50233.3;id_no=BOT0000000;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
+                    request.State = "'+bal_no=20000.50234.5;id_no=BOT0035280;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
                     //request.State = "'+bal_no=20000.50233.3;id_no=BOT0000000;cobalt=cobaltD;-5791a545d45a92763d8216ffb7004e3ebc32226af366113cf24975ea00014d51+";
                     request.Code = "182635";
                 }
@@ -186,7 +186,7 @@ namespace BAL9035.Controllers
                             Log.Info("Bal Number : " + bal_no + ": Process : Draft9035 -  No Data Found from the SQL Query.");
                             TempData["Error"] = "You have entered an invalid case matter number. Please submit a new request with the correct matter number";
                             es.AddErrorESLog(ViewBag.id_no, "Business", "No Data Found from the SQL Query.", out errorMessage);
-                            api.AddErrorQueueItem(ViewBag.cobaltTenant,ViewBag.id_no, TempData["Error"].ToString(), "Business", TempData["Error"].ToString(), "Failed", bal_no);
+                            api.AddErrorQueueItem(ViewBag.cobaltTenant, ViewBag.id_no, TempData["Error"].ToString(), "Business", TempData["Error"].ToString(), "Failed", bal_no);
                             return RedirectToAction("Error");
                         }
                     }
@@ -212,7 +212,7 @@ namespace BAL9035.Controllers
                     }
 
 
-                  
+                   
 
                     obj.Form9035 = form;
                     obj.Lists = allLists;
@@ -233,11 +233,11 @@ namespace BAL9035.Controllers
                 bool isSqlException = ex.GetType().Name == "SqlException" ? true : false;
                 if (isSqlException)
                 {
-                    api.AddErrorQueueItem(ViewBag.cobaltTenant,ViewBag.id_no, "There is an intermittent database issue that is preventing the bot from proceeding with your 9035. Please try resubmitting your request in 30 minutes. If you have any questions, please contact #automationinfo.", "Business", "There is an intermittent database issue that is preventing the bot from proceeding with your 9035. Please try resubmitting your request in 30 minutes. If you have any questions, please contact #automationinfo.", "Failed", bal_no);
+                    api.AddErrorQueueItem(ViewBag.cobaltTenant, ViewBag.id_no, "There is an intermittent database issue that is preventing the bot from proceeding with your 9035. Please try resubmitting your request in 30 minutes. If you have any questions, please contact #automationinfo.", "Business", "There is an intermittent database issue that is preventing the bot from proceeding with your 9035. Please try resubmitting your request in 30 minutes. If you have any questions, please contact #automationinfo.", "Failed", bal_no);
                 }
                 else
                 {
-                    api.AddErrorQueueItem(ViewBag.cobaltTenant,ViewBag.id_no, ex.Message, "Technical", ex.Message, "In Progress", bal_no);
+                    api.AddErrorQueueItem(ViewBag.cobaltTenant, ViewBag.id_no, ex.Message, "Technical", ex.Message, "In Progress", bal_no);
                 }
 
                 if (WebConfigurationManager.AppSettings["EnvironmentName"] == "prod")

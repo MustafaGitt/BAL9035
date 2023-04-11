@@ -124,6 +124,7 @@ function btnLocOnClose() {
 }
 // Add or Update the Location Table Values
 function UpdateLocationTable() {
+    debugger;
     $("#reqLoc").empty();
     var valF4 = $("input[name=F4]").val();
     var valF5 = $("input[name=F5]").val();
@@ -163,12 +164,12 @@ function productDelete(ctl) {
     $(ctl).parents("tr").remove();
 }
 // Display the Location table row in a popup
-function productDisplay(ctl,tenant) {
+function productDisplay(ctl, tenant) {
     var row = $(ctl).parents("tr");
     var cols = row.children("td");
 
 
-    EditId=$("#locTable tr").index(ctl.closest('tr'));
+    EditId = $("#locTable tr").index(ctl.closest('tr'));
     //EditId = row.attr('id').split('-')[1];
     $("input[name=F4]").val(cols[0].innerText);
     $("input[name=F5]").val(cols[1].innerText);
@@ -192,8 +193,14 @@ function productDisplay(ctl,tenant) {
     $("input[name=SecondEntityName]").val($(row).find('#tblSecondEntityName').text());
 
 
-    if (tenant=='BOT') {
-        $("input[name=AddressRadio][value=" + $(row).find('#tblAddress2RadioButton').text() + "]").prop('checked', true);
+    if (tenant == 'BOT') {
+
+        if ($(row).find('#tblAddress2RadioButton').text()) {
+            $("input[name=AddressRadio][value=" + $(row).find('#tblAddress2RadioButton').text() + "]").prop('checked', true);
+        }
+        else {
+            $("input[name=AddressRadio]").prop('checked', false);
+        }
     }
 
     $('#LocPopUp').modal();
@@ -210,7 +217,12 @@ function AddLocationTable(jsonObject) {
     var valLocWageFrom = $("input[name=LocWageFrom]").val();
     var valLocWageTo = $("input[name=LocWageTo]").val();
     var valLocBusnsName = $("input[name=SecondEntityName]").val();
-    var valaddress2Radio = $('input[name="AddressRadio"]:checked').val();
+    var valaddress2Radio = '';
+
+
+    if ($('input[name="AddressRadio"]:checked').val()) {
+        valaddress2Radio = $('input[name="AddressRadio"]:checked').val();
+    }
     var highlight = "<td>";
     if (valF8 == "0") {
         valF8 = "";
@@ -241,7 +253,7 @@ function AddLocationTable(jsonObject) {
             '<button type="button" onclick="productDisplay(this);" class="btn btn-default btn-tbl-custom"><span class="glyphicon glyphicon-edit" /></button> | ' +
             '<button type="button" onclick="productDelete(this);" class="btn btn-default btn-tbl-custom"><span class="glyphicon glyphicon-remove" /></button> | ' +
             '<button type="button" onclick="addSection(this);" class="btn btn-default btn-tbl-custom redAddSection"><span class="glyphicon glyphicon-plus" /></button>' +
-            '</td><td style="display:none;"><input type="text" name="jsonValue" id="jsonValue" value=""></td><td style="display:none;" id="wageFrom">' + valLocWageFrom + '</td><td style="display:none;" id="wageTo">' + valLocWageTo + '</td><td style="display:none;" id="tblSecondEntityName">' + valLocBusnsName + '</td><td style="display:none;" id="tblAddress2RadioButton">' + valaddress2Radio +'</td></tr>');
+            '</td><td style="display:none;"><input type="text" name="jsonValue" id="jsonValue" value=""></td><td style="display:none;" id="wageFrom">' + valLocWageFrom + '</td><td style="display:none;" id="wageTo">' + valLocWageTo + '</td><td style="display:none;" id="tblSecondEntityName">' + valLocBusnsName + '</td><td style="display:none;" id="tblAddress2RadioButton">' + valaddress2Radio + '</td></tr>');
         $('#locTable tr').eq(inc).find('#jsonValue').val(jsonObject);
     }
 
@@ -267,7 +279,14 @@ function productBuildTableRow(id) {
     var valLocWageFrom = $("input[name=LocWageFrom]").val();
     var valLocWageTo = $("input[name=LocWageTo]").val();
     var valLocBusnsName = $("input[name=SecondEntityName]").val();
-    var valaddress2Radio = $('input[name="AddressRadio"]:checked').val();
+   
+
+    var valaddress2Radio = '';
+
+
+    if ($('input[name="AddressRadio"]:checked').val()) {
+        valaddress2Radio = $('input[name="AddressRadio"]:checked').val();
+    }
 
     var highlight = '<td style="width: 100px; max-width: 100px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; ">';
     if (valF8 == "0") {
@@ -304,7 +323,7 @@ function productBuildTableRow(id) {
         '<button type="button" onclick="productDisplay(this);" data-id=' + id + ' class="btn btn-default btn-tbl-custom"><span class="glyphicon glyphicon-edit" /></button> | ' +
         '<button type="button" onclick="productDelete(this);" data-id=' + id + ' class="btn btn-default btn-tbl-custom"><span class="glyphicon glyphicon-remove" /></button> | ' +
         '<button type="button" onclick="addSection(this);" data-id=' + id + ' class="btn btn-default btn-tbl-custom ' + classResult + '"><span class="glyphicon glyphicon-plus" /></button>' +
-        '</td><td style="display:none;"><input type="text" name="jsonValue" id="jsonValue" value=""></td><td style="display:none;" id="wageFrom">' + valLocWageFrom + '</td><td style="display:none;" id="wageTo">' + valLocWageTo + '</td><td style="display:none;" id="tblSecondEntityName">' + valLocBusnsName + '</td><td style="display:none;" id="tblAddress2RadioButton">' + valaddress2Radio +'</td></tr>';
+        '</td><td style="display:none;"><input type="text" name="jsonValue" id="jsonValue" value=""></td><td style="display:none;" id="wageFrom">' + valLocWageFrom + '</td><td style="display:none;" id="wageTo">' + valLocWageTo + '</td><td style="display:none;" id="tblSecondEntityName">' + valLocBusnsName + '</td><td style="display:none;" id="tblAddress2RadioButton">' + valaddress2Radio + '</td></tr>';
     return ret;
 }
 //create a new Section (F13,F14)
