@@ -94,6 +94,37 @@ namespace BAL9035.Controllers
                     ViewBag.cobaltTenant = !string.IsNullOrEmpty(tenantName) && tenantName.ToLower() == "cobaltd" ? "COB" : "BOT";
 
 
+
+
+
+
+                    //DataBricks is down for update.Remove below logic after this time.
+                    if (ViewBag.cobaltTenant == "BOT")
+                    {
+                        TimeZoneInfo targetZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+                        DateTime newDT = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, targetZone);
+
+                        DateTime startDate = DateTime.Parse("4/20/2023 4:00:00 PM");
+                        DateTime endDate = DateTime.Parse("4/20/2023 5:00:00 PM");
+
+                        bool isGreater = newDT > startDate && newDT < endDate;
+
+
+                        if (isGreater)
+                        {
+                            Log.Info(bal_no + ": Process : Draft9035 -  DataBricks Is down.");
+                            TempData["Error"] = "This bot is offline for a scheduled update and will be back online at 5 pm CST today, April 18th. If you have any questions, please contact #AutomationInfo.";
+                            return RedirectToAction("Error");
+                        }
+                    }
+
+
+
+
+
+
+
+
                     //Set which tenant to use
                     appKeys.tenancyName = ViewBag.cobaltTenant.ToString().StartsWith("COB") ? appKeys.cobaltDtenancyName : appKeys.tenancyName;
 
@@ -141,7 +172,7 @@ namespace BAL9035.Controllers
                         {
                             MapDataBricks dbData = new MapDataBricks();
                             form = dbData.MapBricksResult(dtResult);
-                            allLists = dbData.CreateBricksListsCobaltD(dtResult, bal_no);
+                            allLists = dbData.CreateBricksLists(dtResult, bal_no);
                             dbData.AssignValue(form, allLists.parentCaseSubTypes);
                             Log.Info("Bal Number : " + bal_no + " Process : Draft 9035 Page Loading, Message :  Data from SQL Query has been generated successfully.");
                         }
